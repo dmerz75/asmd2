@@ -126,6 +126,7 @@ class asmd_calcs:
                 data_1=np.array(sample_i)
                 tew,wf=calc_work(data_1,st,self.w_c) #sample_i/data => tew
                 self.wrk[st][seed]=folder,tew,wf
+                os.remove(path)
         data=np.array(acc)
         JA=calc_pmf(data,st,self.w_c)               # get JA
         wf_sd=dict([(self.wrk[st][s][2],s) for s in seeds])
@@ -157,6 +158,15 @@ def main_call(st,w_c,d_cp):
                     os.path.join(my_dir,nextnum),'00.coor')
             cp_file(os.path.join(my_dir,st,f),'daOut.vel.%s' % s, \
                     os.path.join(my_dir,nextnum),'00.vel')
+            if os.path.isfile(os.path.join(my_dir,nextnum,'00.vel'))==True:
+                print 'COOR VEL in place'
+                for path in glob(os.path.join(my_dir,'%s/*/*daOut*' % st)):
+                    any_seed = path.split('/')[-1].split('.')[-1]
+                    print any_seed
+                    if any_seed == s:
+                        pass
+                    else:
+                        os.remove(path)
     pickle.dump(w_c,open('%s-wc.pkl' % st,'w'))
     pickle.dump(wrk_pkl,open('%s-sfwf.pkl' % st,'w'))
     print w_c
