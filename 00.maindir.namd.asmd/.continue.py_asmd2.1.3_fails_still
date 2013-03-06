@@ -1,0 +1,169 @@
+#!/usr/bin/env python
+import sys,os,pickle,shutil,fnmatch,itertools
+import os.path
+from glob import glob
+from sys import argv
+import numpy as np
+from random import *
+from lockfile import FileLock  # provided in 04.scripts dir ->
+import datetime,time                         # export PYTHONPATH
+
+lock = FileLock(__file__)
+if lock.is_locked()==True: sys.exit()
+lock.acquire()
+
+import matplotlib
+import matplotlib.pyplot as plt
+from scipy.interpolate import LSQUnivariateSpline
+
+my_dir = os.path.abspath(os.path.dirname(__file__))
+print my_dir
+os.chdir(my_dir)
+#now=datetime.datetime.now()
+#now=now.strftime("%Y%m%dt%H%M")
+num=sys.argv[1]  # str 01 02 etc
+print 'num',num
+nextnum=str(int(num)+1).zfill(2)
+print nextnum
+
+class mdict(dict):
+    def __setitem__(self,key,value):
+        self.setdefault(key,[]).append(value)
+def print_dict(dct):
+    for key,val in dct.items():
+        print key,val
+        print ''
+    return key
+
+config = pickle.load(open('config.pkl','rb'))
+key = print_dict(config)
+
+vel  = key
+dist = config[vel][0][0]
+ts   = config[vel][0][1]
+path_seg   = config[vel][0][2]
+path_svel  = config[vel][0][3]
+path_vel   = config[vel][0][4]
+path_steps = config[vel][0][5]
+dct        = config[vel][0][6]  # 'freq'  50*ts/1000
+dt         = dct['freq']*ts/1000
+path_v_aps = path_vel/ts*1000
+
+spos=xxsposxx
+beta=-0.6
+
+pmf_ideal = mdict()
+work_used = mdict()
+col_seeds = {}
+corr_work = mdict()
+info_seed_w={}
+info_folder={}
+quota=xxquotaxx*xxhowmanyxx
+
+def select_traj(info_ssw,wfsd,JA,stage):
+    phase = int(stage)-1
+    for k,kv in info_ssw.items():
+        for k_kv,v_kv in kv.items():
+            wf=np.cumsum(v_kv[::,3]*path_v_aps[phase]*dt)[-1]
+            wfsd[wf]=k_kv
+    seed=wfsd.get(JA,wfsd[min(wfsd.keys(),key=lambda k: abs(k-JA))])
+    print seed
+    return seed
+
+def corrected_work(data,stage,sdwf,work_used):
+    if stage=='01':
+        cdata = data[::,::,3]
+        corr_work[stage]=0
+    elif stage!='01':
+        uptonowstages=[str(st).zfill(2) for st in range(1,int(stage))]
+        awp=[]
+        for i in uptonowstages:
+            awp.append(work_used[i])
+        dawp=np.array(awp)
+        wp=np.cumsum(dawp)[-1]
+        corr_work[stage]=wp
+
+def write_data(data,info_ssw,stage):
+    phase = int(stage)-1
+    data[::,::,3] = np.exp(np.cumsum(data[::,::,3]*path_v_aps[phase]*dt,axis=1)*beta)
+    deltaf = np.log(data[::,::,3].mean(axis=0))*(1/beta)
+    JA=deltaf[-1]
+    pmf_ideal[stage]=deltaf[-1]
+    wfsd={}
+    seed=select_traj(info_ssw,wfsd,JA,stage)
+    col_seeds[stage]=seed
+    sdwf = dict((v,k) for k,v in wfsd.iteritems())
+    work_used[stage]=sdwf[seed]
+    print 'Jarzynski\'s average:',JA,'compared to work:',sdwf[seed]
+    corrected_work(data,stage,sdwf,work_used)
+
+def pack(stage):
+    acc=[]
+    for path in glob(os.path.join(my_dir,'%s/*/*-tef.dat.*' % stage)):
+        #print path
+        folder = path.split('/')[-2]
+        seed = path.split('/')[-1].split('.')[2]
+        sample_i = np.loadtxt(path)
+        #os.remove(path)
+        acc.append(sample_i)
+        info_seed_w[stage]={}
+        info_seed_w[stage][seed]=sample_i
+        info_folder[stage]={}
+        info_folder[stage][seed]=folder
+    data = np.array(acc)
+    write_data(data,info_seed_w,stage)
+    if len(data)==quota:
+        #np.save('%s_%s' % (num,# /|\ now),data)
+        pass
+    else:
+        print "not all trajectories acquired yet"
+    #return data
+
+# get DIRECTORIES
+#[dirs.append(d) for d in os.listdir(my_dir) if \
+#    os.path.isdir(os.path.join(my_dir,d))]
+dirs = []
+for i in range(1,int(num)+1):
+    dirs.append(str(i).zfill(2))
+[pack(st) for st in sorted(dirs)]
+
+print 'corrected work, for prepending...(4..3..2..)'
+print corr_work
+print 'ideally, the jarzynski averaging result was'
+print pmf_ideal
+print 'however, work from coordinates/vels available'
+print work_used
+
+print col_seeds
+seed = col_seeds[num]
+print seed
+folder=info_folder[num][seed]
+print folder
+JA = pmf_ideal[num]
+wu = work_used[num]
+print 'JA:',JA,'work:',wu
+
+f_coor=os.path.join(my_dir,num,folder,'daOut.coor.%s' % seed)
+d_coor=os.path.join(my_dir,nextnum,'00.coor')
+f_vel=os.path.join(my_dir,num,folder,'daOut.vel.%s' % seed)
+d_vel=os.path.join(my_dir,nextnum,'00.vel')
+
+print 'source files'
+print f_coor
+print f_vel
+
+print 'destinations'
+print d_coor
+print d_vel
+
+f_list=[f_coor,f_vel]
+d_list=[d_coor,d_vel]
+for f,d in zip(f_list,d_list):
+    shutil.copy(f,d)
+
+str1='{stage:{seed:folder}}\n'
+str2=str(info_folder)+'\n'
+text=str1+str2
+rfile = open('%s-trajselect.txt' % num,'w')
+rfile.write(text)
+rfile.close()
