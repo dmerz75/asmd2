@@ -4,7 +4,7 @@ from smdwork import *
 from asmdwork import *
 import numpy as np
 
-jobid='80at04'
+jobid='400st3'
 
 #_____MOLECULE___configurations________________________________________________
 ngn    =['namd']                           # 'namd','amb,'gro'
@@ -14,32 +14,32 @@ zcrd   = 13                                # z constraint:  13,33,4, start pos.
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 dist   = 20.0                              # declare a float dist: 6.0, 28.0
 ts     = 2.0                               # 0.5, 1.0, 2.0
-n      =[2.]                               # [1.,2.] | [4.,5.]
+n      =[2.,3.]                            # [1.,2.] | [4.,5.]
 xcopy  ={'1':2,'2':2,'3':3,'4':5,'5':5}    # duplication for smd() only
-environ=['01.vac']                # ['01.vac'] | ['01.vac','03.exp']
+environ=['01.vac','02.imp','03.exp']       # ['01.vac'] | ['01.vac','03.exp']
 langevD='5'                                # langevin Damping: 0.2, 1, 5
 sf     = 1                     # untrusted # scale factor: -1, 1, or 5 if el
 direct = 1                     # untrusted # direction
 setup  ={1:{'howmany':100,'freq':50},
-         2:{'howmany':9,'freq':50},
-         3:{'howmany':29,'freq':50},
+         2:{'howmany':20,'freq':50},
+         3:{'howmany':20,'freq':50},
          4:{'howmany':2,'freq':50},
          5:{'howmany':1,'freq':50}}
 #_____GATE_______configurations________________________________________________
 gate ='steele2'                # namd      # ggategpu,ggatecpu,fgatecpu,steele
                                            # steele2,fgatecpu2,ggatecpu2/gpu2
-gate='fgatecpu2'               # amb       # multisndr,fgatecpu
-cn   ='1'                                  # ppn request
-ppn_env={'01.vac':cn,'02.imp':cn,'03.exp':cn}
+#gate='fgatecpu2'               # amb       # multisndr,fgatecpu
+cn   ='4'                                  # ppn request
+ppn_env={'01.vac':'2','02.imp':cn,'03.exp':cn}
 comp ='cpu'                                # gpu or cpu !TESLA: always 1
 wallt='lwt'                    # smd       # sst=15m,swt=72h,mwt=368h,lwt=720h
                                # asmd      # swt=1.5h,mwt:4h,lwt:72h,dwt:15d
 wt_env={'01.vac':wallt,'02.imp':wallt,'03.exp':wallt}
 queue='workq'                            # tg_'short'72 'workq'720
-q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
+q_env={'01.vac':'standby','02.imp':queue,'03.exp':queue}
                                            # 'standby-8','standby','debug'
 #_____ASMD_____________________________________________________________________
-howmany='9'              # total trajectories = howmany*setup[n]['howmany']
+howmany='20'              # total trajectories = howmany*setup[n]['howmany']
 path_seg  = np.array([0.1,0.1,0.1,0.1,0.1,0.1,.1,.1,.1,.1])  # <--Sum to 1
 path_svel = np.array([1.0,1.0,1.0,1.0,1.,1.,1.0,1.0,1.0,1.0])# <--STAGES
 

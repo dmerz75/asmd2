@@ -45,9 +45,9 @@ dt         = dct['freq']*ts/1000
 path_v_aps = path_vel/ts*1000
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 
-spos=13
+spos=xxsposxx
 beta=-0.6
-quota=40*20
+quota=xxquotaxx*xxhowmanyxx
 
 # matplotlib begin
 fig=plt.figure()
@@ -57,7 +57,7 @@ def plot_work(data,st):
     rnd = np.random.RandomState(0x2913)
     indices = np.arange(data.shape[0])
     rnd.shuffle(indices)
-    plot_indices = indices[1:data.shape[0]:20]
+    plot_indices = indices[1:data.shape[0]:1]   # plot this many
     phase = int(st)-1
     if phase == 0:
         d = np.linspace(spos,spos+domain[phase],data.shape[1])
@@ -69,7 +69,7 @@ def plot_work(data,st):
 def plot_pmf(data,st):
     print data.shape[0]
     phase = int(st)-1
-    deltaf= np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta) 
+    deltaf= np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
     if phase == 0:
         d = np.linspace(spos,spos+domain[phase],deltaf.shape[0])
     else:
@@ -84,7 +84,7 @@ def main_call(st,w_c,d_cp):
     wrk_pkl= pickle.load(open('%s-sfwf.pkl' % st,'rb'))
     print len(wrk_pkl[st])
     seeds = wrk_pkl[st].keys()
-    print seeds[::100]
+    #print seeds[::100]
     for s in seeds:
         sample_i = wrk_pkl[st][s][1]
         acc.append(sample_i)
