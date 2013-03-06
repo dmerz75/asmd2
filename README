@@ -1,0 +1,34 @@
+project:  smdgen
+author*:  Dale R. Merz Jr.
+affiliation: Georgia Institute of Technology
+email: dmerz3@gatech.edu
+
+*ASMD was developed by Gungor Ozer and Rigoberto Hernandez.
+
+Molecular Dynamics Engines: NAMD & Amber
+Methodologies: Steered Molecular Dynamics,Adaptive Steered Molecular Dynamics
+
+A quick description of steered molecular dynamics:
+ -obtaining the Potential of Mean Force(PMF) pulling a peptide
+ -a 'pseudoatom' connected by a harmonic potential to a site on the peptide
+    is directed along an axis or through configuration space at a constant
+    velocity, during which time the force applied on the peptide by the 
+    'pseudoatom' is recorded, thereby allowing one to calculate the work
+    for a single trajectory and the PMF for multiple trajectories by 
+    boltzmann weighting the work and taking the average of that result.
+
+Preparations:
+ 1) place 00.pdb and 00.psf for any peptide, previously subjected to
+    equilibration, in its own directory in 01.struc-equil.[amb,namd] folder
+    >>> for a peptide pep, /01.struc-equil.namd/pep/01.vac/00.pdb,00.psf
+    >>> for a peptide ba, /01.struc-equil.namd/ba/03.exp/00.pdb,00.psf
+ 2) create solvent templates in 00.maindir.namd for a new peptide
+    >>> /0000-maindir/pep/02.imp/smd.namd
+ 3) make necessary modifications to gen.py
+ 4) './gen.py' creates the working directories
+ 5) upload the directory onto a cluster
+ 6a) SMD:  './run.py' submits all job.sh scripts to the PBS resource manager
+ 6b) ASMD: './pipe.py' submits all job.sh scripts in one stage,'01', to the
+    PBS resource manager and all subsequent stages,'02','03', etc. with a 
+    job dependency hold in order that the prior stage completes before the
+    following stage begins.
