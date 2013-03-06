@@ -152,7 +152,7 @@ class a_Smd_Method:
             reg_ex(script,'xxenvironxx',self.e)
             reg_ex(script,'xxvelxx',str(self.pv_ans[0]))
             lenarray=self.ps[phase]/self.dct['freq']+1
-            reg_ex(script,'xxlenarrayxx',str(lenarray))
+            reg_ex(script,'xxlenarrayxx',str(int(lenarray)))
             reg_ex(script,'xxdtxx',str(self.dt))
             reg_ex(script,'xxmoleculexx',self.mol.upper())
             reg_ex(script,'xxngnxx',self.ngn.upper())
