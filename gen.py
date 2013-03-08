@@ -4,11 +4,11 @@ from smdwork import *
 from asmdwork import *
 import numpy as np
 
-jobid='100at01'
+jobid='10t02'
 
 #_____MOLECULE___configurations________________________________________________
 ngn    =['namd']                           # 'namd','amb,'gro'
-mlist  =['da','rda','ee','le','el','oo','titin']  # da,rda
+mlist  =['da','rda','ee','le','el','oo','ti']  # da,rda
 molec  =[mlist[6]]                         # can use [0],[1] ... [n]
 zcrd   = 42                                # z constraint:  13,33,4, start pos.
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
@@ -29,7 +29,7 @@ setup  ={1:{'howmany':100,'freq':50},
 gate ='ggatecpu2'   # namd                 # ggategpu,ggatecpu,fgatecpu,steele
                                            # steele2,fgatecpu2,ggatecpu2/gpu2
 #gate='fgatecpu2'   # amb                  # multisndr,fgatecpu
-cn   ='1'                                  # ppn request
+cn   ='4'                                  # ppn request
 ppn_env={'01.vac':'1','02.imp':cn,'03.exp':cn}
 comp ='cpu'                                # gpu or cpu !TESLA: always 1
 wallt='lwt'                    # smd       # sst=15m,swt=72h,mwt=368h,lwt=720h
