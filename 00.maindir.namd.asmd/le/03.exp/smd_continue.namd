@@ -46,10 +46,10 @@ langevinHydrogen    no    ;# don't couple langevin bath to hydrogens
 # NOTE: Do not set the periodic cell basis if you have also 
 # specified an .xsc restart file!
 if {1} { 
-cellBasisVector1    42.0    0.0   0.0
-cellBasisVector2     0.0   40.0   0.0
-cellBasisVector3     0.0    0.0  60.0
-cellOrigin           1.9   -0.5  16.9
+cellBasisVector1    24.0    0.0   0.0
+cellBasisVector2     0.0   36.0   0.0
+cellBasisVector3     0.0    0.0  70.0
+cellOrigin          -1.9    7.5  26.6
 }
 wrapWater           on
 wrapAll             on
@@ -61,7 +61,7 @@ PMEGridSpacing      1.0
 #manual grid definition
 PMEGridSizeX         48
 PMEGridSizeY         40
-PMEGridSizeZ         60
+PMEGridSizeZ         80
 }
 
 # Constant Pressure Control (variable volume)
