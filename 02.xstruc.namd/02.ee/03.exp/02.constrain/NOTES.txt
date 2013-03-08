@@ -1,0 +1,7 @@
+select.pdb came from the cooridnates of one of the late dcd frames(completely unconstrained).
+
+orisel.pdb  is the reoriented  select.pdb
+
+oriselconstr.pdb is orisel.pdb with beta = 1
+
+beta.pdb is the solvated orisel.pdb, just PEP [beta = 1]  

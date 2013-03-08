@@ -1,0 +1,1 @@
+#  copying fewsteps.pdb to nm.pdb for a starting structure

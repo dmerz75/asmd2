@@ -1,0 +1,6 @@
+
+constr.pdb constr.psf are the solvated oriselect.pdb
+
+eq.pdb is the end of simulation of constr using beta to fix atoms.
+
+

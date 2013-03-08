@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -N emineq.da.gpu
+#PBS -j oe
+#PBS -l walltime=00:02:00:00
+#PBS -l pmem=650mb
+#PBS -l nodes=1:ppn=1,gres=lscr:TESLA
+# #PBS -M dmerz3@gatech.edu
+#PBS -V
+
+# Job proper starts here
+
+# Additional environment setting, if necessary
+export PATH="/usr/lib:$PATH"
+# export LD_LIBRARY_PATH="/usr/lib"
+# export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+# export LD_LIBRARY_PATH=/nethome/dmerz3/packages/NAMDCUDA/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/nethome/dmerz3/packages/NAMDCUDA:$LD_LIBRARY_PATH
+# run job ________________________
+
+cd $PBS_O_WORKDIR
+
+# run job
+./go.py

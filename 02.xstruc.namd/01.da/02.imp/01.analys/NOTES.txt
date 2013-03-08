@@ -1,0 +1,7 @@
+# orisel.pdb
+
+select.pdb was printed from equilibration dcd
+
+orisel is the reorientation of that selection onto the z-axis
+
+orisel was sent to smd/asmd as 00.pdb, along with da.psf as 00.psf
