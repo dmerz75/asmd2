@@ -4,7 +4,7 @@ from smdwork import *
 from asmdwork import *
 import numpy as np
 
-jobid='400st3'
+jobid='40'
 
 #_____MOLECULE___configurations________________________________________________
 ngn    =['namd']                           # 'namd','amb,'gro'
