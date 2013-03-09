@@ -225,8 +225,8 @@ class a_Smd_Method:
                         idn=f.split('-')[1]
                     script=os.path.join(root,f)
                     if idn=='job.sh':
-                        bashjobname=self.mol+self.ngn+\
-                            str(self.pv[0]/2*(10**6))+self.e+ds
+                        bashjobname=self.mol+self.ngn[0]+\
+                            str(int(self.pv[0]/2*(10**6)))+self.e[0]+ds
                         reg_ex(script,'xxjobnamexx',bashjobname)
                         reg_ex(script,'xxqueuexx',configq[self.q])
                         reg_ex(script,'xxnodesxx',confign[self.cn][self.comp])
