@@ -25,7 +25,7 @@ def analyze_bond(univ,seg1,seg2):
 
 #__analyze__bonds______________________________________________________________
 analyze_bond(u,'protein','protein')
-analyze_bond(u,'protein','water')
+analyze_bond(u,'protein','Water')
 
 '''
 f = open('%s-hlist.dat.%s' % (stri,jbid),'w')

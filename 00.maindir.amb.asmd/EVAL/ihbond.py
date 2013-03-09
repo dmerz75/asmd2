@@ -12,7 +12,7 @@ my_dir=os.path.abspath(os.path.dirname(__file__))
 my_dir='/'.join(os.path.abspath(os.path.dirname(__file__)).split('/')[0:-1])
 
 acc=[]
-for path in glob(os.path.join(my_dir,'xxnumxx.*/*-hb_protein_pr*.pkl.*')):
+for path in glob(os.path.join(my_dir,'xxnumxx.*/*-hb_pr*pr*.pkl.*')):
     print path
     sample_i = pickle.load(open(path,'rb'))
     acc.append(sample_i)
