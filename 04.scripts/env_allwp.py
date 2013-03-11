@@ -56,7 +56,7 @@ def pack(stage):
         lens = [(len(acc[trj][n])) for n in range(len(acc[trj]))]
         return lens
     acc=[]
-    for path in glob(os.path.join(my_dir,'%s/*/*-hb_protein*.pkl.*' % stage)):
+    for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*W*.pkl.*' % stage)):
         print path
         sample_i = pickle.load(open(path,'rb'))
         acc.append(sample_i)

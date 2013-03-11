@@ -4,7 +4,7 @@ from smdwork import *
 from asmdwork import *
 import numpy as np
 
-jobid='200r01'
+jobid='800'
 
 #_____MOLECULE___configurations________________________________________________
 ngn    =['namd']                           # 'namd','amb,'gro'
@@ -21,8 +21,8 @@ langevD='5'                                # langevin Damping: 0.2, 1, 5
 sf     = 1                     # untrusted # scale factor: -1, 1, or 5 if el
 direct = 1                     # untrusted # direction
 setup  ={1:{'howmany':100,'freq':50},
-         2:{'howmany':21,'freq':50},    # 45*18t = 810, 29*28t = 812,
-         3:{'howmany':21,'freq':50},    # 20*40t = 800, 25*32t = 800
+         2:{'howmany':33,'freq':50},    # 45*18t = 810, 29*28t = 812,
+         3:{'howmany':33,'freq':50},    # 20*40t = 800, 25*32t = 800
          4:{'howmany':2,'freq':50},
          5:{'howmany':1,'freq':50}}
 #_____GATE_______configurations________________________________________________
@@ -39,7 +39,7 @@ queue='workq'                            # tg_'short'72 'workq'720
 q_env={'01.vac':'standby','02.imp':queue,'03.exp':queue}
                                            # 'standby-8','standby','debug'
 #_____ASMD_____________________________________________________________________
-howmany='40'                 # total trajectories = howmany*setup[n]['howmany']
+howmany='25'                 # total trajectories = howmany*setup[n]['howmany']
 path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])# <--Sum to 1
 path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])# <--STAGES
 #path_seg =np.linspace(0.02,0.02,50)

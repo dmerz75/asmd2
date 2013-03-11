@@ -8,7 +8,7 @@ import numpy as np
 import pickle
 import sys,os,re
 
-my_dir = os.path.abspath(os.path.dirname(__file__))
+my_dir=os.path.abspath(os.path.dirname(__file__))
 my_dir='/'.join(os.path.abspath(os.path.dirname(__file__)).split('/')[0:-1])
 
 acc=[]
