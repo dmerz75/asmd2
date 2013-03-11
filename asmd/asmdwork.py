@@ -50,6 +50,8 @@ class a_make_JobDirSmd:
         self.mol  = mol
         self.zc   = zc
         self.workdir = workdir
+        self.mdir    = os.path.join(workdir,'00.maindir')
+        self.ndir    = os.path.join(workdir,'00.maindir',ngn)
         self.jobdir = jobdir
         self.jdir = os.path.join(self.workdir,self.jobdir)
     def a_makeJobDir(self):
@@ -58,13 +60,13 @@ class a_make_JobDirSmd:
         if not os.path.exists(texdir): os.makedirs(texdir)
         cp_file(self.workdir,'gen.py',self.jobdir,'.gen_%s.py' % \
                   self.jdir.split('/')[-1])
-        cp_file(self.workdir,'04.scripts/pipe.py',self.jobdir,'pipe.py')
-        cp_file(self.workdir,'04.scripts/tm.tex',texdir,'tm.tex')
-        cp_file(self.workdir,'04.scripts/pdflatex.sh',texdir,'pdflatex.sh')
-        cp_file(self.workdir,'04.scripts/del.py',self.jobdir,'del.py')
+        cp_file(self.workdir,'00.scripts/pipe.py',self.jobdir,'pipe.py')
+        cp_file(self.workdir,'00.scripts/tm.tex',texdir,'tm.tex')
+        cp_file(self.workdir,'00.scripts/pdflatex.sh',texdir,'pdflatex.sh')
+        cp_file(self.workdir,'00.scripts/del.py',self.jobdir,'del.py')
         if self.ngn == 'namd':
-            cp_tree(self.workdir,'04.toppar',self.jobdir,'toppar')
-        cp_tree(self.workdir,'04.scripts',self.jobdir,'04.scripts')
+            cp_tree(self.ndir,'toppar',self.jobdir,'toppar')
+        cp_tree(self.workdir,'00.scripts',self.jobdir,'00.scripts')
         return texdir
     def reg_exp(self,subdir):
         for root, dirnames, filenames in os.walk(subdir):
@@ -80,11 +82,13 @@ class a_Struc_Dirs:
         self.mol  = mol
         self.env  = env
         self.workdir = workdir
+        self.mdir = os.path.join(workdir,'00.maindir')
+        self.ndir = os.path.join(workdir,'00.maindir',ngn)
         self.jobdir = jobdir
         self.jdir = os.path.join(self.workdir,self.jobdir)
     def a_makeStrucDir(self):
-        cp_tree(os.path.join(self.workdir,'01.struc-equil.'+self.ngn, \
-                self.mol,self.env),'',self.jdir,strdir[self.env])
+        cp_tree(os.path.join(self.ndir,'struc',self.mol,self.env),'',self.jdir, \
+                strdir[self.env])
 
 class a_Smd_Method:
     def __init__(self,ngn,mol,env,v,ts,zc,lD,sf,workdir,jobdir, \
@@ -101,6 +105,8 @@ class a_Smd_Method:
         self.lD   = lD
         self.sf   = sf
         self.workdir = workdir
+        self.mdir = os.path.join(workdir,'00.maindir')
+        self.ndir = os.path.join(workdir,'00.maindir',ngn)
         self.jobdir = jobdir
         self.gate = gate
         self.cn   = cn
@@ -163,20 +169,20 @@ class a_Smd_Method:
             reg_ex(script,'xxplotnamexx',plotname)
         for i in range(1,int(self.st)+1):
             os.makedirs(os.path.join(self.vdir,str(i).zfill(2)))
-            cp_file(os.path.join(self.workdir,'00.maindir.%s.asmd' % self.ngn \
-                    ),'continue.py',self.vdir,str(i).zfill(2)+'-continue.py')
+            cp_file(os.path.join(self.ndir,'continue'),'continue.py', \
+                            self.vdir,str(i).zfill(2)+'-continue.py')
             stage=str(i).zfill(2)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                         '-continue.py'),stage,i)
-        cp_file(os.path.join(self.workdir,'04.scripts'),'env_allhb.py', \
+        cp_file(os.path.join(self.workdir,'00.scripts'),'env_allhb.py', \
                 self.vdir,'env_allhb.py')
-        cp_file(os.path.join(self.workdir,'04.scripts'),'env_allwp.py', \
+        cp_file(os.path.join(self.workdir,'00.scripts'),'env_allwp.py', \
                 self.vdir,'env_allwp.py')
-        cp_file(os.path.join(self.workdir,'04.scripts'),'env_ihbond.py', \
+        cp_file(os.path.join(self.workdir,'00.scripts'),'env_ihbond.py', \
                 self.vdir,'env_ihbond.py')
-        cp_file(os.path.join(self.workdir,'04.scripts'),'discrete.py', \
+        cp_file(os.path.join(self.workdir,'00.scripts'),'discrete.py', \
                 self.vdir,'discrete.py')
-        cp_file(os.path.join(self.workdir,'04.scripts'),'plotpkl.py', \
+        cp_file(os.path.join(self.workdir,'00.scripts'),'plotpkl.py', \
                 self.vdir,'plotpkl.py')
         d_vis=os.path.join(self.vdir,'env_allhb.py')
         reg_exp_contd(d_vis,stage,1)
@@ -271,29 +277,20 @@ class a_Smd_Method:
                     elif idn=='dist.RST':
                         phase = int(script.split('/')[-3])-1
                         zdist = (self.pv*self.ps).cumsum()
-                        #print zdist
-                        #time.sleep(1)
                         if phase == 0:
                             reg_ex(script,'xxsposxx',str(self.spos))
                             reg_ex(script,'xxeposxx',str(self.spos+zdist[phase]))
                         else:
                             reg_ex(script,'xxsposxx',str(self.spos+zdist[phase-1]))
                             reg_ex(script,'xxeposxx',str(self.spos+zdist[phase]))
-                        # need mod
-                        #scon=str(self.zc+(int(dir_loc.split('/')[-1])-1)*2)
-                        #econ=str(self.zc+int(dir_loc.split('/')[-1])*2)
-                        #reg_ex(script,'xxstartconstraintxx','scon')
-                        #reg_ex(script,'xxendconstraintxx','econ')
         def how_many(tmpdir):
             rlist=[]
             for i in range(int(self.hm)):
                 def reg_seed(subdir,seed):
                     if self.ngn=='namd':
                         f1=os.path.join(subdir,'smd.namd')
-                        # ### reg_ex(f1,'xxxxx',str(seed))
                     elif self.ngn=='amb':
                         f1=os.path.join(subdir,'smd.in')
-                        # ### reg_ex(f1,'xxxxx',str(seed))
                 r=random.randint(10000,99999)
                 while r in rlist:
                     r=random.randint(10000,99999)
@@ -303,58 +300,40 @@ class a_Smd_Method:
                 shutil.copytree(tmpdir,td)
                 reg_seed(td,r)
             shutil.rmtree(tmpdir)
-        mdir='00.maindir.'+self.ngn+'.asmd'
-        pre=os.path.join(self.workdir,mdir)
-        sdir=os.path.join(pre,self.mol,self.env)
         dls=[]
         [dls.append(d) for d in os.listdir(self.vdir) if \
              os.path.isdir(os.path.join(self.vdir,d))]
         for ds in dls:
             ddir=os.path.join(self.vdir,ds,'tmp')
             os.makedirs(ddir)
-            # switching tcl and dist back into subdir
+            cp_file(os.path.join(self.ndir,'job'),'job-'+self.gate+'.sh',\
+                   ddir,'job.sh')
+            cp_file(os.path.join(self.ndir,'go'),'go-'+self.gate+ \
+                   '.py',ddir,'go.py')
             if ds=='01':
                 if self.ngn=='namd':
-                    cp_file(sdir,'smd_initial.namd',ddir,'smd.namd')
-                    cp_file(sdir,'smd_force.tcl',ddir,'smdforce.tcl')
-                    cp_file(os.path.join(pre,'VDIR'),'job-'+self.gate+ \
-                            '.sh',ddir,'job.sh')
-                    cp_file(os.path.join(pre,'VDIR'),'go-'+self.gate+ \
-                            '.py',ddir,'go.py')
-                # start here
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                           'smd_initial.namd',ddir,'smd.namd')
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                           'smd_force.tcl',ddir,'smdforce.tcl')
                 if self.ngn=='amb':
                     cp_file(sdir,'smd.in',ddir,'smd.in')
-                    # back into subdir
                     cp_file(sdir,'dist.RST',ddir,'dist.RST')
-                    cp_file(os.path.join(pre,'VDIR'),'job-'+self.gate+'.sh',\
-                            ddir,'job.sh')
-                    cp_file(os.path.join(pre,'VDIR'),'go-'+self.gate+'.py',\
-                            ddir,'go.py')
             elif ds!='01':
                 if self.ngn=='namd':
-                    cp_file(sdir,'smd_continue.namd',ddir,'smd.namd')
-                    cp_file(sdir,'smd_force.tcl',ddir,'smdforce.tcl')
-                    cp_file(os.path.join(pre,'VDIR'),'job-'+self.gate+ \
-                            '.sh',ddir,'job.sh')
-                    cp_file(os.path.join(pre,'VDIR'),'go-'+self.gate+ \
-                            '.py',ddir,'go.py')
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                           'smd_continue.namd',ddir,'smd.namd')
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                           'smd_force.tcl',ddir,'smdforce.tcl')
                 if self.ngn=='amb':
                     cp_file(sdir,'smd_r.in',ddir,'smd.in')
-                    # back into subdir
                     cp_file(sdir,'dist.RST',ddir,'dist.RST')
-                    cp_file(os.path.join(pre,'VDIR'),'job-'+self.gate+'.sh',\
-                            ddir,'job.sh')
-                    cp_file(os.path.join(pre,'VDIR'),'go-'+self.gate+ \
-                            '_r.py',ddir,'go.py')
             reg_exp(ddir,ds)
             how_many(ddir)
     def a_steering_control(self):
         def reg_exp(dir_loc,idn):
             script=os.path.join(dir_loc,idn)
             if idn=='smdforce.tcl':
-                # removed self.sf
-                #reg_ex(script,'xxvelocityxx',str(self.v_ats))
-                #reg_ex(script,'xxvelocityxx',self.pv[
                 reg_ex(script,'xxzcoordxx',str(self.spos))
                 reg_ex(script,'xxtsxx',str(self.ts))
                 reg_ex(script,'xxfreqxx',str(setup[self.vel]['freq']))
@@ -367,25 +346,10 @@ class a_Smd_Method:
             elif idn=='hb.py':
                 reg_ex(script,'xxenvironxx',strdir[self.env])
             #____END OF FUNCTION_____________
-        mdir='00.maindir.'+self.ngn+'.asmd'
-        pre=os.path.join(self.workdir,mdir)
-        sdir=os.path.join(pre,self.mol,self.env)
-        svdir=os.path.join(pre,'VDIR')
         dls=[]
         [dls.append(d) for d in os.listdir(self.vdir) if \
              os.path.isdir(os.path.join(self.vdir,d))]
-        if self.ngn=='namd':
-            for ds in dls:
-                ddir=os.path.join(self.vdir,ds)
-                #cp_file(sdir,'smd_force.tcl',ddir,'smdforce.tcl')
-                #reg_exp(ddir,'smdforce.tcl')
-                cp_file(svdir,'hb.py',ddir,'hb.py')
-                reg_exp(ddir,'hb.py')
-                # dist and tcl back into subdir
-        if self.ngn=='amb':
-            for ds in dls:
-                ddir=os.path.join(self.vdir,ds)
-                #cp_file(sdir,'dist.RST',ddir,'dist.RST')
-                #reg_exp(ddir,'dist.RST')
-                cp_file(svdir,'hb.py',ddir,'hb.py')
-                reg_exp(ddir,'hb.py')
+        for ds in dls:
+            ddir=os.path.join(self.vdir,ds)
+            cp_file(os.path.join(self.ndir,'hb'),'hb.py',ddir,'hb.py')
+            reg_exp(ddir,'hb.py')

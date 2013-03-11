@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import sys,os,itertools,shutil,re,pickle,time
-from smdwork import *
-from asmdwork import *
+from asmd.asmdwork import *
 import numpy as np
 
 jobid='800'
@@ -67,41 +66,6 @@ def  print_dict(dt):
         print ''
 
 #_____CODE_____________________________________________________________________
-def smd():
-    def call_Smd(ng,mol,env,v,zc,workdir,jobdir):
-        print 'SMD is ready with',ng,'for',mol,'in',env,'at velocity',v, \
-              'assembled inside',jobdir+'.'
-        f = Smd_Method(ng,mol,env,v,ts,zc,langevD,sf,workdir,jobdir, \
-          gate,ppn_env[env],comp,wt_env[env],q_env[env],direct)
-        f.makeEnvDir()
-        subdir = f.makeSubDir()
-        f.reg_exp(subdir)
-        f.makeSubDirCopies(xcopy[str(int(v))])
-        subdir = f.makeEvalDir()
-        f.reg_exp(subdir)
-    def call_steer_cntrl(ng,mol,env,v,zc,workdir,jobdir):
-        f = Smd_Steering(ng,mol,env,v,ts,zc,langevD,sf,workdir,jobdir, \
-               gate,ppn_env[env],comp,wt_env[env],q_env[env],direct)
-        subdir = f.place_steering_control()
-        f.reg_exp(subdir)
-    def call_Struc(ng,mol,env,workdir,jobdir):
-        s = Struc_Dirs(ng,mol,env,workdir,jobdir)
-        s.makeStrucDir()
-    def work_dir():
-        w = make_JobDirSmd(ngn[0],molec[0],zcrd,workdir,jobdir)
-        subdir = w.makeJobDir()
-        w.reg_exp(subdir)
-    # sub call starts here !!
-    workdir=os.path.abspath(os.path.dirname(__file__))
-    jobdir =ngn[0]+'_'+molec[0]+'_'+'smd2'+'_'+jobid
-    work_dir()
-    [call_Struc(ng,mol,env,workdir,jobdir) for ng in ngn for mol in molec \
-         for env in environ]
-    [call_Smd(ng,mol,env,v,envdist[env],workdir,jobdir) for ng in ngn \
-         for mol in molec for env in environ for v in n]
-    [call_steer_cntrl(ng,mol,env,v,envdist[env],workdir,jobdir) \
-           for ng in ngn for mol in molec for env in environ for v in n]
-
 def asmd():
     def a_work_dir():
         w = a_make_JobDirSmd(ngn[0],molec[0],zcrd,workdir,jobdir)
@@ -123,7 +87,7 @@ def asmd():
         f.a_savepickle()
         f.a_makeSubDir()
         f.a_steering_control()
-    # sub call starts here !!
+    # asmd():
     workdir=os.path.abspath(os.path.dirname(__file__))
     jobdir =ngn[0]+'_'+molec[0]+'_'+'asmd2'+'_'+jobid
     a_work_dir()
@@ -133,5 +97,4 @@ def asmd():
          for mol in molec for env in environ for v in n]
 
 #___main_calls___
-#smd()
 asmd()
