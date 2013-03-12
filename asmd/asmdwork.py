@@ -176,13 +176,19 @@ class a_Smd_Method:
             plotname=self.mol+self.ngn+self.e \
                     +'v'+confige[self.vel]+'asmd'
             reg_ex(script,'xxplotnamexx',plotname)
+            reg_ex(script,'xxnumxx',stage)
+            reg_ex(script,'xxjobnamexx',self.mol+self.ngn[0]+'cjob'+stage)
         for i in range(1,int(self.st)+1):
             os.makedirs(os.path.join(self.vdir,str(i).zfill(2)))
             cp_file(os.path.join(self.ndir,'continue'),'continue.py', \
                             self.vdir,str(i).zfill(2)+'-continue.py')
+            cp_file(os.path.join(self.ndir,'jobc'),'job-'+self.gate+'.sh',\
+                            self.vdir,str(i).zfill(2)+'-job.sh')
             stage=str(i).zfill(2)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
-                        '-continue.py'),stage,i)
+                  '-continue.py'),stage,i)
+            reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
+                  '-job.sh'),stage,i)
         cp_file(self.pydir,'env_allhb.py',self.vdir,'env_allhb.py')
         cp_file(self.pydir,'env_allwp.py',self.vdir,'env_allwp.py')
         cp_file(self.pydir,'env_ihbond.py',self.vdir,'env_ihbond.py')
@@ -321,8 +327,10 @@ class a_Smd_Method:
                     cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
                            'smd_force.tcl',ddir,'smdforce.tcl')
                 if self.ngn=='amb':
-                    cp_file(sdir,'smd.in',ddir,'smd.in')
-                    cp_file(sdir,'dist.RST',ddir,'dist.RST')
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                            'smd.in',ddir,'smd.in')
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                            'dist.RST',ddir,'dist.RST')
             elif ds!='01':
                 if self.ngn=='namd':
                     cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
@@ -330,8 +338,10 @@ class a_Smd_Method:
                     cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
                            'smd_force.tcl',ddir,'smdforce.tcl')
                 if self.ngn=='amb':
-                    cp_file(sdir,'smd_r.in',ddir,'smd.in')
-                    cp_file(sdir,'dist.RST',ddir,'dist.RST')
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                            'smd_r.in',ddir,'smd.in')
+                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
+                            'dist.RST',ddir,'dist.RST')
             reg_exp(ddir,ds)
             how_many(ddir)
     def a_steering_control(self):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys,os,glob,subprocess
+import sys,os,glob,subprocess,time
 import os.path
 from glob import glob
 import fnmatch
@@ -11,11 +11,11 @@ class mdict(dict):
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
 acc=[]
-qsub_path = 'qsub'
+qsub_path='qsub'
 jdict = mdict()
+cdict = mdict()
 
 def qsub_job(stage,job_path):
-    #if stage=='01':
     if stage==stages[0]:
         dep_args = []
         pipe=subprocess.Popen([qsub_path] + dep_args +
@@ -26,11 +26,10 @@ def qsub_job(stage,job_path):
         print stout.split('.')[0]
         print 'stderr >> ',stderr
         jdict[stage]=stout.split('.')[0]
-    #elif stage!='01':
     elif stage!=stages[0]:
         entry=str(int(stage)-1).zfill(2)
-        print jdict[entry]
-        job_deps = ':'.join(jdict[entry])
+        print cdict[entry]
+        job_deps = ':'.join(cdict[entry])
         dep_args = ['-W depend=afterany:%s' % job_deps]
         print 'dep_args',dep_args
         pipe=subprocess.Popen([qsub_path] + dep_args +
@@ -41,22 +40,45 @@ def qsub_job(stage,job_path):
         print stout.split('.')[0]
         print 'stderr >> ',stderr
         jdict[stage]=stout.split('.')[0]
+def qsub_jobc(stage,job_path):
+    print jdict[stage]
+    job_deps = ':'.join(jdict[stage])
+    dep_args = ['-W depend=afterany:%s' % job_deps]
+    print 'dep_args',dep_args
+    pipe=subprocess.Popen([qsub_path] + dep_args +
+                      [job_path],stdin=subprocess.PIPE, \
+        stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+    stout, stderr = pipe.communicate()
+    print stout
+    print stout.split('.')[0]
+    print 'stderr >> ',stderr
+    cdict[stage]=stout.split('.')[0]
 
 def find_job(vel,solv,st):
-    for root, dirnames, filenames in os.walk(my_dir):
-        for filename in fnmatch.filter(filenames,'job.sh'):
-            num=(root.split('/')[-3])
-            sol=(root.split('/')[-4]).split('.')[1]
-            stg=(root.split('/')[-2])
-            if (num==vel) and (sol==solv) and (stg==st):
-                jobs=os.path.join(root,filename)
-                jtype=vel+solv+st
-                acc.append(jtype)
-                #root='/'+'/'.join(root.split('/')[2:])
-                #jobs=os.path.join(root,'job.sh')
-                print jobs
-                os.chdir(root)
-		qsub_job(stg,jobs)
+    for path in glob(os.path.join(my_dir,'*.%s/%s/%s/*/job.sh'%(solv,vel,st))):
+        num=(path.split('/')[-4])
+        sol=(path.split('/')[-5]).split('.')[1]
+        stg=(path.split('/')[-3])
+        jtype=num+sol+stg
+        acc.append(jtype)
+        root='/'.join(path.split('/')[:-1])
+        #root='/'+'/'.join(path.split('/')[2:-1])
+        #path='/'+'/'.join(path.split('/')[2:])
+        print root
+        print path
+        os.chdir(root)
+        qsub_job(stg,path)
+    for path in glob(os.path.join(my_dir,'*.%s/%s/%s-job.sh'%(solv,vel,st))):
+        num=(path.split('/')[-2])
+        sol=(path.split('/')[-3]).split('.')[1]
+        stg=(path.split('/')[-1]).split('-')[0]
+        root='/'.join(path.split('/')[:-1])
+        #root='/'+'/'.join(path.split('/')[2:-1])
+        #path='/'+'/'.join(path.split('/')[2:])
+        print root
+        print path
+        os.chdir(root)
+        qsub_jobc(stg,path)
 
 # submitted 02:
 # submitted 03:

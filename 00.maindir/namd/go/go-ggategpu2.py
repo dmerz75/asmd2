@@ -59,19 +59,27 @@ def next_stage(dir_loc,cfile):
     os.chdir(dir_loc)
     os.system('python %s %s' % (cfile,prev_num))
 
+'''
 def check_vel(pnum):
     if pnum=='00':
 	pass
     else:
 	cnt = 0
 	while os.path.isfile(os.path.join(predir1,'00.vel'))==False:
-	    next_stage(predir2,cfile)
-	    cnt += 1
-	    print "waiting 20 seconds ..."
-	    print cnt
-	    time.sleep(20)
-	    if cnt >= 20:
+            next_stage(predir2,cfile)
+            cnt += 1
+            print "waiting 20 seconds ..."
+            print cnt
+            time.sleep(20)
+            if cnt >= 20:
 		sys.exit()
+    os.chdir(my_dir)
+'''
+def check_vel(pnum):
+    if pnum=='00':
+	pass
+    elif os.path.isfile(os.path.join(predir1,'00.vel'))==False:
+        sys.exit()
     os.chdir(my_dir)
 
 check_vel(prev_num)

@@ -53,6 +53,7 @@ def next_stage(dir_loc,cfile):
     os.chdir(dir_loc)
     os.system('python %s %s' % (cfile,prev_num))
 
+'''
 def check_vel(pnum):
     if pnum=='00':
         pass
@@ -66,6 +67,13 @@ def check_vel(pnum):
             time.sleep(20)
             if cnt >= 20:
                 sys.exit()
+    os.chdir(my_dir)
+'''
+def check_vel(pnum):
+    if pnum=='00':
+	pass
+    elif os.path.isfile(os.path.join(predir1,'00.vel'))==False:
+        sys.exit()
     os.chdir(my_dir)
 
 check_vel(prev_num)

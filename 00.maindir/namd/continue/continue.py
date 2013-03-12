@@ -5,12 +5,14 @@ from glob import glob
 from sys import argv
 import numpy as np
 from random import *
-from lockfile import FileLock  # provided in 04.scripts dir ->
+#from lockfile import FileLock  # provided in 04.scripts dir ->
 import datetime,time                         # export PYTHONPATH
 
+'''
 lock = FileLock(__file__)
 if lock.is_locked()==True: sys.exit()
 lock.acquire()
+'''
 
 #import matplotlib
 #import matplotlib.pyplot as plt

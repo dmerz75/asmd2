@@ -8,7 +8,7 @@ import pickle
 import os,sys
 
 #______________universe________________________________________________________
-u = MDAnalysis.Universe('../../../../xxenvironxx/00.psf','daOut.dcd', \
+u = MDAnalysis.Universe('../../../../00.struc/xxenvironxx/00.psf','daOut.dcd',\
                         permissive=True)
 
 def analyze_bond(univ,seg1,seg2):
