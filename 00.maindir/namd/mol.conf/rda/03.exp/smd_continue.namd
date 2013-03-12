@@ -6,7 +6,7 @@
 #############################################################
 ## ADJUSTABLE PARAMETERS                                   ##
 #############################################################
-structure          ../../../../00.struc-equil.e/00.psf
+structure          ../../../../00.struc/03.exp/00.psf
 coordinates        ../00.coor
 outputName         daOut
 set temperature    300

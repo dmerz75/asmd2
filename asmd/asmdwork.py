@@ -43,30 +43,37 @@ def reg_ex(script,subout,subin):
     o=open(script,'w+')
     o.write(text)
     o.close()
-#______________________________________________________________________________
+#__class_a_make_JobDirSmd______________________________________________________
 class a_make_JobDirSmd:
-    def __init__(self,ngn,mol,zc,workdir,jobdir):
+    def __init__(self,ngn,mol,zc,workdir,jobdir,pack_dir):
         self.ngn  = ngn
         self.mol  = mol
         self.zc   = zc
         self.workdir = workdir
         self.mdir    = os.path.join(workdir,'00.maindir')
         self.ndir    = os.path.join(workdir,'00.maindir',ngn)
+        self.pydir= os.path.join(workdir,'00.maindir','py_gen')
+        self.packdir = pack_dir
+        self.pdir = os.path.join(self.workdir,self.packdir)
         self.jobdir = jobdir
-        self.jdir = os.path.join(self.workdir,self.jobdir)
+        self.jdir = os.path.join(self.pdir,self.jobdir)
     def a_makeJobDir(self):
         if not os.path.exists(self.jdir):os.makedirs(self.jdir)
-        texdir=os.path.join(self.jobdir,'tex_%s' % self.jdir.split('/')[-1])
+        texdir=os.path.join(self.jdir,'tex_%s' % self.jdir.split('/')[-1])
+        print 'texdir',texdir
         if not os.path.exists(texdir): os.makedirs(texdir)
-        cp_file(self.workdir,'gen.py',self.jobdir,'.gen_%s.py' % \
+        print 'self.workdir',self.workdir
+        print 'self.jobdir',self.jobdir
+        print 'self.jdir',self.jdir
+        cp_file(self.workdir,'gen.py',self.jdir,'.gen_%s.py' % \
                   self.jdir.split('/')[-1])
-        cp_file(self.workdir,'00.scripts/pipe.py',self.jobdir,'pipe.py')
-        cp_file(self.workdir,'00.scripts/tm.tex',texdir,'tm.tex')
-        cp_file(self.workdir,'00.scripts/pdflatex.sh',texdir,'pdflatex.sh')
-        cp_file(self.workdir,'00.scripts/del.py',self.jobdir,'del.py')
+        cp_file(self.pydir,'pipe.py',self.jdir,'pipe.py')
+        cp_file(self.mdir,'tex/tm.tex',texdir,'tm.tex')
+        cp_file(self.mdir,'tex/pdflatex.sh',texdir,'pdflatex.sh')
+        cp_file(self.pydir,'del.py',self.jdir,'del.py')
         if self.ngn == 'namd':
-            cp_tree(self.ndir,'toppar',self.jobdir,'toppar')
-        cp_tree(self.workdir,'00.scripts',self.jobdir,'00.scripts')
+            cp_tree(self.ndir,'toppar',self.jdir,'toppar')
+        cp_tree(self.workdir,'00.scripts',self.jdir,'00.scripts')
         return texdir
     def reg_exp(self,subdir):
         for root, dirnames, filenames in os.walk(subdir):
@@ -75,23 +82,28 @@ class a_make_JobDirSmd:
                 if f=='tm.tex':
                     plotname=self.mol+self.ngn+'env'+confige['2']+'asmd'
                     reg_ex(script,'xxplotnamexx',plotname)
-#______________________________________________________________________________
+#__class_a_Struc_Dirs__________________________________________________________
 class a_Struc_Dirs:
-    def __init__(self,ngn,mol,env,workdir,jobdir):
+    def __init__(self,ngn,mol,env,workdir,jobdir,pack_dir):
         self.ngn  = ngn
         self.mol  = mol
         self.env  = env
         self.workdir = workdir
         self.mdir = os.path.join(workdir,'00.maindir')
         self.ndir = os.path.join(workdir,'00.maindir',ngn)
+        self.pydir= os.path.join(workdir,'00.maindir','py_gen')
+        self.packdir = pack_dir
+        self.pdir = os.path.join(self.workdir,self.packdir)
         self.jobdir = jobdir
-        self.jdir = os.path.join(self.workdir,self.jobdir)
+        self.jdir = os.path.join(self.pdir,self.jobdir)
     def a_makeStrucDir(self):
-        cp_tree(os.path.join(self.ndir,'struc',self.mol,self.env),'',self.jdir, \
-                strdir[self.env])
-
+        if not os.path.exists(os.path.join(self.jdir,'00.struc')):
+            os.makedirs(os.path.join(self.jdir,'00.struc'))
+        cp_tree(os.path.join(self.ndir,'struc',self.mol,self.env),'',\
+          os.path.join(self.jdir,'00.struc'),self.env)
+#__class_a_Smd_Method__________________________________________________________
 class a_Smd_Method:
-    def __init__(self,ngn,mol,env,v,ts,zc,lD,sf,workdir,jobdir, \
+    def __init__(self,ngn,mol,env,v,ts,zc,lD,sf,workdir,jobdir,pack_dir,\
           gate,cn,comp,wallt,queue,howmany,stages,direct,dist,config):
         self.ngn  = ngn
         self.mol  = mol
@@ -107,13 +119,17 @@ class a_Smd_Method:
         self.workdir = workdir
         self.mdir = os.path.join(workdir,'00.maindir')
         self.ndir = os.path.join(workdir,'00.maindir',ngn)
+        self.pydir= os.path.join(workdir,'00.maindir','py_gen')
+        self.packdir = pack_dir
+        self.pdir = os.path.join(self.workdir,self.packdir)
         self.jobdir = jobdir
+        self.jdir = os.path.join(self.pdir,self.jobdir)
         self.gate = gate
         self.cn   = cn
         self.comp = comp
         self.wt   = wallt
         self.q    = queue
-        self.jdir = os.path.join(self.workdir,self.jobdir)
+        #self.jdir = os.path.join(self.workdir,self.jobdir)
         self.edir = os.path.join(self.jdir,self.env)
         self.vdir = os.path.join(self.edir,self.v0)
         self.hm   = howmany
@@ -121,17 +137,10 @@ class a_Smd_Method:
         self.cfg  = config   # << print_dict(self.cfg)
         print_dict(self.cfg)
         #___CONFIG_SECTION_BEGIN
-        '''
-        print self.cfg[v][0][0],'dist'
-        print self.cfg[v][0][1],'ts'
-        print self.cfg[v][0][2],'path_seg'
-        print self.cfg[v][0][3],'path_svel'
-        print self.cfg[v][0][4],'path_vel'
-        print self.cfg[v][0][5],'path_steps'
-        print self.cfg[v][0][6],'setup'
-        '''
         self.d  = self.cfg[v][0][0]    # total distance
         self.ts = self.cfg[v][0][1]    # timestep
+        #path.seg=self.cfg[v][0][2]    # path_seg
+        #path.sv =self.cfg[v][0][3]    # path_svel
         self.pv = self.cfg[v][0][4]    # path_vel
         self.ps = self.cfg[v][0][5]    # path_steps
         self.dct= self.cfg[v][0][6]    # dict: 'howmany','freq'
@@ -174,16 +183,11 @@ class a_Smd_Method:
             stage=str(i).zfill(2)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                         '-continue.py'),stage,i)
-        cp_file(os.path.join(self.workdir,'00.scripts'),'env_allhb.py', \
-                self.vdir,'env_allhb.py')
-        cp_file(os.path.join(self.workdir,'00.scripts'),'env_allwp.py', \
-                self.vdir,'env_allwp.py')
-        cp_file(os.path.join(self.workdir,'00.scripts'),'env_ihbond.py', \
-                self.vdir,'env_ihbond.py')
-        cp_file(os.path.join(self.workdir,'00.scripts'),'discrete.py', \
-                self.vdir,'discrete.py')
-        cp_file(os.path.join(self.workdir,'00.scripts'),'plotpkl.py', \
-                self.vdir,'plotpkl.py')
+        cp_file(self.pydir,'env_allhb.py',self.vdir,'env_allhb.py')
+        cp_file(self.pydir,'env_allwp.py',self.vdir,'env_allwp.py')
+        cp_file(self.pydir,'env_ihbond.py',self.vdir,'env_ihbond.py')
+        cp_file(self.pydir,'discrete.py',self.vdir,'discrete.py')
+        cp_file(self.pydir,'plotpkl.py',self.vdir,'plotpkl.py')
         d_vis=os.path.join(self.vdir,'env_allhb.py')
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'env_allwp.py')

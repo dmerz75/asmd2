@@ -6,8 +6,8 @@
 #############################################################
 ## ADJUSTABLE PARAMETERS                                   ##
 #############################################################
-structure          ../../../../00.struc-equil.i/00.psf
-coordinates        ../../../../00.struc-equil.i/00.pdb
+structure          ../../../../00.struc/02.imp/00.psf
+coordinates        ../../../../00.struc/02.imp/00.pdb
 outputName         daOut
 #############################################################
 ## SIMULATION PARAMETERS                                   ##
