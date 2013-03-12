@@ -10,6 +10,6 @@ function sc {
 echo $1
 CURRENT=`pwd`
 
-D=dmerz3@fgate-fs.chemistry.gatech.edu:/nethome/dmerz3/Documents/valiant/fgate/01.da/
+D=dmerz3@fgate-fs.chemistry.gatech.edu:/nethome/dmerz3/Documents/valiant/fgate/00.interim/
 S=$CURRENT/$1
 sc $S $D

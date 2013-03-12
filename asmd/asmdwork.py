@@ -60,11 +60,7 @@ class a_make_JobDirSmd:
     def a_makeJobDir(self):
         if not os.path.exists(self.jdir):os.makedirs(self.jdir)
         texdir=os.path.join(self.jdir,'tex_%s' % self.jdir.split('/')[-1])
-        print 'texdir',texdir
         if not os.path.exists(texdir): os.makedirs(texdir)
-        print 'self.workdir',self.workdir
-        print 'self.jobdir',self.jobdir
-        print 'self.jdir',self.jdir
         cp_file(self.workdir,'gen.py',self.jdir,'.gen_%s.py' % \
                   self.jdir.split('/')[-1])
         cp_file(self.pydir,'pipe.py',self.jdir,'pipe.py')
@@ -103,7 +99,7 @@ class a_Struc_Dirs:
           os.path.join(self.jdir,'00.struc'),self.env)
 #__class_a_Smd_Method__________________________________________________________
 class a_Smd_Method:
-    def __init__(self,ngn,mol,env,v,ts,zc,lD,sf,workdir,jobdir,pack_dir,\
+    def __init__(self,ngn,mol,env,v,ts,zc,lD,workdir,jobdir,pack_dir,\
           gate,cn,comp,wallt,queue,howmany,stages,direct,dist,config):
         self.ngn  = ngn
         self.mol  = mol
@@ -115,7 +111,6 @@ class a_Smd_Method:
         self.ts   = ts
         self.spos = zc
         self.lD   = lD
-        self.sf   = sf
         self.workdir = workdir
         self.mdir = os.path.join(workdir,'00.maindir')
         self.ndir = os.path.join(workdir,'00.maindir',ngn)
@@ -129,13 +124,12 @@ class a_Smd_Method:
         self.comp = comp
         self.wt   = wallt
         self.q    = queue
-        #self.jdir = os.path.join(self.workdir,self.jobdir)
         self.edir = os.path.join(self.jdir,self.env)
         self.vdir = os.path.join(self.edir,self.v0)
         self.hm   = howmany
         self.st   = stages
         self.cfg  = config   # << print_dict(self.cfg)
-        print_dict(self.cfg)
+        #print_dict(self.cfg)
         #___CONFIG_SECTION_BEGIN
         self.d  = self.cfg[v][0][0]    # total distance
         self.ts = self.cfg[v][0][1]    # timestep
@@ -149,9 +143,8 @@ class a_Smd_Method:
 	self.pv_ans=self.pv/ts*(10**6)
         zdist_c = format((self.pv*self.ps).cumsum()[-1],'.2f')
         dist_c  = format(self.d,'.2f')
-        print 'zdist',zdist_c,'dist',dist_c
         if zdist_c!=dist_c:
-            print '?@#$!_correct total distance!'
+            print '?@#$! total distance doesn\'t match path_seg dist'
             sys.exit()
         #___CONFIG_SECTION_END
     def a_makeEnvDir(self):
