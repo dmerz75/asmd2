@@ -12,26 +12,25 @@ zcrd   = 13.0                              # z constraint:  13,33,4, start pos.
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 dist   = 20.0                              # declare a float dist: 6.0, 28.0
 ts     = 2.0                               # 0.5, 1.0, 2.0
-n      =[2.]                            # [1.,2.] | [4.,5.]
-#xcopy  ={'1':2,'2':2,'3':3,'4':5,'5':5}    # duplication for smd() only
+n      =[2.,3.]                            # [1.,2.] | [4.,5.]
 environ=['01.vac','02.imp','03.exp']       # ['01.vac'] | ['01.vac','03.exp']
 langevD='5'                                # langevin Damping: 0.2, 1, 5
 direct = 1                     # untrusted # direction
-#sf     = 1                     # untrusted # scale factor: -1, 1, or 5 if el
 #_____GATE_______configurations________________________________________________
-gate ='fgatecpu2'   # namd                 # steele2,fgatecpu2,ggatecpu2/gpu2
+gate ='steele2'     # namd                 # steele2,fgatecpu2,ggatecpu2/gpu2
                     # amb                  # multisndr2,fgatecpu2
 cn   ='1'                                  # ppn request
-ppn_env={'01.vac':cn,'02.imp':cn,'03.exp':cn}
+ppn_env={'01.vac':cn,'02.imp':cn,'03.exp':'4'}
 comp ='cpu'                                # gpu or cpu !TESLA: always 1
-wallt='mwt'                    # asmd      # swt=1.5h,mwt:4h,lwt:72h,dwt:15d
+wallt='lwt'                    # asmd      # swt=1.5h,mwt:4h,lwt:72h,dwt:15d
 wt_env={'01.vac':wallt,'02.imp':wallt,'03.exp':wallt}
-queue='standby'                            # tg_'short'72 'workq'720
+queue='workq'  # 'standby-8','standby','debug' tg_'short'72 'workq'720
 q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
-                                           # 'standby-8','standby','debug'
 #_____ASMD_____________________________________________________________________
-path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])# <--Sum to 1
-path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])# <--STAGES
+path_seg =np.array([1.0])
+path_svel=np.array([1.0])
+#path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])# <--Sum to 1
+#path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])# <--STAGES
 #path_seg =np.linspace(0.02,0.02,50)
 #path_svel=np.linspace(1,1,50)
 #_________pickle_______________________________________________________________
@@ -98,13 +97,13 @@ def tar_ball(t_dir):
 
 #___main_calls___
 setup  ={1:{'howmany':100,'freq':50},
-         2:{'howmany':2,'freq':50},    # 45*18t = 810, 29*28t = 812,
-         3:{'howmany':2,'freq':50},    # 20*40t = 800, 25*32t = 800
+         2:{'howmany':28,'freq':50},    # 45*18t = 810, 29*28t = 812,
+         3:{'howmany':28,'freq':50},    # 20*40t = 800, 25*32t = 800
          4:{'howmany':2,'freq':50},
          5:{'howmany':1,'freq':50}}
 # --> FINISH HERE         # total trajectories = dircount*setup[n]['howmany']
-dircounts=['5','10','15']    # ['1','2'], jobid=12
-jobid=('').join(dircounts)+'_st'+str(len(path_seg))+'_a00' # <<<~~~~~!!!
+dircounts=['32']    # ['1','2'], jobid=12
+jobid=('').join(dircounts)+'_st'+str(len(path_seg))+'_smdmar14' # <<<~~~~~!!!
 #[asmd(str(d)) for d in dircounts]
 
 # for tarball

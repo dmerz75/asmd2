@@ -187,6 +187,7 @@ class a_Smd_Method:
         cp_file(self.pydir,'env_ihbond.py',self.vdir,'env_ihbond.py')
         cp_file(self.pydir,'discrete.py',self.vdir,'discrete.py')
         cp_file(self.pydir,'plotpkl.py',self.vdir,'plotpkl.py')
+        cp_file(self.pydir,'mpmf.py',self.pdir,'mpmf.py')
         d_vis=os.path.join(self.vdir,'env_allhb.py')
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'env_allwp.py')
@@ -196,6 +197,8 @@ class a_Smd_Method:
         d_vis=os.path.join(self.vdir,'discrete.py')
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'plotpkl.py')
+        reg_exp_contd(d_vis,stage,1)
+        d_vis=os.path.join(self.pdir,'mpmf.py')
         reg_exp_contd(d_vis,stage,1)
     def a_savepickle(self):
         os.chdir(self.vdir)
