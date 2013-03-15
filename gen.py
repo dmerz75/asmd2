@@ -17,20 +17,20 @@ environ=['01.vac','02.imp','03.exp']       # ['01.vac'] | ['01.vac','03.exp']
 langevD='5'                                # langevin Damping: 0.2, 1, 5
 direct = 1                     # untrusted # direction
 #_____GATE_______configurations________________________________________________
-gate ='steele2'     # namd                 # steele2,fgatecpu2,ggatecpu2/gpu2
+gate ='fgatecpu2'     # namd                 # steele2,fgatecpu2,ggatecpu2/gpu2
                     # amb                  # multisndr2,fgatecpu2
 cn   ='1'                                  # ppn request
-ppn_env={'01.vac':cn,'02.imp':cn,'03.exp':'4'}
+ppn_env={'01.vac':cn,'02.imp':cn,'03.exp':'2'}
 comp ='cpu'                                # gpu or cpu !TESLA: always 1
-wallt='lwt'                    # asmd      # swt=1.5h,mwt:4h,lwt:72h,dwt:15d
+wallt='mwt'                    # asmd      # swt=1.5h,mwt:4h,lwt:72h,dwt:15d
 wt_env={'01.vac':wallt,'02.imp':wallt,'03.exp':wallt}
 queue='workq'  # 'standby-8','standby','debug' tg_'short'72 'workq'720
 q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
 #_____ASMD_____________________________________________________________________
-path_seg =np.array([1.0])
-path_svel=np.array([1.0])
-#path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])# <--Sum to 1
-#path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])# <--STAGES
+#path_seg =np.array([1.0])
+#path_svel=np.array([1.0])
+path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])# <--Sum to 1
+path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])# <--STAGES
 #path_seg =np.linspace(0.02,0.02,50)
 #path_svel=np.linspace(1,1,50)
 #_________pickle_______________________________________________________________
@@ -88,7 +88,7 @@ def asmd(dircount):
         in ngn for mol in molec for env in environ for v in n]
     os.chdir(my_dir)
     return pack_dir
-
+#______________________________________________________________________________
 def tar_ball(t_dir):
     import tarfile
     tar = tarfile.open('%s.tar.gz' % t_dir,'w:gz')
@@ -97,13 +97,13 @@ def tar_ball(t_dir):
 
 #___main_calls___
 setup  ={1:{'howmany':100,'freq':50},
-         2:{'howmany':28,'freq':50},    # 45*18t = 810, 29*28t = 812,
-         3:{'howmany':28,'freq':50},    # 20*40t = 800, 25*32t = 800
+         2:{'howmany':8,'freq':50},    # 45*18t = 810, 29*28t = 812,
+         3:{'howmany':8,'freq':50},    # 20*40t = 800, 25*32t = 800
          4:{'howmany':2,'freq':50},
          5:{'howmany':1,'freq':50}}
-# --> FINISH HERE         # total trajectories = dircount*setup[n]['howmany']
-dircounts=['32']    # ['1','2'], jobid=12
-jobid=('').join(dircounts)+'_st'+str(len(path_seg))+'_smdmar14' # <<<~~~~~!!!
+# --> FINISH HERE     # total trajectories = dircount*setup[n]['howmany']
+dircounts=['8']    # ['1','2'], jobid=12
+jobid=('').join(dircounts)+'_st'+str(len(path_seg))+'_test' # <<<~~~~~!!!
 #[asmd(str(d)) for d in dircounts]
 
 # for tarball

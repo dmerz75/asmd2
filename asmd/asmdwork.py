@@ -15,8 +15,8 @@ configw={'sst':'walltime=15:00','swt':'walltime=00:90:00','mwt': \
 configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
          'standby-8':'standby-8','debug':'tg_debug'}
 confige={'1':'v1000','2':'v100','3':'v10','4':'v1','5':'vp1'}
-strdir ={'01.vac':'00.struc-equil.v','02.imp':'00.struc-equil.i',
-         '03.exp':'00.struc-equil.e'}
+#strdir ={'01.vac':'00.struc-equil.v','02.imp':'00.struc-equil.i',
+         #'03.exp':'00.struc-equil.e'}
 dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
 setup0 ={'1':{'vel':0.002,'steps':1000,'dcd':100,'howmany':50,'freq':50},
        '2':{'vel':0.0002,'steps':1000,'dcd':1000,'howmany':25,'freq':50},
@@ -249,7 +249,7 @@ class a_Smd_Method:
                         reg_ex(script,'xxnodecountxx',self.cn)
                         reg_ex(script,'xxstartconstraintxx',str(self.spos))
                         reg_ex(script,'xxquotaxx',self.hm)
-                        reg_ex(script,'xxstrucequilxx',strdir[self.env])
+                        reg_ex(script,'xxstrucequilxx',self.env)
                     elif idn=='smd.namd':
                         call_smd(script)
                     elif idn=='smd.in':
@@ -354,7 +354,7 @@ class a_Smd_Method:
                 reg_ex(script,'xxstartconstraintxx',scon)
                 reg_ex(script,'xxendconstraintxx',econ)
             elif idn=='hb.py':
-                reg_ex(script,'xxenvironxx',strdir[self.env])
+                reg_ex(script,'xxenvironxx',self.env)
             #____END OF FUNCTION_____________
         dls=[]
         [dls.append(d) for d in os.listdir(self.vdir) if \
