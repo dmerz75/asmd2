@@ -106,8 +106,8 @@ setup  ={1:{'howmany':100,'freq':50},
 dircounts=['5','10','20','40']             # ['1','2'], jobid=12
 
 jobid=('').join(dircounts)+'_as800g'     # <<<~~~~~!!!
-#[asmd(str(d)) for d in dircounts]
-# for tarball
+
 for d in dircounts:
     pd=asmd(str(d))
 tar_ball(pd)
+#[asmd(str(d)) for d in dircounts]       # no tarball
