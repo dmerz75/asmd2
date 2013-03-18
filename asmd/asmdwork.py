@@ -68,8 +68,10 @@ class a_make_JobDirSmd:
         cp_file(self.mdir,'tex/pdflatex.sh',texdir,'pdflatex.sh')
         cp_file(self.pydir,'del.py',self.jdir,'del.py')
         if self.ngn == 'namd':
-            cp_tree(self.ndir,'toppar',self.jdir,'toppar')
-        cp_tree(self.workdir,'00.scripts',self.jdir,'00.scripts')
+            if not os.path.exists(os.path.join(self.jdir,'toppar')):
+                cp_tree(self.ndir,'toppar',self.jdir,'toppar')
+        if not os.path.exists(os.path.join(self.jdir,'00.scripts')):
+            cp_tree(self.workdir,'00.scripts',self.jdir,'00.scripts')
         return texdir
     def reg_exp(self,subdir):
         for root, dirnames, filenames in os.walk(subdir):
