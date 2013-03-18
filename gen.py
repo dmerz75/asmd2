@@ -8,7 +8,7 @@ import numpy as np
 ngn    =['namd']                           # 'namd','amb,'gro'
 mlist  =['da','rda','ee','le','el','oo','ti']  # da,rda  ti:42,270,50-0.02
 molec  =[mlist[2]]                         # can use [0],[1] ... [n]
-zcrd   = 4.0                              # z constraint:  13,33,4, start pos.
+zcrd   = 4.0                               # z constraint:  13,33,4, start pos.
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 dist   = 32.0                              # declare a float dist:20.0,32.0
 ts     = 2.0                               # 0.5, 1.0, 2.0
@@ -29,12 +29,12 @@ q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
 #_____ASMD_____________________________________________________________________
 #path_seg =np.array([1.0])
 #path_svel=np.array([1.0])
-#path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])# <--Sum to 1
-#path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])# <--STAGES
-path_seg =np.linspace(0.0625,0.0625,16)
-path_svel=np.linspace(1,1,16)
-#path_seg =np.linspace(0.02,0.02,50)
-#path_svel=np.linspace(1,1,50)
+#path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])  # da
+#path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])  # da
+path_seg =np.linspace(0.0625,0.0625,16)   # ee
+path_svel=np.linspace(1,1,16)             # ee
+#path_seg =np.linspace(0.02,0.02,50)       # titin
+#path_svel=np.linspace(1,1,50)             # titin
 #_________pickle_______________________________________________________________
 def super_pickle(nset):
     config = mdict()
@@ -89,12 +89,13 @@ def asmd(dircount):
         in ngn for mol in molec for env in environ for v in n]
     os.chdir(my_dir)
     return pack_dir
-#______________________________________________________________________________
+
 def tar_ball(t_dir):
     import tarfile
     tar = tarfile.open('%s.tar.gz' % t_dir,'w:gz')
     tar.add(t_dir)
     tar.close()
+#______________________________________________________________________________
 
 #___main_calls___
 setup  ={1:{'howmany':100,'freq':50},
@@ -102,11 +103,10 @@ setup  ={1:{'howmany':100,'freq':50},
          3:{'howmany':20,'freq':50},    # 20*40t = 800, 25*32t = 800
          4:{'howmany':2,'freq':50},
          5:{'howmany':1,'freq':50}}
-# --> FINISH HERE     # total trajectories = dircount*setup[n]['howmany']
-dircounts=['5','10','20','40']    # ['1','2'], jobid=12
-jobid=('').join(dircounts)+'_as800g' # <<<~~~~~!!!
-#[asmd(str(d)) for d in dircounts]
+dircounts=['5','10','20','40']             # ['1','2'], jobid=12
 
+jobid=('').join(dircounts)+'_as800g'     # <<<~~~~~!!!
+#[asmd(str(d)) for d in dircounts]
 # for tarball
 for d in dircounts:
     pd=asmd(str(d))
