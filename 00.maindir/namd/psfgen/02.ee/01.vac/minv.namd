@@ -6,7 +6,6 @@
 #############################################################
 ## ADJUSTABLE PARAMETERS                                   ##
 #############################################################
-
 structure          nm.psf
 coordinates        nm.pdb 
 set temperature    300
@@ -61,14 +60,6 @@ outputPressure      2000
 #############################################################
 ## EXECUTION SCRIPT                                        ##
 #############################################################
-
 minimize            1000
-
-set freq 200
-for {set i 0} {$i <= $temperature} {incr i 20} {
-langevinTemp $i
-reinitvels $i
-run $freq
-}
 
 run 996000   ;#    2 ns 

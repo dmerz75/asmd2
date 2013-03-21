@@ -7,17 +7,17 @@ import numpy as np
 #_____MOLECULE___configurations________________________________________________
 ngn    =['namd']                           # 'namd','amb,'gro'
 mlist  =['da','rda','ee','le','el','oo','ti']  # da,rda  ti:42,270,50-0.02
-molec  =[mlist[2]]                         # can use [0],[1] ... [n]
-zcrd   = 4.0                               # z constraint:  13,33,4, start pos.
+molec  =[mlist[0]]                         # can use [0],[1] ... [n]
+zcrd   = 13.0                               # z constraint:  13,33,4, start pos.
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
-dist   = 32.0                              # declare a float dist:20.0,32.0
+dist   = 20.0                              # declare a float dist:20.0,32.0
 ts     = 2.0                               # 0.5, 1.0, 2.0
 n      =[2.,3.]                            # [1.,2.] | [4.,5.]
 environ=['01.vac','02.imp','03.exp']       # ['01.vac'] | ['01.vac','03.exp']
 langevD='5'                                # langevin Damping: 0.2, 1, 5
 direct = 1                     # untrusted # direction
 #_____GATE_______configurations________________________________________________
-gate ='ggatecpu2'     # namd                 # steele2,fgatecpu2,ggatecpu2/gpu2
+gate ='steele2'     # namd                 # steele2,fgatecpu2,ggatecpu2/gpu2
                     # amb                  # multisndr2,fgatecpu2
 cn   ='1'                                  # ppn request
 ppn_env={'01.vac':cn,'02.imp':cn,'03.exp':'3'}
@@ -27,12 +27,12 @@ wt_env={'01.vac':wallt,'02.imp':'lwt','03.exp':'dwt'}
 queue='workq'  # 'standby-8','standby','debug' tg_'short'72 'workq'720
 q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
 #_____ASMD_____________________________________________________________________
-#path_seg =np.array([1.0])
-#path_svel=np.array([1.0])
+path_seg =np.array([1.0])                 # SMD
+path_svel=np.array([1.0])                 # SMD
 #path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])  # da
 #path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])  # da
-path_seg =np.linspace(0.0625,0.0625,16)   # ee
-path_svel=np.linspace(1,1,16)             # ee
+#path_seg =np.linspace(0.0625,0.0625,16)   # ee
+#path_svel=np.linspace(1,1,16)             # ee
 #path_seg =np.linspace(0.02,0.02,50)       # titin
 #path_svel=np.linspace(1,1,50)             # titin
 #_________pickle_______________________________________________________________
@@ -103,9 +103,9 @@ setup  ={1:{'howmany':100,'freq':50},
          3:{'howmany':20,'freq':50},    # 20*40t = 800, 25*32t = 800
          4:{'howmany':2,'freq':50},
          5:{'howmany':1,'freq':50}}
-dircounts=['5','10','20','40']             # ['1','2'], jobid=12
+dircounts=['42']                    # ['1','2'], jobid=12
 
-jobid=('').join(dircounts)+'_as800g'     # <<<~~~~~!!!
+jobid=('').join(dircounts)+'_as800'     # <<<~~~~~!!!
 
 for d in dircounts:
     pd=asmd(str(d))

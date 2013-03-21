@@ -1,0 +1,13 @@
+#!/bin/bash
+#PBS -N imineq-ee
+#PBS -j oe
+#PBS -l walltime=20:00:00
+#PBS -l pmem=280mb
+#PBS -l nodes=1:ppn=4
+#PBS -V
+
+# Job proper starts here
+cd $PBS_O_WORKDIR
+
+# run job
+./go.py

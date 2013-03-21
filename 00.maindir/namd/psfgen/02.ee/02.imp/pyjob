@@ -2,9 +2,8 @@
 #PBS -N imineq-ee
 #PBS -j oe
 #PBS -l walltime=03:00:00:00
-#PBS -l pmem=480mb
-#PBS -l nodes=6:ppn=1
-# #PBS -M dmerz3@gatech.edu
+#PBS -l pmem=280mb
+#PBS -l nodes=1:ppn=2
 #PBS -V
 
 # Job proper starts here
