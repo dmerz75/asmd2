@@ -3,89 +3,7 @@ import sys,os,itertools,shutil,re,pickle,time
 my_dir=os.path.abspath(os.path.dirname(__file__))
 from asmd.asmdwork import *
 import numpy as np
-import ConfigParser
 
-dircounts=['5','10','20','40']           # ['1','2','5','10'], jobid=12
-jobid=('').join(dircounts)+'_test'       # NAME
-
-setup= {1:{'howmany':100,'freq':50},
-        2:{'howmany':20, 'freq':50},
-        3:{'howmany':20, 'freq':50},
-        4:{'howmany':2,  'freq':50},
-        5:{'howmany':1,  'freq':50}, }
-
-# run ex1.  >>> ./gen.py namd da         # START HERE
-# run ex2.  >>> ./gen.py namd da_smd
-# run ex3.  >>> ./gen.py namd ee
-ngn  =[sys.argv[1]]
-molec=[sys.argv[2]]
-mol = molec[0]
-
-config = ConfigParser.ConfigParser()
-config.read('%s.gconf' % ngn[0])
-
-zcrd    = float(config.get(mol,'zcrd'))
-envdists= config.get(mol,'envdist')
-envdist = {}
-for entry in envdists.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1] =='zcrd':
-        envdist[env]=zcrd
-    else:
-        envdist[env]=float(entry.split(':')[1])
-dist    = float(config.get(mol,'dist'))
-ts      = float(config.get(mol,'ts'))
-n_conf  = config.get(mol,'n')
-n       = []
-for ni in range(len(n_conf.split(','))):
-    n.append(float(n_conf.split(',')[ni]))
-env_cnf = config.get(mol,'environ')
-environ = []
-for ei in range(len(env_cnf.split(','))):
-    environ.append(str(env_cnf.split(',')[ei]))
-langevD = config.get(mol,'langevD')
-direct  = config.get(mol,'direct')
-gate    = config.get(mol,'gate')
-cn      = config.get(mol,'cn')
-ppn_envs= config.get(mol,'ppn_env')
-ppn_env = {}
-for entry in ppn_envs.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1]=='cn':
-        ppn_env[env]=cn
-    else:
-        ppn_env[env]=entry.split(':')[1]
-comp    = config.get(mol,'comp')
-wallt   = config.get(mol,'wallt')
-wt_envs = config.get(mol,'wt_env')
-wt_env  = {}
-for entry in wt_envs.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1]=='wallt':
-        wt_env[env]=wallt
-    else:
-        wt_env[env]=entry.split(':')[1]
-queue   = config.get(mol,'queue')
-q_envs  = config.get(mol,'q_env')
-q_env   = {}
-for entry in q_envs.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1]=='queue':
-        q_env[env]=queue
-    else:
-        q_env[env]=entry.split(':')[1]
-p_seg   = config.get(mol,'path_seg')
-p_svel  = config.get(mol,'path_svel')
-
-path_seg = []
-path_svel= []
-for i in range(len(p_seg.split(','))):
-    path_seg.append(float(p_seg.split(',')[i]))
-    path_svel.append(float(p_svel.split(',')[i]))
-path_seg = np.array(path_seg)
-path_svel= np.array(path_svel)
-
-'''
 #_____MOLECULE___configurations________________________________________________
 ngn    =['namd']                           # 'namd','amb,'gro'
 mlist  =['da','rda','ee','ee2','le','el','oo','ti'] # da,rda  ti:42|270|50-0.02
@@ -112,6 +30,9 @@ q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
 #path_seg =np.array([1.0])                 # SMD
 #path_svel=np.array([1.0])                 # SMD
 path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])  # da
+print path_seg
+print type(path_seg)
+time.sleep(2)
 path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])  # da
 #path_seg =np.linspace(0.0625,0.0625,16)   # ee
 #path_svel=np.linspace(1,1,16)             # ee
@@ -123,14 +44,15 @@ setup  ={1:{'howmany':100,'freq':50},
          3:{'howmany':20,'freq':50},    # 20*40t = 800, 25*32t = 800
          4:{'howmany':2,'freq':50},
          5:{'howmany':1,'freq':50}}
-'''
+dircounts=['5','10','20','40']                  # ['1','2','5','10'], jobid=12
+jobid=('').join(dircounts)+'_800st2'     # NAME
 
 #_________pickle_______________________________________________________________
 def super_pickle(nset):
     config = mdict()
     def construct(n):
         vel = 1/(100*10**n)
-        path_vel=np.linspace(vel,vel,len(path_seg))*ts*path_svel
+        path_vel = (np.linspace(vel,vel,len(path_seg)))*ts*path_svel
         return path_vel
     path_vel  = construct(float(nset))
     path_steps=np.rint(path_seg*dist/path_vel)
