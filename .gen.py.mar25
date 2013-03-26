@@ -30,9 +30,6 @@ q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
 #path_seg =np.array([1.0])                 # SMD
 #path_svel=np.array([1.0])                 # SMD
 path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])  # da
-print path_seg
-print type(path_seg)
-time.sleep(2)
 path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])  # da
 #path_seg =np.linspace(0.0625,0.0625,16)   # ee
 #path_svel=np.linspace(1,1,16)             # ee

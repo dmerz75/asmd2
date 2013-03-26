@@ -1,23 +1,22 @@
 [DEFAULT]
-zcrd = 13.0
-dist = 20.0
 ts   = 2.0
 n    = 2.,3.
 environ = 01.vac,02.imp,03.exp
 langevD = 5
 direct  = 1
 gate = fgatecpu2
-cn   = 2
+cn   = 1
 comp = cpu
 wallt= mwt
 queue= workq
+lnspc= False
 
 ################################
 #####   Molecule configs   #####
 ################################
 
 [da]
-molec = da
+mol = da
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
@@ -32,7 +31,7 @@ path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
 path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
 
 [da_smd]
-molec = da
+mol = da
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
@@ -47,7 +46,7 @@ path_seg = 1.0
 path_svel= 1.0
 
 [ee2]
-molec = ee2
+mol = ee2
 zcrd = 5.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 32.0
@@ -58,6 +57,22 @@ cn   = 2
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
-path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
-path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+lnspc   = True
+path_seg= 0.0625
+path_svel= 1.0
 
+[ee2_smd]
+mol = ee2
+zcrd = 5.0
+envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
+dist = 32.0
+ts   = 2.0
+n    = 2.,3.
+environ = 01.vac,02.imp,03.exp
+cn   = 2
+ppn_env = 01.vac:1,02.imp:cn,03.exp:3
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
+q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
+lnspc   = False  # means use actual length of path_seq etc.
+path_seg= 1.0
+path_svel= 1.0

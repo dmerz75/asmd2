@@ -5,27 +5,29 @@ from asmd.asmdwork import *
 import numpy as np
 import ConfigParser
 
-dircounts=['5','10','20','40']           # ['1','2','5','10'], jobid=12
-jobid=('').join(dircounts)+'_test'       # NAME
+dircounts=['5']    # 1. modify if necessary, ['1','2','5','10']
+jobid=('').join(dircounts)+'_test'       # 2. choose name
 
-setup= {1:{'howmany':100,'freq':50},
+setup= {1:{'howmany':100,'freq':50},     # 3. change if necessary
         2:{'howmany':20, 'freq':50},
         3:{'howmany':20, 'freq':50},
         4:{'howmany':2,  'freq':50},
         5:{'howmany':1,  'freq':50}, }
 
-# run ex1.  >>> ./gen.py namd da         # START HERE
+# run ex1.  >>> ./gen.py namd da         # 4. issue command
 # run ex2.  >>> ./gen.py namd da_smd
 # run ex3.  >>> ./gen.py namd ee
+#_____________________________________________________________________________
 ngn  =[sys.argv[1]]
-molec=[sys.argv[2]]
-mol = molec[0]
+molc =[sys.argv[2]]
 
 config = ConfigParser.ConfigParser()
 config.read('%s.gconf' % ngn[0])
 
-zcrd    = float(config.get(mol,'zcrd'))
-envdists= config.get(mol,'envdist')
+molec= molc[0]  # now it's da or da_smd
+mol     = config.get(molec,'mol')  # now it's da. w/ molec = da_smd or da
+zcrd    = float(config.get(molec,'zcrd'))
+envdists= config.get(molec,'envdist')
 envdist = {}
 for entry in envdists.split(','):
     env = entry.split(':')[0]
@@ -33,9 +35,9 @@ for entry in envdists.split(','):
         envdist[env]=zcrd
     else:
         envdist[env]=float(entry.split(':')[1])
-dist    = float(config.get(mol,'dist'))
-ts      = float(config.get(mol,'ts'))
-n_conf  = config.get(mol,'n')
+dist    = float(config.get(molec,'dist'))
+ts      = float(config.get(molec,'ts'))
+n_conf  = config.get(molec,'n')
 n       = []
 for ni in range(len(n_conf.split(','))):
     n.append(float(n_conf.split(',')[ni]))
@@ -43,11 +45,11 @@ env_cnf = config.get(mol,'environ')
 environ = []
 for ei in range(len(env_cnf.split(','))):
     environ.append(str(env_cnf.split(',')[ei]))
-langevD = config.get(mol,'langevD')
-direct  = config.get(mol,'direct')
-gate    = config.get(mol,'gate')
-cn      = config.get(mol,'cn')
-ppn_envs= config.get(mol,'ppn_env')
+langevD = config.get(molec,'langevD')
+direct  = config.get(molec,'direct')
+gate    = config.get(molec,'gate')
+cn      = config.get(molec,'cn')
+ppn_envs= config.get(molec,'ppn_env')
 ppn_env = {}
 for entry in ppn_envs.split(','):
     env = entry.split(':')[0]
@@ -55,9 +57,9 @@ for entry in ppn_envs.split(','):
         ppn_env[env]=cn
     else:
         ppn_env[env]=entry.split(':')[1]
-comp    = config.get(mol,'comp')
-wallt   = config.get(mol,'wallt')
-wt_envs = config.get(mol,'wt_env')
+comp    = config.get(molec,'comp')
+wallt   = config.get(molec,'wallt')
+wt_envs = config.get(molec,'wt_env')
 wt_env  = {}
 for entry in wt_envs.split(','):
     env = entry.split(':')[0]
@@ -65,8 +67,8 @@ for entry in wt_envs.split(','):
         wt_env[env]=wallt
     else:
         wt_env[env]=entry.split(':')[1]
-queue   = config.get(mol,'queue')
-q_envs  = config.get(mol,'q_env')
+queue   = config.get(molec,'queue')
+q_envs  = config.get(molec,'q_env')
 q_env   = {}
 for entry in q_envs.split(','):
     env = entry.split(':')[0]
@@ -74,56 +76,24 @@ for entry in q_envs.split(','):
         q_env[env]=queue
     else:
         q_env[env]=entry.split(':')[1]
-p_seg   = config.get(mol,'path_seg')
-p_svel  = config.get(mol,'path_svel')
-
+# constructing path_seg, path_svel
+p_seg   = config.get(molec,'path_seg')
+p_svel  = config.get(molec,'path_svel')
+ln_spc  = config.get(molec,'lnspc')
 path_seg = []
 path_svel= []
-for i in range(len(p_seg.split(','))):
-    path_seg.append(float(p_seg.split(',')[i]))
-    path_svel.append(float(p_svel.split(',')[i]))
-path_seg = np.array(path_seg)
-path_svel= np.array(path_svel)
-
-'''
-#_____MOLECULE___configurations________________________________________________
-ngn    =['namd']                           # 'namd','amb,'gro'
-mlist  =['da','rda','ee','ee2','le','el','oo','ti'] # da,rda  ti:42|270|50-0.02
-molec  =[mlist[0]]                         # ee2: 5.0|32d|16p  da: 13.0|20d|10p
-zcrd   = 13.0                              # z constraint:  13,33,4, start pos.
-envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
-dist   = 20.0                              # declare a float dist:20.0,32.0
-ts     = 2.0                               # 0.5, 1.0, 2.0
-n      =[2.,3.]                            # [1.,2.] | [4.,5.]
-environ=['01.vac','02.imp','03.exp']       # ['01.vac'] | ['01.vac','03.exp']
-langevD='5'                                # langevin Damping: 0.2, 1, 5
-direct = 1                     # untrusted # direction
-#_____GATE_______configurations________________________________________________
-gate ='steele2'   # namd                 # steele2,fgatecpu2,ggatecpu2/gpu2
-                    # amb                  # multisndr2,fgatecpu2
-cn   ='2'                                  # ppn request
-ppn_env={'01.vac':'1','02.imp':cn,'03.exp':'3'}
-comp ='cpu'                                # gpu or cpu !TESLA: always 1
-wallt='mwt'                    # asmd      # swt=1.5h,mwt:4h,lwt:72h,dwt:15d
-wt_env={'01.vac':wallt,'02.imp':'lwt','03.exp':'dwt'}
-queue='workq'  # 'standby-8','standby','debug' tg_'short'72 'workq'720
-q_env={'01.vac':queue,'02.imp':queue,'03.exp':queue}
-#_____ASMD_____________________________________________________________________
-#path_seg =np.array([1.0])                 # SMD
-#path_svel=np.array([1.0])                 # SMD
-path_seg  =np.array([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1])  # da
-path_svel =np.array([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])  # da
-#path_seg =np.linspace(0.0625,0.0625,16)   # ee
-#path_svel=np.linspace(1,1,16)             # ee
-#path_seg =np.linspace(0.02,0.02,50)       # titin
-#path_svel=np.linspace(1,1,50)             # titin
-#_____COUNT____________________________________________________________________
-setup  ={1:{'howmany':100,'freq':50},
-         2:{'howmany':20,'freq':50},    # 45*18t = 810, 29*28t = 812,
-         3:{'howmany':20,'freq':50},    # 20*40t = 800, 25*32t = 800
-         4:{'howmany':2,'freq':50},
-         5:{'howmany':1,'freq':50}}
-'''
+if ln_spc == 'False':
+    for i in range(len(p_seg.split(','))):
+        path_seg.append(float(p_seg.split(',')[i]))
+        path_svel.append(float(p_svel.split(',')[i]))
+    path_seg = np.array(path_seg)
+    path_svel= np.array(path_svel)
+else:
+    pseg = float(p_seg)
+    psvel= float(p_svel)
+    parts= int(1/pseg)
+    path_seg = np.linspace(pseg,pseg,parts)
+    path_svel= np.linspace(psvel,psvel,parts)
 
 #_________pickle_______________________________________________________________
 def super_pickle(nset):
@@ -148,7 +118,7 @@ def  print_dict(dt):
 #_____CODE_____________________________________________________________________
 def asmd(dircount):
     def a_work_dir():
-        w = a_make_JobDirSmd(ngn[0],molec[0],zcrd,workdir,jobdir,pack_dir)
+        w = a_make_JobDirSmd(ngn[0],mol,zcrd,workdir,jobdir,pack_dir)
         subdir = w.a_makeJobDir()
         w.reg_exp(subdir)
     def call_a_Struc(ng,mol,env,workdir,jobdir,pack_dir):
@@ -169,14 +139,18 @@ def asmd(dircount):
         f.a_makeSubDir()
         f.a_steering_control()
     # asmd():
-    pack_dir=ngn[0][0]+molec[0]+'_'+jobid
+    pack_dir=ngn[0][0]+molec+'_'+jobid
+        # molec[0]
     workdir=os.path.abspath(os.path.dirname(__file__))
-    jobdir =ngn[0][0]+molec[0]+str(dircount)+'_'+jobid
+    jobdir =ngn[0][0]+molec+str(dircount)+'_'+jobid
+        # molec[0]
     a_work_dir()
-    [call_a_Struc(ng,mol,env,workdir,jobdir,pack_dir) for ng in ngn for mol \
-         in molec for env in environ]
+    [call_a_Struc(ng,mol,env,workdir,jobdir,pack_dir) for ng in ngn \
+         for env in environ]
+         # for mol in molec
     [call_a_Smd(ng,mol,env,v,envdist[env],workdir,jobdir,pack_dir) for ng \
-        in ngn for mol in molec for env in environ for v in n]
+         in ngn for env in environ for v in n]
+         # for mol in molec
     os.chdir(my_dir)
     return pack_dir
 
