@@ -76,3 +76,36 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = False  # means use actual length of path_seq etc.
 path_seg= 1.0
 path_svel= 1.0
+
+[le]
+mol = le
+zcrd = 4.0
+envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
+dist = 40.0
+ts   = 2.0
+n    = 2.,3.
+environ = 01.vac,03.exp
+gate = ggatecpu2
+cn   = 2
+ppn_env = 01.vac:1,02.imp:cn,03.exp:3
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
+q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
+lnspc   = True
+path_seg= 0.05
+path_svel= 1.0
+
+[le_smd]
+mol = le
+zcrd = 4.0
+envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
+dist = 40.0
+ts   = 2.0
+n    = 2.,3.
+environ = 01.vac,03.exp
+cn   = 2
+ppn_env = 01.vac:1,02.imp:cn,03.exp:3
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
+q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
+lnspc   = False  # means use actual length of path_seq etc.
+path_seg= 1.0
+path_svel= 1.0

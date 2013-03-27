@@ -1,0 +1,54 @@
+#############################################################
+## JOB DESCRIPTION                                         ##
+#############################################################
+# SMD simulation (stretching) of 1E0L in vacuum
+# Constant temperature
+#############################################################
+## ADJUSTABLE PARAMETERS                                   ##
+#############################################################
+structure          ../../../../00.struc/01.vac/00.psf
+coordinates        ../../../../00.struc/01.vac/00.pdb
+outputName         daOut
+#############################################################
+## SIMULATION PARAMETERS                                   ##
+#############################################################
+# Input
+seed                xxxxx
+paraTypeCharmm	    on
+parameters          ../../../../toppar/par_all27_prot_lipid.prm
+temperature         300
+ 
+# Force-Field Parameters
+exclude             scaled1-4
+1-4scaling          1.0
+cutoff              12.0
+switching           on
+switchdist          10.0
+pairlistdist        13.5
+
+# Integrator Parameters
+timestep            2.0  ;# 2fs/step
+rigidBonds          all    ;# needed for 2fs steps
+nonbondedFreq	    1
+fullElectFrequency  2  
+stepspercycle       10
+
+# Constant Temperature Control
+langevin            on    ;# do langevin dynamics
+langevinDamping     5      ;# damping coefficient (gamma) of 5/ps
+langevinTemp        300
+langevinHydrogen    no    ;# don't couple langevin bath to hydrogens
+
+# Output
+binaryoutput        no
+dcdfreq             350     ;# 500steps = every 1ps
+outputEnergies      500
+
+#############################################################
+## EXTRA PARAMETERS                                        ##
+#############################################################
+# Tcl interface
+tclForces           on
+tclForcesScript     smdforce.tcl
+
+run 35000 ;# 20 ps
