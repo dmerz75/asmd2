@@ -53,6 +53,19 @@ def qsub_jobc(stage,job_path):
     print stout.split('.')[0]
     print 'stderr >> ',stderr
     cdict[stage]=stout.split('.')[0]
+def qsub_jobh(stage,job_path):
+    print jdict[stage]
+    job_deps = ':'.join(jdict[stage])
+    dep_args = ['-W depend=afterany:%s' % job_deps]
+    print 'dep_args',dep_args
+    pipe=subprocess.Popen([qsub_path] + dep_args +
+                      [job_path],stdin=subprocess.PIPE, \
+        stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+    stout, stderr = pipe.communicate()
+    print stout
+    print stout.split('.')[0]
+    print 'stderr >> ',stderr
+    #cdict[stage]=stout.split('.')[0]
 
 def find_job(vel,solv,st):
     for path in glob(os.path.join(my_dir,'*.%s/%s/%s/*/job.sh'%(solv,vel,st))):
@@ -79,6 +92,17 @@ def find_job(vel,solv,st):
         print path
         os.chdir(root)
         qsub_jobc(stg,path)
+    for path in glob(os.path.join(my_dir,'*.%s/%s/%s-jobh.sh'%(solv,vel,st))):
+        num=(path.split('/')[-2])
+        sol=(path.split('/')[-3]).split('.')[1]
+        stg=(path.split('/')[-1]).split('-')[0]
+        root='/'.join(path.split('/')[:-1])
+        #root='/'+'/'.join(path.split('/')[2:-1])
+        #path='/'+'/'.join(path.split('/')[2:])
+        print root
+        print path
+        os.chdir(root)
+        qsub_jobh(stg,path)
 
 # submitted 02:
 # submitted 03:

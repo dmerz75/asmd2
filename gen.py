@@ -5,12 +5,12 @@ from asmd.asmdwork import *
 import numpy as np
 import ConfigParser
 
-dircounts=['5']    # 1. modify if necessary, ['1','2','5','10']
-jobid=('').join(dircounts)+'_test'       # 2. choose name
+dircounts=['10']    # 1. modify if necessary, ['1','2','5','10']
+jobid=('').join(dircounts)+'_test7'       # 2. choose name
 
-setup= {1:{'howmany':100,'freq':50},     # 3. change if necessary
-        2:{'howmany':20, 'freq':50},
-        3:{'howmany':20, 'freq':50},
+setup= {1:{'howmany':3,'freq':50},     # 3. change if necessary
+        2:{'howmany':10, 'freq':50},
+        3:{'howmany':10, 'freq':50},
         4:{'howmany':2,  'freq':50},
         5:{'howmany':1,  'freq':50}, }
 

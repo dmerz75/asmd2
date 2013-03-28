@@ -16,11 +16,6 @@ configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
          'standby-8':'standby-8','debug':'tg_debug'}
 confige={'1':'v1000','2':'v100','3':'v10','4':'v1','5':'vp1'}
 dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
-setup0 ={'1':{'vel':0.002,'steps':1000,'dcd':100,'howmany':50,'freq':50},
-       '2':{'vel':0.0002,'steps':1000,'dcd':1000,'howmany':25,'freq':50},
-       '3':{'vel':0.00002,'steps':1000,'dcd':10000,'howmany':25,'freq':50},
-       '4':{'vel':0.000002,'steps':1000,'dcd':100000,'howmany':5,'freq':50},
-       '5':{'vel':0.0000002,'steps':1000,'dcd':1000000,'howmany':5,'freq':50}}
 #__________global_____use______________________________________________________
 class mdict(dict):
     def __setitem__(self,key,value):
@@ -177,16 +172,25 @@ class a_Smd_Method:
                             self.vdir,str(i).zfill(2)+'-continue.py')
             cp_file(os.path.join(self.ndir,'jobc'),'job-'+self.gate+'.sh',\
                             self.vdir,str(i).zfill(2)+'-job.sh')
+            cp_file(os.path.join(self.ndir,'hb_pkl'),'hb_pkl.py', \
+                            self.vdir,str(i).zfill(2)+'-hb_pkl.py')
+            cp_file(os.path.join(self.ndir,'jobhb'),'job-'+self.gate+'.sh',\
+                            self.vdir,str(i).zfill(2)+'-jobh.sh')
             stage=str(i).zfill(2)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-continue.py'),stage,i)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-job.sh'),stage,i)
+            reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
+                  '-hb_pkl.py'),stage,i)
+            reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
+                  '-jobh.sh'),stage,i)
         cp_file(self.pydir,'env_allhb.py',self.vdir,'env_allhb.py')
         cp_file(self.pydir,'env_allwp.py',self.vdir,'env_allwp.py')
         cp_file(self.pydir,'env_ihbond.py',self.vdir,'env_ihbond.py')
         cp_file(self.pydir,'discrete.py',self.vdir,'discrete.py')
         cp_file(self.pydir,'plotpkl.py',self.vdir,'plotpkl.py')
+        cp_file(self.pydir,'plothb.py',self.vdir,'plothb.py')
         cp_file(self.pydir,'mpmf.py',self.pdir,'mpmf.py')
         d_vis=os.path.join(self.vdir,'env_allhb.py')
         reg_exp_contd(d_vis,stage,1)
@@ -197,6 +201,8 @@ class a_Smd_Method:
         d_vis=os.path.join(self.vdir,'discrete.py')
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'plotpkl.py')
+        reg_exp_contd(d_vis,stage,1)
+        d_vis=os.path.join(self.vdir,'plothb.py')
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.pdir,'mpmf.py')
         reg_exp_contd(d_vis,stage,1)

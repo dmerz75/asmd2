@@ -16,4 +16,4 @@ cd $PBS_O_WORKDIR
 NUM=xxnumxx
 
 # run job
-./$NUM-continue.py $NUM
+./$NUM-hb_pkl.py $NUM

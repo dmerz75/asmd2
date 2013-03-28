@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N xxjobnamexx
 #PBS -j oe
-#PBS -l walltime=17:00
+#PBS -l walltime=27:00
 #PBS -l pmem=310mb
 #PBS -l nodes=1:ppn=1
 #PBS -V
