@@ -14,6 +14,13 @@ lnspc= False
 ################################
 #####   Molecule configs   #####
 ################################
+# begin options
+# configw={'sst':'walltime=15:00','swt':'walltime=00:90:00','mwt': \
+#         'walltime=03:59:00',
+#        'lwt':'walltime=072:00:00','dwt':'walltime=15:00:00:00'}
+# configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
+#         'standby-8':'standby-8','debug':'tg_debug'}
+# end options
 
 [da]
 mol = da
@@ -21,13 +28,13 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 1.,2.,3.
-#gate = steele2
-gate = ggatecpu2
+n    = 2.,3.
+gate = steele2
+queue= workq
 environ = 01.vac,02.imp,03.exp
 cn   = 1
-ppn_env = 01.vac:1,02.imp:cn,03.exp:1
-wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
+ppn_env = 01.vac:cn,02.imp:cn,03.exp:2
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
 path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0

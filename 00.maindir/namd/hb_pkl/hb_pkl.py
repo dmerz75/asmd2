@@ -49,23 +49,21 @@ def pack_pkl(stage):
         print path
         seed = path.split('.')[-1]
         sample_i = pickle.load(open(path,'rb'))
-        #if len(sample_i)==int(path_steps[phase]/100):
         if len(sample_i)==100:
             dct_s_hb[seed]=[sample_i]
             os.remove(path)
     if len(dct_s_hb)>0:
         pickle.dump(dct_s_hb,open('%s-sd_hb.pkl' % stage,'w'))
-    phase = int(stage)-1
-    for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*segid*.pkl.*' % stage)):
-        print path
-        seed = path.split('.')[-1]
-        sample_i = pickle.load(open(path,'rb'))
-        #if len(sample_i)==int(path_steps[phase]/100):
-        if len(sample_i)==100:
-            dct_s_whb[seed]=[sample_i]
-            os.remove(path)
-    if len(dct_s_hb)>0:
-        pickle.dump(dct_s_whb,open('%s-sd_wp.pkl' % stage,'w'))
+    if my_dir.split('/')[-2].split('.')[1]=='exp':
+        for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*segid*.pkl.*' % stage)):
+            print path
+            seed = path.split('.')[-1]
+            sample_i = pickle.load(open(path,'rb'))
+            if len(sample_i)==100:
+                dct_s_whb[seed]=[sample_i]
+                os.remove(path)
+        if len(dct_s_hb)>0:
+            pickle.dump(dct_s_whb,open('%s-sd_wp.pkl' % stage,'w'))
 
 # main call
 pack_pkl(num)

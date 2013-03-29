@@ -12,4 +12,4 @@ cd $PBS_O_WORKDIR
 NUM=xxnumxx
 
 # run job
-./$NUM-continue.py $NUM
+./00-continue.py $NUM

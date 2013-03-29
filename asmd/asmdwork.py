@@ -168,38 +168,42 @@ class a_Smd_Method:
             reg_ex(script,'xxjobnamexx',self.mol+self.ngn[0]+'cjob'+stage)
         for i in range(1,int(self.st)+1):
             os.makedirs(os.path.join(self.vdir,str(i).zfill(2)))
-            cp_file(os.path.join(self.ndir,'continue'),'continue.py', \
-                            self.vdir,str(i).zfill(2)+'-continue.py')
             cp_file(os.path.join(self.ndir,'jobc'),'job-'+self.gate+'.sh',\
                             self.vdir,str(i).zfill(2)+'-job.sh')
-            cp_file(os.path.join(self.ndir,'hb_pkl'),'hb_pkl.py', \
-                            self.vdir,str(i).zfill(2)+'-hb_pkl.py')
             cp_file(os.path.join(self.ndir,'jobhb'),'job-'+self.gate+'.sh',\
                             self.vdir,str(i).zfill(2)+'-jobh.sh')
             stage=str(i).zfill(2)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
-                  '-continue.py'),stage,i)
-            reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-job.sh'),stage,i)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
-                  '-hb_pkl.py'),stage,i)
-            reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-jobh.sh'),stage,i)
-        cp_file(self.pydir,'env_allhb.py',self.vdir,'env_allhb.py')
-        cp_file(self.pydir,'env_allwp.py',self.vdir,'env_allwp.py')
+        cp_file(os.path.join(self.ndir,'hb_pkl'),'hb_pkl.py', \
+                self.vdir,'00-hb_pkl.py')
+                #self.vdir,str(i).zfill(2)+'-hb_pkl.py')
+        cp_file(os.path.join(self.ndir,'continue'),'continue.py', \
+                self.vdir,'00-continue.py')
+        #        self.vdir,str(i).zfill(2)+'-continue.py')
+        #reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
+        reg_exp_contd(os.path.join(self.vdir,'00-continue.py'),stage,i)
+        #reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
+        reg_exp_contd(os.path.join(self.vdir,'00-hb_pkl.py'),stage,i)
+        #        '-hb_pkl.py'),stage,i)
+        # ^ changing hb_pkl / continue
+        #cp_file(self.pydir,'env_allhb.py',self.vdir,'env_allhb.py')
+        #cp_file(self.pydir,'env_allwp.py',self.vdir,'env_allwp.py')
         cp_file(self.pydir,'env_ihbond.py',self.vdir,'env_ihbond.py')
-        cp_file(self.pydir,'discrete.py',self.vdir,'discrete.py')
+        #cp_file(self.pydir,'discrete.py',self.vdir,'discrete.py')
         cp_file(self.pydir,'plotpkl.py',self.vdir,'plotpkl.py')
         cp_file(self.pydir,'plothb.py',self.vdir,'plothb.py')
         cp_file(self.pydir,'mpmf.py',self.pdir,'mpmf.py')
-        d_vis=os.path.join(self.vdir,'env_allhb.py')
-        reg_exp_contd(d_vis,stage,1)
-        d_vis=os.path.join(self.vdir,'env_allwp.py')
-        reg_exp_contd(d_vis,stage,1)
+        #d_vis=os.path.join(self.vdir,'env_allhb.py')
+        #reg_exp_contd(d_vis,stage,1)
+        #d_vis=os.path.join(self.vdir,'env_allwp.py')
+        #reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'env_ihbond.py')
         reg_exp_contd(d_vis,stage,1)
-        d_vis=os.path.join(self.vdir,'discrete.py')
-        reg_exp_contd(d_vis,stage,1)
+        #d_vis=os.path.join(self.vdir,'discrete.py')
+        #reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'plotpkl.py')
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'plothb.py')
