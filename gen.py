@@ -5,22 +5,13 @@ from asmd.asmdwork import *
 import numpy as np
 import ConfigParser
 
-dircounts=['15','30']    # 1. modify if necessary, ['1','2','5','10']
-jobid=('').join(dircounts)+'_st15'       # 2. choose name
-
-setup= {1:{'howmany':7,'freq':50},     # 3. change if necessary
-        2:{'howmany':7, 'freq':50},
-        3:{'howmany':7, 'freq':50},
-        4:{'howmany':2,  'freq':50},
-        5:{'howmany':1,  'freq':50}, }
-
-# run ex1.  >>> ./gen.py namd da         # 4. issue command
-# run ex2.  >>> ./gen.py namd da_smd
-# run ex3.  >>> ./gen.py namd ee
-#_____________________________________________________________________________
+# EXAMPLE
+#>>> ./gen.py namd da
+#    ./gen.py ngn  molecule
 ngn  =[sys.argv[1]]
 molc =[sys.argv[2]]
 
+#_____________________________________________________________________________
 config = ConfigParser.ConfigParser()
 config.read('%s.gconf' % ngn[0])
 
@@ -94,6 +85,25 @@ else:
     parts= int(1/pseg)
     path_seg = np.linspace(pseg,pseg,parts)
     path_svel= np.linspace(psvel,psvel,parts)
+
+
+
+vels    = config.get(molec,'vels')
+vels_l  = [int(v) for v in vels.split(',')]
+hows    = config.get(molec,'howmany')
+hows_l  = [(h) for h in hows.split(',')]
+freqs   = config.get(molec,'freq')
+freq_l  = [int(f)for f in freqs.split(',')]
+
+setup={}
+for i in range(len(vels_l)):
+    setup[vels_l[i]]={}
+    setup[vels_l[i]]['howmany']=hows_l[i]
+    setup[vels_l[i]]['freq']=freq_l[i]
+
+jobid   = config.get(molec,'jobid')
+dirs    = config.get(molec,'dircounts')
+dircounts=[d for d in dirs.split(',')]
 
 #_________pickle_______________________________________________________________
 def super_pickle(nset):
