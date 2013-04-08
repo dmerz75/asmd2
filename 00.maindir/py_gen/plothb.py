@@ -180,14 +180,14 @@ def main_bond(sel):
     # matplotlib - label axes on plots
     plt.xlabel('end-to-end distance (A)')
     plt.ylabel('average H-bond count')
-    plt.title('DA - NAMD - ASMD \n vac 1000.0 A/ns')
+    plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx A/ns')
     plt.legend()
     plt.gca().set_ylim(ymin=-0.2)
     plt.draw()
     texdir = os.path.join(('/'.join(my_dir.split('/')[0:-2])), \
                        'tex_%s/fig_bond' % my_dir.split('/')[-3])
     if not os.path.exists(texdir): os.makedirs(texdir)
-    plotname = 'danamdvacvv1000asmd_%s' % sel
+    plotname = 'xxplotnamexx_%s' % sel
     plt.savefig('%s/%s.png' % (texdir,plotname))
     plt.savefig('%s/%s.eps' % (texdir,plotname))
 # main call  >>>  'hb','wp','ihb' ____________________________________
