@@ -18,7 +18,6 @@ config.read('%s.gconf' % ngn[0])
 molec= molc[0]  # now it's da or da_smd
 mol     = config.get(molec,'mol')  # now it's da. w/ molec = da_smd or da
 print 'molec',molec,'mol',mol
-time.sleep(.3)
 zcrd    = float(config.get(molec,'zcrd'))
 envdists= config.get(molec,'envdist')
 envdist = {}
@@ -36,13 +35,9 @@ for ni in range(len(n_conf.split(','))):
     n.append(float(n_conf.split(',')[ni]))
 #env_cnf = config.get(mol,'environ')
 env_cnf = config.get(molec,'environ')
-print env_cnf
-time.sleep(1)
 environ = []
 for ei in range(len(env_cnf.split(','))):
     environ.append(str(env_cnf.split(',')[ei]))
-print environ
-time.sleep(1)
 langevD = config.get(molec,'langevD')
 direct  = config.get(molec,'direct')
 gate    = config.get(molec,'gate')
