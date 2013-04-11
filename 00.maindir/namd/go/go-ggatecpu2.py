@@ -2,7 +2,6 @@
 import sys,os,re,shutil,time
 from glob import glob
 import numpy as np
-#import datetime
 from random import randint
 
 JOBID = os.environ['PBS_JOBID'].split('.')[0]
@@ -53,22 +52,6 @@ def next_stage(dir_loc,cfile):
     os.chdir(dir_loc)
     os.system('python %s %s' % (cfile,prev_num))
 
-'''
-def check_vel(pnum):
-    if pnum=='00':
-        pass
-    else:
-        cnt = 0
-        while os.path.isfile(os.path.join(predir1,'00.vel'))==False:
-            next_stage(predir2,cfile)
-            cnt += 1
-            print "waiting 20 seconds ..."
-            print cnt
-            time.sleep(20)
-            if cnt >= 20:
-                sys.exit()
-    os.chdir(my_dir)
-'''
 def check_vel(pnum):
     if pnum=='00':
 	pass

@@ -7,7 +7,6 @@ import time
 from random import randint
 
 JOBID = os.environ['PBS_JOBID'].split('.')[0]
-#now=datetime.datetime.now().strftime("%m%dt%H%M")
 
 my_dir=os.path.abspath(os.path.dirname(__file__))
 num   =my_dir.split('/')[-2]
@@ -47,9 +46,5 @@ if count==quota:
     next_stage(predir2,cfile)
 elif count!=quota: sys.exit()
 
-#os.system('rm *.BAK')
-#os.system('rm da_smd.coor')
-#os.system('rm da_smd.dcd')
-#os.system('rm da_smd.vel')
 os.system('rm *.xsc')
 os.system('rm run.log')

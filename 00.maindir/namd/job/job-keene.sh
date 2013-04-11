@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #PBS -N xxjobnamexx
 #PBS -l pmem=220mb
 #PBS -l xxwalltimexx

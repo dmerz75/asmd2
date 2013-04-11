@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 import sys,os,fnmatch,itertools,pickle
-import os.path
-import datetime,time
+import os.path,datetime,time
 from glob import glob
 import numpy as np
 from random import *
 import matplotlib
 import matplotlib.pyplot as plt
-from scipy.interpolate import LSQUnivariateSpline
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
 num=sys.argv[1]
