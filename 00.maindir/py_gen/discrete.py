@@ -1,22 +1,12 @@
 #!/usr/bin/env python
 import sys,os,pickle,shutil,fnmatch,itertools
-import os.path
+import os.path,datetime,time
 from glob import glob
 from sys import argv
 import numpy as np
 from random import *
-from lockfile import FileLock  # provided in 04.scripts dir ->
-import datetime,time                         # export PYTHONPATH
-
-'''
-lock = FileLock(__file__)
-if lock.is_locked()==True: sys.exit()
-lock.acquire()
-'''
-
 import matplotlib
 import matplotlib.pyplot as plt
-from scipy.interpolate import LSQUnivariateSpline
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
 num=sys.argv[1]
@@ -33,8 +23,8 @@ def print_dict(dct):
 config = pickle.load(open('config.pkl','rb'))
 key = print_dict(config)
 
-vel  = key
-dist = config[vel][0][0]
+vel  = key                    # keys =  01,02,03 -- 1000,100,10 A/ns
+dist = config[vel][0][0]      # and all values under those keys
 ts   = config[vel][0][1]
 path_seg   = config[vel][0][2]
 path_svel  = config[vel][0][3]
@@ -45,9 +35,9 @@ dt         = dct['freq']*ts/1000
 path_v_aps = path_vel/ts*1000
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 
-spos=xxsposxx
+spos=xxsposxx                 # should be added to config.pkl
 beta=-0.6
-quota=xxhowmanyxx*xxquotaxx
+quota=xxhowmanyxx*xxquotaxx   # entirely unnecessary
 
 # matplotlib begin
 fig=plt.figure()
@@ -55,9 +45,9 @@ plt.clf()
 
 def calc_work(data,st,w_c):
     phase = int(st)-1
-    data[::,3] = np.cumsum(data[::,3]*path_v_aps[phase]*dt)
-    data[::,3] = data[::,3] + w_c[phase]
-    wf = data[::,3][-1]
+    data[::,3] = np.cumsum(data[::,3]*path_v_aps[phase]*dt)  # work(fvdt)
+    data[::,3] = data[::,3] + w_c[phase]     # plus previous stage's work
+    wf = data[::,3][-1]                      # final value of work
     if phase == 0:
         d = np.linspace(spos,spos+domain[phase],data.shape[0])
     else:
@@ -69,14 +59,14 @@ def calc_pmf(data,st,w_c):
     data[::,::,3] = np.cumsum(data[::,::,3]*path_v_aps[phase]*dt,axis=1)
     data[::,::,3] = data[::,::,3] + w_c[phase]
     deltaf = np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
-    if phase == 0:
+    if phase == 0:         # PMF:deltaf
         d = np.linspace(spos,spos+domain[phase],deltaf.shape[0])
     else:
         d = np.linspace(spos+domain[phase-1],spos+domain[phase],deltaf.shape[0])
     lb = st+' '+str(int(path_steps[phase]))+' '+str(quota)
     plt.plot(d,deltaf,'r-',linewidth=4.0,label=lb)
     plt.plot(d,deltaf,'k--',linewidth=1.4)
-    JA = deltaf[-1]
+    JA = deltaf[-1]        # PMF:deltaf, final value for comparison to work
     return JA
 
 class asmd_calcs:
@@ -135,16 +125,6 @@ def main_call(st,w_c,d_cp):
     print w_c
     nextnum=str(int(st)+1).zfill(2)
     seed_folder = d_cp[st]
-    '''
-    if st == num:
-        for s,f in seed_folder.items():
-            if not os.path.exists(os.path.join(my_dir,nextnum)):
-                os.makedirs(os.path.join(my_dir,nextnum))
-            cp_file(os.path.join(my_dir,st,f),'daOut.coor.%s' % s, \
-                    os.path.join(my_dir,nextnum),'00.coor')
-            cp_file(os.path.join(my_dir,st,f),'daOut.vel.%s' % s, \
-                    os.path.join(my_dir,nextnum),'00.vel')
-    '''
 
 # main call
 dirs = []
@@ -181,6 +161,5 @@ def continue_pic(n):
     plotname = '%s-eval' % num
     plt.savefig('%s.png' % plotname)
     plt.savefig('%s.eps' % plotname)
-
 tex_pic(num)
 #continue_pic(num)

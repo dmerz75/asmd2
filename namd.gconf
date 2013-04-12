@@ -3,6 +3,7 @@ ts   = 2.0
 n    = 2.,3.
 langevD = 5
 direct  = 1
+environ = 01.vac,02.imp,03.exp
 gate = fgatecpu2
 cn   = 1
 comp = cpu
@@ -13,8 +14,13 @@ vels = 1,2,3,4,5
 freq = 50,50,50,50,50
 howmany=100,20,20,2,1
 
+<<<<<<< HEAD
 jobid = 100at1
 dircounts= 5
+=======
+jobid = test_90
+dircounts= 2,4,6
+>>>>>>> a5bbf6fea7b36ede773d10c0821fc7b67545a103
 
 ################################
 #####   Molecule configs   #####
@@ -33,15 +39,15 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.
-gate = fgatecpu2
-queue= workq
+n    = 2.,3.
+gate = steele2
+queue= standby
 environ = 01.vac,02.imp,03.exp
-howmany = 100,40,40,2,1
-cn   = 3
-wallt= lwt
+howmany = 100,3,40,2,1
+cn   = 1
+wallt= sst
 ppn_env = 01.vac:cn,02.imp:cn,03.exp:4
-wt_env  = 01.vac:wallt,02.imp:lwt,03.exp:lwt
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
 path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
@@ -177,14 +183,14 @@ envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
 n    = 2.
-gate = fgatecpu2
-queue= workq
+gate = steele2
+queue= standby
 environ = 01.vac,02.imp,03.exp
-howmany = 100,7,40,2,1
+howmany = 100,5,40,2,1
 cn   = 1
 wallt= swt
 ppn_env = 01.vac:cn,02.imp:cn,03.exp:4
-wt_env  = 01.vac:wallt,02.imp:lwt,03.exp:lwt
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 path_seg = 0.1,0.2,0.45,0.25
 path_svel= 1.0,1.0,1.0,1.0

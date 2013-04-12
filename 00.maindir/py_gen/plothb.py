@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 import sys,os,fnmatch,itertools,pickle,re
-import os.path
-import datetime,time
+import os.path,datetime,time
 from glob import glob
 import numpy as np
 from random import *
 import matplotlib
 import matplotlib.pyplot as plt
-from scipy.interpolate import LSQUnivariateSpline
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -124,13 +122,10 @@ def pack(stage):
     print type(wb_vecs)
     print len(wb_vecs)
 #____________________________________________________________________________
-
 def plot_pkl(stage,sel):
     def residue_index(label):
         return int(re.sub("[^0-9]","",label))
     def charac_bond2(trajectory,distance_target):
-        #print trajectory
-        #print len(trajectory)
         acc_count_frames = []
         for frame in trajectory:
             acc_count = 0
@@ -139,7 +134,6 @@ def plot_pkl(stage,sel):
                 if distance == distance_target:
                     acc_count += 1
             acc_count_frames.append(acc_count)
-        #print acc_count_frames
         return acc_count_frames
 
     if sel != 'ihb':
@@ -166,7 +160,6 @@ def plot_pkl(stage,sel):
                      for n in [3,4,5]])
         # len 3 list, with len ~100,200 length 100 lists inside, 3x100,100_long
         plot_hb(b_data,stage,sel)
-
 
 def main_bond(sel):
     # matplotlib

@@ -40,17 +40,12 @@ def run_namd(i):
     script = os.path.join(my_dir,'smd.namd.%s' % (seed))
     reg_ex(script,'xxxxx',str(seed),i)
     st = time.time()
-    #os.system('namd2 +idlepoll +isomalloc_sync +pxxnodecountxx +devices %s \
-              #smd.namd.%s > run.log.%s' % (device,seed,seed))
     os.system('namd2 +idlepoll +isomalloc_sync +pxxnodecountxx +devices %s \
               smd.namd.%s > run.log' % (device,seed))
     tt = time.time()-st
     os.remove(script)
-    #os.system('mv smdforces.out %d-tef.dat.%s' % (i,seed))
     os.rename('smdforces.out','%d-tef.dat.%s' % (i,seed))
-    #os.system('mv daOut.coor daOut.coor.%s' % (seed))
     os.rename('daOut.coor','daOut.coor.%s' % (seed))
-    #os.system('mv daOut.vel daOut.vel.%s' % (seed))
     os.rename('daOut.vel','daOut.vel.%s' % (seed))
     os.system('python ../hb.py %d %s' % (i,seed))
     return tt
@@ -59,22 +54,6 @@ def next_stage(dir_loc,cfile):
     os.chdir(dir_loc)
     os.system('python %s %s' % (cfile,prev_num))
 
-'''
-def check_vel(pnum):
-    if pnum=='00':
-	pass
-    else:
-	cnt = 0
-	while os.path.isfile(os.path.join(predir1,'00.vel'))==False:
-            next_stage(predir2,cfile)
-            cnt += 1
-            print "waiting 20 seconds ..."
-            print cnt
-            time.sleep(20)
-            if cnt >= 20:
-		sys.exit()
-    os.chdir(my_dir)
-'''
 def check_vel(pnum):
     if pnum=='00':
 	pass

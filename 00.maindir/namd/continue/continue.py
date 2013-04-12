@@ -1,22 +1,10 @@
 #!/usr/bin/env python
 import sys,os,pickle,shutil,fnmatch,itertools
-import os.path
+import os.path,datetime,time
 from glob import glob
 from sys import argv
 import numpy as np
 from random import *
-#from lockfile import FileLock  # provided in 04.scripts dir ->
-import datetime,time                         # export PYTHONPATH
-
-'''
-lock = FileLock(__file__)
-if lock.is_locked()==True: sys.exit()
-lock.acquire()
-'''
-
-#import matplotlib
-#import matplotlib.pyplot as plt
-#from scipy.interpolate import LSQUnivariateSpline
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
 num=sys.argv[1]
@@ -49,14 +37,6 @@ spos=xxsposxx
 beta=-0.6
 quota=xxquotaxx*xxhowmanyxx
 
-'''
-# matplotlib begin
-fig=plt.figure()
-plt.clf()
-plt.xlabel('Extension (A)')
-plt.ylabel('Work (kcal/mol)')
-'''
-
 def calc_work(data,st,w_c):
     phase = int(st)-1
     if phase == 0:
@@ -64,14 +44,12 @@ def calc_work(data,st,w_c):
         data[::,3] = data[::,3] + w_c[phase]
         wf = data[::,3][-1]
         d = np.linspace(spos,spos+domain[phase],data.shape[0])
-        #plt.plot(d,data[::,3],'c-',linewidth=0.4)
         return data,wf
     else:
         data[::,3] = np.cumsum(data[::,3]*path_v_aps[phase]*dt)
         data[::,3] = data[::,3] + w_c[phase]
         wf = data[::,3][-1]
         d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[0])
-        #plt.plot(d,data[::,3],'c-',linewidth=0.4)
         return data,wf
 def calc_pmf(data,st,w_c):
     phase = int(st)-1
@@ -80,16 +58,13 @@ def calc_pmf(data,st,w_c):
         data[::,::,3] = data[::,::,3] + w_c[phase]
         deltaf = np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
         d = np.linspace(spos,spos+domain[phase],deltaf.shape[0])
-        #plt.plot(d,deltaf,'b-',linewidth=1.0)
         JA = deltaf[-1]
         return JA
     else:
         data[::,::,3] = np.cumsum(data[::,::,3]*path_v_aps[phase]*dt,axis=1)
         data[::,::,3] = data[::,::,3] + w_c[phase]
         deltaf = np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
-        #print data.shape[0]
         d = np.linspace(spos+domain[phase-1],spos+domain[phase],deltaf.shape[0])
-        #plt.plot(d,deltaf,'b-',linewidth=1.0)
         JA = deltaf[-1]
         return JA
 
@@ -145,7 +120,6 @@ class asmd_calcs:
 def cp_file(f_dir,f,d_dir,d):
     shutil.copy(os.path.join(f_dir,f),os.path.join(d_dir,d))
 
-
 def main_call(st,w_c,d_cp):
     wrk_pkl={}
     c1 = asmd_calcs(wrk_pkl,w_c,d_cp)
@@ -183,20 +157,6 @@ def load_work(st,w_c):
 # main call
 w_c    = {}
 d_cp   = {}
-
 w_c = load_work(str(int(num)-1).zfill(2),w_c)
 
 main_call(num,w_c,d_cp)
-
-'''
-dirs = []
-for i in range(1,int(num)+1):
-    dirs.append(str(i).zfill(2))
-[main_call(st,w_c,d_cp) for st in sorted(dirs)]
-
-# matplotlib end
-plt.draw()
-plotname = '%s-eval' % num
-plt.savefig('%s.png' % plotname)
-plt.savefig('%s.eps' % plotname)
-'''
