@@ -139,17 +139,10 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-<<<<<<< HEAD
 n    = 2.,3.
 environ = 01.vac,02.imp,03.exp
 gate = fgatecpu2
 cn   = 1
-=======
-n    = 4.
-environ = 03.exp
-gate = ggatecpu2
-cn   = 2
->>>>>>> 798f2f6926df3ba6cc32afe950f765463fab581a
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
 wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
@@ -158,11 +151,7 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = True
 path_seg= 0.1
 path_svel= 1.0
-<<<<<<< HEAD
 howmany=100,4,51,2,1
-=======
-howmany=100,20,20,20,1
->>>>>>> 798f2f6926df3ba6cc32afe950f765463fab581a
 langevD = 5
 
 [danvt_smd]
@@ -171,17 +160,10 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-<<<<<<< HEAD
 n    = 2.,3.
 environ = 01.vac,02.imp,03.exp
 gate = fgatecpu2
 cn   = 1
-=======
-n    = 4.
-environ = 03.exp
-gate = steele2
-cn   = 8
->>>>>>> 798f2f6926df3ba6cc32afe950f765463fab581a
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
 wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
@@ -190,11 +172,7 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = False  # means use actual length of path_seq etc.
 path_seg= 1.0
 path_svel= 1.0
-<<<<<<< HEAD
 howmany=100,5,51,2,1
-=======
-howmany=100,20,20,10,1
->>>>>>> 798f2f6926df3ba6cc32afe950f765463fab581a
 langevD = 5
 
 [da_d]
