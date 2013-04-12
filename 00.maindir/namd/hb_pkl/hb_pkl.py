@@ -47,7 +47,7 @@ def pack_pkl(stage):
         print path
         seed = path.split('.')[-1]
         sample_i = pickle.load(open(path,'rb'))
-        if len(sample_i)==100:
+        if len(sample_i)==xxlenbpklxx:
             dct_s_hb[seed]=[sample_i]
             os.remove(path)
     if len(dct_s_hb)>0:

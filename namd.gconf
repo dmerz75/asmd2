@@ -14,8 +14,8 @@ vels = 1,2,3,4,5
 freq = 50,50,50,50,50
 howmany=100,20,20,2,1
 
-jobid = test_90
-dircounts= 2,4,6
+jobid = test5
+dircounts= 2,4
 
 ################################
 #####   Molecule configs   #####
@@ -138,17 +138,19 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 4.
-environ = 02.imp,03.exp
-gate = ggatecpu2
-cn   = 2
+n    = 2.,3.
+environ = 01.vac,02.imp,03.exp
+gate = fgatecpu2
+cn   = 1
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
+wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
+queue= workq
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = True
 path_seg= 0.1
 path_svel= 1.0
-howmany=100,20,20,2,1
+howmany=100,4,51,2,1
 langevD = 5
 
 [danvt_smd]
@@ -157,16 +159,19 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 4.
-environ = 02.imp,03.exp
-cn   = 2
+n    = 2.,3.
+environ = 01.vac,02.imp,03.exp
+gate = fgatecpu2
+cn   = 1
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
+wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
+queue= workq
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = False  # means use actual length of path_seq etc.
 path_seg= 1.0
 path_svel= 1.0
-howmany=100,20,20,2,1
+howmany=100,5,51,2,1
 langevD = 5
 
 [da_d]

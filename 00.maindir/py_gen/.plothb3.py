@@ -37,6 +37,54 @@ spos=13.0
 beta=-0.6
 num =str(len(path_steps)).zfill(2)
 #_____________________________________________________________________________
+
+def plot_hb(data,stage,sel):
+    phase = int(stage)-1
+    if sel != 'ihb':
+        if stage =='01':
+            d = np.linspace(spos,spos+domain[phase],data.shape[0])
+            print d[0:-1:len(d)]
+            plt.plot(d,data,'k-',label="hydrogen bonds",linewidth=1)
+        elif stage !='01':
+            d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[0])
+            plt.plot(d,data,'k-',linewidth=1)
+            print d[0:-1:len(d)]
+    if sel == 'ihb':
+        if stage=='01':
+            d = np.linspace(spos,spos+domain[phase],len(data.mean(axis=1)[0]))
+            plt.plot(d,data.mean(axis=1)[0],'r-',label="i->i+3",linewidth=1.5)
+            d = np.linspace(spos,spos+domain[phase],len(data.mean(axis=1)[1]))
+            plt.plot(d,data.mean(axis=1)[1],'k-',label="i->i+4",linewidth=1.5)
+            d = np.linspace(spos,spos+domain[phase],len(data.mean(axis=1)[2]))
+            plt.plot(d,data.mean(axis=1)[2],'g-',label="i->i+5",linewidth=1.5)
+        if stage!='01':
+            d = np.linspace(spos+domain[phase-1],spos+domain[phase], \
+                                             len(data.mean(axis=1)[0]))
+            plt.plot(d,data.mean(axis=1)[0],'r-',linewidth=1.5)
+            d = np.linspace(spos+domain[phase-1],spos+domain[phase], \
+                                             len(data.mean(axis=1)[1]))
+            plt.plot(d,data.mean(axis=1)[1],'k-',linewidth=1.5)
+            d = np.linspace(spos+domain[phase-1],spos+domain[phase], \
+                                             len(data.mean(axis=1)[2]))
+            plt.plot(d,data.mean(axis=1)[2],'g-',linewidth=1.5)
+def w_plot_hb(avgB,st,color,lw):
+    phase = int(st)-1
+    if (st=='01'):
+        d = np.linspace(spos,spos+domain[phase],avgB.shape[0])
+        plt.plot(d,avgB,color,label="hydrogen bonds",linewidth=lw)
+    elif st !='01':
+        d = np.linspace(spos+domain[phase-1],spos+domain[phase],avgB.shape[0])
+        plt.plot(d,avgB,color,linewidth=lw)
+def w_plot_hb_bluedot(avgB,st,color,lw):
+    phase = int(st)-1
+    if (st=='01'):
+        d = np.linspace(spos,spos+domain[phase],avgB.shape[0])
+        plt.plot(d,avgB,color,linewidth=lw)
+    elif st !='01':
+        d = np.linspace(spos+domain[phase-1],spos+domain[phase],avgB.shape[0])
+        plt.plot(d,avgB,color,linewidth=lw)
+
+#___________________________________________________________________________
 def pack(stage):
     seed_bond={}
     wght_bond={}
@@ -68,13 +116,13 @@ def pack(stage):
             W_list.append(sum_W)
         avg_B=np.array(B_list).cumsum()/np.array(W_list).cumsum()
         wght_bond[s]=avg_B
-        #plot_hb_bluedot(avg_B[::2],stage,'b.',0.1)
+        plot_hb_bluedot(avg_B[::2],stage,'b.',0.1)
     wb_vecs = np.array(wght_bond.values()).mean(axis=0)
     plot_hb(wb_vecs,stage,'k-',2)
     print type(wb_vecs)
     print len(wb_vecs)
 #____________________________________________________________________________
-def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
+def plot_pkl(stage,sel):
     def residue_index(label):
         return int(re.sub("[^0-9]","",label))
     def charac_bond2(trajectory,distance_target):
@@ -88,7 +136,7 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
             acc_count_frames.append(acc_count)
         return acc_count_frames
 
-    if sel != 'ihb':     # sel ==  'wp', 'hb'
+    if sel != 'ihb':
         dct_sd_hb=pickle.load(open('%s-sd_%s.pkl' % (stage,sel),'rb'))
         print '%s-sd_%s.pkl' %(stage,sel)
         seeds = dct_sd_hb.keys()
@@ -103,101 +151,40 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
             acclens.append(acc)
         idata= np.array(acclens)
         data = idata.mean(axis=0)
-        #plot_hb(data,stage,sel)      # formerly plotted by stage
-        phase=int(stage)-1            # now, append, line up domains, plot
-        if stage=='01':
-            d = np.linspace(spos,spos+domain[phase],data.shape[0])
-        elif stage !='01':
-            d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[0])
-        acc_d.append(d[2:-2])
-        acc_b.append(data[2:-2])
-        if stage == '10':
-            dd = np.array(acc_d)
-            print dd.shape
-            d3 = np.reshape(dd,dd.shape[0]*dd.shape[1])
-            print d3.shape
-            bb = np.array(acc_b)
-            b3 = np.reshape(bb,bb.shape[0]*bb.shape[1])
-            print b3.shape
-            plt.plot(d3,b3,'k-',linewidth=1.5,label=b_label)
-    else:                # sel == 'ihb'
+        plot_hb(data,stage,sel)
+    else:
         dct_sd_hb=pickle.load(open('%s-sd_%s.pkl' % (stage,sel[1:3]),'rb'))
         print '%s-sd_%s.pkl' %(stage,sel[1:3])
         seeds = dct_sd_hb.keys()
         b_data = np.array([[charac_bond2(dct_sd_hb[s][0],n) for s in seeds] \
                      for n in [3,4,5]])
-        print b_data.shape
-        data  = b_data[index].mean(axis=0)
         # len 3 list, with len ~100,200 length 100 lists inside, 3x100,100_long
-        #plot_hb(b_data,stage,sel)
-        print data.shape
-        phase=int(stage)-1            # now, append, line up domains, plot
-        if stage=='01':
-            d = np.linspace(spos,spos+domain[phase],data.shape[0])
-        elif stage !='01':
-            d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[0])
-        acc_d.append(d[2:-2])
-        print len(acc_d)
-        acc_b.append(data[2:-2])
-        if stage == '10':
-            dd = np.array(acc_d)
-            d3 = np.reshape(dd,dd.shape[0]*dd.shape[1])
-            print d3.shape
-            bb = np.array(acc_b)
-            print bb
-            b3 = np.reshape(bb,bb.shape[0]*bb.shape[1])
-            plt.plot(d3,b3,color,linewidth=1.5,label=b_label)
+        plot_hb(b_data,stage,sel)
 
-def main_bond(sel,indx_clr=(0,'k-')):
-    acc_domain=[]
-    acc_bond  =[]
+def main_bond(sel):
     # matplotlib
     fig=plt.figure()
     plt.clf()
-    # TITLE
-    plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')
-    # FONTSIZE
-    fpropxxl=matplotlib.font_manager.FontProperties(size='xx-large')
-    fpropxl=matplotlib.font_manager.FontProperties(size='x-large')
-    # AXES labels
-    plt.xlabel('end-to-end distance ($\AA$)',fontproperties=fpropxxl)
-    plt.ylabel('Average H-bond count',fontproperties=fpropxxl)
-    # TICKS
-    #list = [0,10,20,30]
-    #plt.yticks(list,fontproperties=fpropxl)
-    #plt.yticks((0,10,20,30),fontproperties=fpropxl)
-    #plt.xticks((15,20,25,30),fontproperties=fpropxl)
     # sub calls - list dirs 01,02, ... 10; call plot_pkl
     dirs = []
     for i in range(1,int(num)+1):
         dirs.append(str(i).zfill(2))
-    if sel == 'ihb':
-        for i in range(0,len(indx_clr)):
-            acc_domain=[]
-            acc_bond  =[]
-            [plot_pkl(st,sel,acc_domain,acc_bond,indx_clr[i][0],indx_clr[i][1],\
-                      indx_clr[i][2]) for st in sorted(dirs)]
-    else:
-        [plot_pkl(st,sel,acc_domain,acc_bond,index,color) for st in sorted(dirs)]
-    # matplotlib - label axes on plots                      # MAIN CALL _ (2)
-    # LEGEND
-    plt.legend(loc='upper right')
+    [plot_pkl(st,sel) for st in sorted(dirs)]
+    # matplotlib - label axes on plots
+    plt.xlabel('end-to-end distance (A)')
+    plt.ylabel('average H-bond count')
+    plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx A/ns')
+    plt.legend()
     plt.gca().set_ylim(ymin=-0.2)
-    leg = plt.gca().get_legend()
-    leg.draw_frame(False)
-    # DRAW
     plt.draw()
-
     texdir = os.path.join(('/'.join(my_dir.split('/')[0:-2])), \
                        'tex_%s/fig_bond' % my_dir.split('/')[-3])
     if not os.path.exists(texdir): os.makedirs(texdir)
     plotname = 'xxplotnamexx_%s' % sel
     plt.savefig('%s/%s.png' % (texdir,plotname))
     plt.savefig('%s/%s.eps' % (texdir,plotname))
-
 # main call  >>>  'hb','wp','ihb' ____________________________________
-#main_bond('hb')                                  # MAIN CALL _ (1)
+main_bond('hb')
 if my_dir.split('/')[-2].split('.')[1] == 'exp':
     main_bond('wp')
-main_bond('ihb',[(0,'r-',r"i$\rightarrow$i+3"),(1,'k-',r"i$\rightarrow$i+4"), \
-                                     (2,'g-',r"i$\rightarrow$i+5")])
+main_bond('ihb')

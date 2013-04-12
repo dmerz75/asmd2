@@ -5,7 +5,7 @@ from glob import glob
 from sys import argv
 import numpy as np
 from random import *
-#import matplotlib
+import matplotlib
 import matplotlib.pyplot as plt
 
 my_dir = os.path.abspath(os.path.dirname(__file__))

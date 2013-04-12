@@ -141,6 +141,8 @@ class a_Smd_Method:
         if zdist_c!=dist_c:
             print '?@#$! total distance doesn\'t match path_seg dist'
             sys.exit()
+        #len_hb_pkl=500 # length of the hydrogen bond pkl
+        self.hb_l = 500 # length of the hydrogen bond pkl
         #___CONFIG_SECTION_END
     def a_makeEnvDir(self):
         if not os.path.exists(self.edir):os.makedirs(self.edir)
@@ -159,6 +161,9 @@ class a_Smd_Method:
             #print 'self.ps[phase]',self.ps[phase]
             #print 'self.dct[freq]',self.dct['freq']+1
             reg_ex(script,'xxlenarrayxx',str(int(lenarray)))
+            #len_hb_pkl=500 # length of the hydrogen bond pkl
+            #print str(int(self.ps[phase])/len_hb_pkl)  #xxdcdxx
+            reg_ex(script,'xxlenbpklxx',str(self.hb_l))
             reg_ex(script,'xxdtxx',str(self.dt))
             reg_ex(script,'xxmoleculexx',self.mol.upper())
             reg_ex(script,'xxngnxx',self.ngn.upper())
@@ -243,7 +248,9 @@ class a_Smd_Method:
             def call_smd(script):
                 phase = int(script.split('/')[-3])-1
                 reg_ex(script,'xxstepsxx',str(int(self.ps[phase])))
-                reg_ex(script,'xxdcdxx',str(int(self.ps[phase])/100))
+                # len_hb_pkl, self.hb_l
+                reg_ex(script,'xxdcdxx',str(int(self.ps[phase]) \
+                           /self.hb_l))
                 if self.ngn=='amb':
                     reg_ex(script,'xxtsxx',str(self.ts/1000))
                 elif self.ngn=='namd':
