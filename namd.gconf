@@ -13,8 +13,8 @@ vels = 1,2,3,4,5
 freq = 50,50,50,50,50
 howmany=100,20,20,2,1
 
-jobid = test
-dircounts= 1
+jobid = 100at1
+dircounts= 5
 
 ################################
 #####   Molecule configs   #####
@@ -105,9 +105,9 @@ ts   = 2.0
 n    = 3.
 environ = 03.exp
 howmany=100,20,20,2,1
-gate = ggatecpu2
+gate = steele2
 dircounts= 10
-cn   = 2
+cn   = 8
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
@@ -123,7 +123,8 @@ dist = 40.0
 ts   = 2.0
 n    = 2.,3.
 environ = 01.vac
-cn   = 2
+cn   = 4
+gate = steele2
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
@@ -138,7 +139,7 @@ envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
 n    = 4.
-environ = 02.imp,03.exp
+environ = 03.exp
 gate = ggatecpu2
 cn   = 2
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
@@ -147,7 +148,7 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = True
 path_seg= 0.1
 path_svel= 1.0
-howmany=100,20,20,2,1
+howmany=100,20,20,20,1
 langevD = 5
 
 [danvt_smd]
@@ -157,15 +158,16 @@ envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
 n    = 4.
-environ = 02.imp,03.exp
-cn   = 2
+environ = 03.exp
+gate = steele2
+cn   = 8
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = False  # means use actual length of path_seq etc.
 path_seg= 1.0
 path_svel= 1.0
-howmany=100,20,20,2,1
+howmany=100,20,20,10,1
 langevD = 5
 
 [da_d]
