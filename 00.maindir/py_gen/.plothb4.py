@@ -33,7 +33,7 @@ dt         = dct['freq']*ts/1000
 path_v_aps = path_vel/ts*1000
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 
-spos=xxsposxx
+spos=13.0
 beta=-0.6
 num =str(len(path_steps)).zfill(2)
 #_____________________________________________________________________________
@@ -75,7 +75,6 @@ def pack(stage):
     print len(wb_vecs)
 #____________________________________________________________________________
 def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
-    phase=int(stage)-1
     def residue_index(label):
         return int(re.sub("[^0-9]","",label))
     def charac_bond2(trajectory,distance_target):
@@ -88,42 +87,70 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
                     acc_count += 1
             acc_count_frames.append(acc_count)
         return acc_count_frames
-    #_________________________________________________________________________
+
     if sel != 'ihb':     # sel ==  'wp', 'hb'
         dct_sd_hb=pickle.load(open('%s-sd_%s.pkl' % (stage,sel),'rb'))
-        print '%s-sd_%s.pkl' %(stage,sel)     # pkl: sd_hb or sd_wp
+        print '%s-sd_%s.pkl' %(stage,sel)
         seeds = dct_sd_hb.keys()
+        traj_s= dct_sd_hb.values()
         acclens=[]
         for s in seeds:
             acc=[]
-            sample_i = dct_sd_hb[s]  # trajectory,dcd-length list with
-            for c in range(len(sample_i[0])):     # width of bonds per frame
-                hbc=len(sample_i[0][c]) # hbc-hydrogen-bond-count, 1 frame
-                acc.append(hbc)      # acc: counts over full trajectory
-            acclens.append(acc)      # acclens: all trajectories
-        data = np.array(acclens).mean(axis=0)
+            sample_i = dct_sd_hb[s]
+            for c in range(len(sample_i[0])):
+                hbc=len(sample_i[0][c])
+                acc.append(hbc)
+            acclens.append(acc)
+        idata= np.array(acclens)
+        data = idata.mean(axis=0)
+        #plot_hb(data,stage,sel)      # formerly plotted by stage
+        phase=int(stage)-1            # now, append, line up domains, plot
         if stage=='01':
             d = np.linspace(spos,spos+domain[phase],data.shape[0])
         elif stage !='01':
             d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[0])
-        # establish domain, by linspacing - vector same length as data(frames)
-        acc_d.append(d)              # acc_d.append(d[2:-2])
-        acc_b.append(data)           # acc_b.append(data[2:-2])
-    else: # sel == 'ihb'
+        acc_d.append(d[2:-2])
+        acc_b.append(data[2:-2])
+        if stage == '10':
+            dd = np.array(acc_d)
+            print dd.shape
+            d3 = np.reshape(dd,dd.shape[0]*dd.shape[1])
+            print d3.shape
+            bb = np.array(acc_b)
+            b3 = np.reshape(bb,bb.shape[0]*bb.shape[1])
+            print b3.shape
+            plt.plot(d3,b3,'k-',linewidth=1.5,label=b_label)
+    else:                # sel == 'ihb'
         dct_sd_hb=pickle.load(open('%s-sd_%s.pkl' % (stage,sel[1:3]),'rb'))
         print '%s-sd_%s.pkl' %(stage,sel[1:3])
         seeds = dct_sd_hb.keys()
         b_data = np.array([[charac_bond2(dct_sd_hb[s][0],n) for s in seeds] \
                      for n in [3,4,5]])
+        print b_data.shape
+        data  = b_data[index].mean(axis=0)
+        # len 3 list, with len ~100,200 length 100 lists inside, 3x100,100_long
+        #plot_hb(b_data,stage,sel)
+        print data.shape
+        phase=int(stage)-1            # now, append, line up domains, plot
         if stage=='01':
-            d = np.linspace(spos,spos+domain[phase],b_data.shape[2])
+            d = np.linspace(spos,spos+domain[phase],data.shape[0])
         elif stage !='01':
-            d = np.linspace(spos+domain[phase-1],spos+domain[phase], \
-                                 b_data.shape[2])
-        acc_d.append(d)
-        acc_b.append(b_data)
-#_____________________________________________________________________________
-def main_bond(sel,indx_clr=[(0,'k-','')]):
+            d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[0])
+        acc_d.append(d[2:-2])
+        print len(acc_d)
+        acc_b.append(data[2:-2])
+        if stage == '10':
+            dd = np.array(acc_d)
+            d3 = np.reshape(dd,dd.shape[0]*dd.shape[1])
+            print d3.shape
+            bb = np.array(acc_b)
+            print bb
+            b3 = np.reshape(bb,bb.shape[0]*bb.shape[1])
+            plt.plot(d3,b3,color,linewidth=1.5,label=b_label)
+
+def main_bond(sel,indx_clr=(0,'k-')):
+    acc_domain=[]
+    acc_bond  =[]
     # matplotlib
     fig=plt.figure()
     plt.clf()
@@ -136,34 +163,23 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     plt.xlabel('end-to-end distance ($\AA$)',fontproperties=fpropxxl)
     plt.ylabel('Average H-bond count',fontproperties=fpropxxl)
     # TICKS
-    # list = [0,10,20,30]
-    # plt.yticks(list,fontproperties=fpropxl)
-    # plt.yticks((0,10,20,30),fontproperties=fpropxl)
-    plt.yticks((0,1,2,3,4,5,6),fontproperties=fpropxl)
-    plt.xticks((10,15,20,25,30,35),fontproperties=fpropxl)
+    #list = [0,10,20,30]
+    #plt.yticks(list,fontproperties=fpropxl)
+    #plt.yticks((0,10,20,30),fontproperties=fpropxl)
+    #plt.xticks((15,20,25,30),fontproperties=fpropxl)
     # sub calls - list dirs 01,02, ... 10; call plot_pkl
     dirs = []
     for i in range(1,int(num)+1):
         dirs.append(str(i).zfill(2))
-    acc_domain=[]
-    acc_bond  =[]
     if sel == 'ihb':
-        [plot_pkl(st,sel,acc_domain,acc_bond,indx_clr[0][0],indx_clr[0][1],\
-                  indx_clr[0][2]) for st in sorted(dirs)]
-        ext = np.concatenate(acc_domain,axis=0)
-        bnd = np.concatenate(acc_bond,axis=2)
-        plt.plot(ext,bnd[0,::,::].mean(axis=0),'r-',linewidth=1.0, \
-                                              label=r"i$\rightarrow$i+3")
-        plt.plot(ext,bnd[1,::,::].mean(axis=0),'k-',linewidth=1.0, \
-                                              label=r"i$\rightarrow$i+4")
-        plt.plot(ext,bnd[2,::,::].mean(axis=0),'g-',linewidth=1.0, \
-                                              label=r"i$\rightarrow$i+5")
-    else: # 'hb','wp'
-        [plot_pkl(st,sel,acc_domain,acc_bond,indx_clr[0][0],indx_clr[0][1],\
-                   ) for st in sorted(dirs)]
-        ext = np.concatenate(acc_domain,axis=0)
-        bnd = np.concatenate(acc_bond,axis=0)
-        plt.plot(ext,bnd,'k-',linewidth=1.5,label='hydrogen bonds')
+        for i in range(0,len(indx_clr)):
+            acc_domain=[]
+            acc_bond  =[]
+            [plot_pkl(st,sel,acc_domain,acc_bond,indx_clr[i][0],indx_clr[i][1],\
+                      indx_clr[i][2]) for st in sorted(dirs)]
+    else:
+        [plot_pkl(st,sel,acc_domain,acc_bond,index,color) for st in sorted(dirs)]
+    # matplotlib - label axes on plots                      # MAIN CALL _ (2)
     # LEGEND
     plt.legend(loc='upper right')
     plt.gca().set_ylim(ymin=-0.2)
@@ -171,17 +187,17 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     leg.draw_frame(False)
     # DRAW
     plt.draw()
-    # SAVE:  ../../tex_workdir/fig_bond/plotname.png|.eps
+
     texdir = os.path.join(('/'.join(my_dir.split('/')[0:-2])), \
                        'tex_%s/fig_bond' % my_dir.split('/')[-3])
     if not os.path.exists(texdir): os.makedirs(texdir)
     plotname = 'xxplotnamexx_%s' % sel
     plt.savefig('%s/%s.png' % (texdir,plotname))
     plt.savefig('%s/%s.eps' % (texdir,plotname))
-    # matplotlib - end
 
-#___main_call_'hb','wp','ihb'_________________________________________________
-main_bond('hb')
-if my_dir.split('/')[-2].split('.')[1]=='exp':
+# main call  >>>  'hb','wp','ihb' ____________________________________
+main_bond('hb')                                  # MAIN CALL _ (1)
+if my_dir.split('/')[-2].split('.')[1] == 'exp':
     main_bond('wp')
-main_bond('ihb')
+main_bond('ihb',[(0,'r-',r"i$\rightarrow$i+3"),(1,'k-',r"i$\rightarrow$i+4"), \
+                                     (2,'g-',r"i$\rightarrow$i+5")])
