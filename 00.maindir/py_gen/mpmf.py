@@ -5,6 +5,7 @@ from glob import glob
 from sys import argv
 import numpy as np
 from random import *
+import matplotlib
 import matplotlib.pyplot as plt
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
@@ -53,7 +54,7 @@ def main():
                 plt.plot(d,w_i,'#000000',linewidth=0.3)
         def plot_pmf(data,st,c_lin):
             if st=='01':
-                print 'STAGE 01',data.shape[0]
+                print data.shape[0]
                 phase = int(st)-1
                 deltaf= np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
                 if phase == 0:
@@ -88,21 +89,17 @@ def main():
                 acc.append(sample_i)
             data = np.array(acc)
             print data.shape
-            #plot_work(data,st)
             plot_pmf(data,st,c_lin)
-
         def pkl_func(tp,clin):
             [pkl2(tp,s,clin) for s in stg_list]
     #_____________________________________________________________________
         fsvs_list=[]
         fsvs_dct={}
         stg_list=[]
-
         def build_list(list,item):
             while item not in list:
                 list.append(item)
             return list
-
         for path in glob(os.path.join(my_dir,'%s/*/*/*-sfwf.pkl' % f_older)):
             fold = path.split('/')[-4]
             solv = path.split('/')[-3]
@@ -119,16 +116,25 @@ def main():
             sfwf_pkl = pickle.load(open(path,'rb'))
             fsvs_list =build_list(fsvs_list ,(fold,solv,vel))
             fsvs_dct[(fold,solv,vel)][stg]=sfwf_pkl
-
         colors=['k','b','r','c','g','y','m']
         line_sty=['-','--','-.',':',' ']
-        #[pkl_func(tup,colors[select]) for tup in fsvs_list if (tup[1]==solvent) and (tup[2]==v.zfill(2))]
         lin = colors[select]+line_sty[select]
-        [pkl_func(tup,lin) for tup in fsvs_list if (tup[1]==solvent) and (tup[2]==v.zfill(2))]
-
+        [pkl_func(tup,lin) for tup in fsvs_list if (tup[1]==solvent) and \
+                                                   (tup[2]==v.zfill(2))]
     # matplotlib begin______________________________________
     fig=plt.figure()
     plt.clf()
+    # pmf_plot____CALLS_____________________________________
+    vel_p = '2'
+    solv_p= '01.vac'
+    #vel_p = sys.argv[1]
+    #solv_p= sys.argv[2]
+    # if smd, only 01 stages, use 0 in 5th spot
+    load_pmf(solv_p,vel_p,'01','cwd',0)
+    load_pmf(solv_p,vel_p,'10','cwd',1)
+    load_pmf(solv_p,vel_p,'10','cwd',2)
+    load_pmf(solv_p,vel_p,'10','cwd',3)
+    #_______________________________________________________
     v_dct ={'1':'1000','2':'100','3':'10','4':'1','5':'0.1'}
     plt.title('xxmoleculexx - xxngnxx - MULTI \n %s, %s $\AA$/ns' % \
             (solv_p.split('.')[1].upper(),v_dct[vel_p]))
@@ -143,24 +149,13 @@ def main():
     #plt.yticks(list,fontproperties=fpropxl)
     plt.yticks((0,10,20,30),fontproperties=fpropxl)
     plt.xticks((15,20,25,30,),fontproperties=fpropxl)
-    plt.xlim([13,33])                 # manually define
+    plt.xlim([xxsposxx,xxendxx])                 # manually define
     # LEGEND
-    #plt.legend(loc='lower right')
-    #leg = plt.gca().get_legend()
-    #leg.draw_frame(False)
-    # pmf_plot____CALLS_____________________________________
-    vel_p = '1'
-    solv_p= '01.vac'
-    #vel_p = sys.argv[1]
-    #solv_p= sys.argv[2]
-    # if smd, only 01 stages, use 0 in 5th spot
-    load_pmf(solv_p,vel_p,'01','cwd',0)
-    load_pmf(solv_p,vel_p,'10','cwd',1)
-    load_pmf(solv_p,vel_p,'10','cwd',2)
-    load_pmf(solv_p,vel_p,'10','cwd',3)
+    plt.legend(loc='upper left')
+    leg = plt.gca().get_legend()
+    leg.draw_frame(False)
     # DRAW__________________________________________________
     plt.draw()
-
     def tex_pic(v,s):
         texdir = os.path.join(my_dir,'tex_%s/fig_pmf' % my_dir.split('/')[-1])
         if not os.path.exists(texdir): os.makedirs(texdir)
@@ -169,8 +164,8 @@ def main():
     def continue_pic():
         plt.savefig('danamd.png') # % (texdir,n))
         plt.savefig('danamd.eps') # % (texdir,n))
-    #tex_pic(vel_p,solv_p.split('.')[1])
-    continue_pic()
+    tex_pic(vel_p,solv_p.split('.')[1])
+    #continue_pic()
 
 if __name__=="__main__":
     main()

@@ -14,8 +14,8 @@ vels = 1,2,3,4,5
 freq = 50,50,50,50,50
 howmany=100,20,20,2,1
 
-jobid = test5
-dircounts= 2,4
+jobid = test6
+dircounts= 4,5,6
 
 ################################
 #####   Molecule configs   #####
