@@ -159,8 +159,8 @@ def main():
     def tex_pic(v,s):
         texdir = os.path.join(my_dir,'tex_%s/fig_pmf' % my_dir.split('/')[-1])
         if not os.path.exists(texdir): os.makedirs(texdir)
-        plt.savefig('%s/danamd%s%s.png' % (texdir,s,v))
-        plt.savefig('%s/danamd%s%s.eps' % (texdir,s,v))
+        plt.savefig('%s/xxplotnamexx%s%s.png' % (texdir,s,v))
+        plt.savefig('%s/xxplotnamexx%s%s.eps' % (texdir,s,v))
     def continue_pic():
         plt.savefig('danamd.png') # % (texdir,n))
         plt.savefig('danamd.eps') # % (texdir,n))
