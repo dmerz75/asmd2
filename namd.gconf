@@ -14,8 +14,8 @@ vels = 1,2,3,4,5
 freq = 50,50,50,50,50
 howmany=100,20,20,2,1
 
-jobid = test6
-dircounts= 4,5,6
+jobid = i3v_12
+dircounts= 7,14,28,56
 
 ################################
 #####   Molecule configs   #####
@@ -139,19 +139,21 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
-environ = 01.vac,02.imp,03.exp
-gate = fgatecpu2
-cn   = 1
+n    = 3.
+#environ = 01.vac,02.imp,03.exp
+#e times = imp,2procs: 150/1500(25min)
+environ = 02.imp
+gate = steele2
+cn   = 4
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
-wallt= lwt
+wallt= mwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
-queue= workq
+queue= standby
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = True
 path_seg= 0.1
 path_svel= 1.0
-howmany=100,4,51,2,1
+howmany=100,16,15,2,1
 langevD = 5
 
 [danvt_smd]
@@ -160,9 +162,10 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
-environ = 01.vac,02.imp,03.exp
-gate = fgatecpu2
+n    = 3.
+#environ = 01.vac,02.imp,03.exp
+environ = 02.imp
+gate = steele2
 cn   = 1
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
 wallt= lwt
