@@ -346,10 +346,10 @@ class a_Smd_Method:
                    '.py',ddir,'go.py')
             if ds=='01':
                 if self.ngn=='namd':
-                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
-                           'smd_initial.namd',ddir,'smd.namd')
-                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
-                           'smd_force.tcl',ddir,'smdforce.tcl')
+                    cp_file(os.path.join(self.ndir,'mol.conf.tcl',self.mol, \
+                            self.env),'smd_initial.namd',ddir,'smd.namd')
+                    cp_file(os.path.join(self.ndir,'mol.conf.tcl',self.mol, \
+                            self.env),'smd_force.tcl',ddir,'smdforce.tcl')
                 if self.ngn=='amb':
                     cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
                             'smd.in',ddir,'smd.in')
@@ -357,10 +357,10 @@ class a_Smd_Method:
                             'dist.RST',ddir,'dist.RST')
             elif ds!='01':
                 if self.ngn=='namd':
-                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
-                           'smd_continue.namd',ddir,'smd.namd')
-                    cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
-                           'smd_force.tcl',ddir,'smdforce.tcl')
+                    cp_file(os.path.join(self.ndir,'mol.conf.tcl',self.mol, \
+                            self.env),'smd_continue.namd',ddir,'smd.namd')
+                    cp_file(os.path.join(self.ndir,'mol.conf.tcl',self.mol, \
+                            self.env),'smd_force.tcl',ddir,'smdforce.tcl')
                 if self.ngn=='amb':
                     cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
                             'smd_r.in',ddir,'smd.in')
