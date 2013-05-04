@@ -145,7 +145,7 @@ class a_Smd_Method:
             print '?@#$! total distance doesn\'t match path_seg dist'
             sys.exit()
         #len_hb_pkl=500 # length of the hydrogen bond pkl
-        self.hb_l = 500 # length of the hydrogen bond pkl
+        self.hb_l = 200 # length of the hydrogen bond pkl
         #___CONFIG_SECTION_END
     def a_makeEnvDir(self):
         if not os.path.exists(self.edir):os.makedirs(self.edir)
