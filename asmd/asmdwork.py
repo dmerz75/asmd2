@@ -54,12 +54,15 @@ class a_make_JobDirSmd:
         if not os.path.exists(self.jdir):os.makedirs(self.jdir)
         texdir=os.path.join(self.jdir,'tex_%s' % self.jdir.split('/')[-1])
         if not os.path.exists(texdir): os.makedirs(texdir)
-        cp_file(self.workdir,'gen.py',self.jdir,'.gen_%s.py' % \
+        cp_file(self.workdir,'gen.py',self.pdir,'.gen_%s.py' % \
                   self.jdir.split('/')[-1])
         cp_file(self.pydir,'pipe.py',self.jdir,'pipe.py')
         cp_file(self.mdir,'tex/tm.tex',texdir,'tm.tex')
         cp_file(self.mdir,'tex/pdflatex.sh',texdir,'pdflatex.sh')
-        cp_file(self.pydir,'del.py',self.jdir,'del.py')
+        #cp_file(self.pydir,'del.py',self.jdir,'del.py')
+        cp_file(self.pydir,'del.py',self.pdir,'del.py')
+        cp_file(self.workdir,'%s.gconf' % self.ngn,self.pdir,'.%s.gconf' % \
+                self.ngn)
         if self.ngn == 'namd':
             if not os.path.exists(os.path.join(self.jdir,'toppar')):
                 cp_tree(self.ndir,'toppar',self.jdir,'toppar')

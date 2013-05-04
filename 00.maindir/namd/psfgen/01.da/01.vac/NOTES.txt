@@ -1,1 +1,0 @@
-# nm.pdb and nm.psf are the same as the other psf and pdb

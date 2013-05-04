@@ -1,5 +1,0 @@
-# orisel.pdb
-
-select.pdb was printed from equilibration dcd
-
-orisel is the reorientation of that selection onto the z-axis

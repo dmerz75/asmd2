@@ -14,8 +14,8 @@ vels = 1,2,3,4,5
 freq = 50,50,50,50,50
 howmany=100,20,20,2,1
 
-jobid = allvie
-dircounts= 42
+jobid = hund
+dircounts= 20
 
 ################################
 #####   Molecule configs   #####
@@ -26,38 +26,48 @@ dircounts= 42
 #          'lwt':'walltime=072:00:00','dwt':'walltime=15:00:00:00'}
 # configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
 #          'standby-8':'standby-8','debug':'tg_debug'}
+# gates
+# fgatecpu2,ggatecpu2,steele2,keene,stibv2,sth2
 # end options
 
 [da]
+jobid = hund
+dircounts= 5
+
 mol = da
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
-gate = steele2
-queue= standby
-environ = 01.vac,02.imp,03.exp
-howmany = 100,3,40,2,1
+n    = 2.,3.,4.
+gate = ggatecpu2
+#environ = 01.vac,02.imp,03.exp
+environ = 01.vac
+howmany = 100,20,20,2,1
 cn   = 1
-wallt= sst
-ppn_env = 01.vac:cn,02.imp:cn,03.exp:4
+wallt= lwt
+queue= standby
+ppn_env = 01.vac:cn,02.imp:cn,03.exp:cn
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
 path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
 
 [da_smd]
+jobid = hund
+dircounts= 40
+
 mol = da
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 1.,2.,3.
-gate = fgatecpu2
-environ = 01.vac,03.exp
-howmany = 100,50,10,2,1
+n    = 2.,3.,4.
+gate = ggatecpu2
+environ = 01.vac
+howmany = 100,20,20,2,1
 cn   = 1
+wallt= lwt
 queue= standby
 ppn_env = 01.vac:1,02.imp:cn,03.exp:2
 wt_env  = 01.vac:wallt,02.imp:mwt,03.exp:dwt
@@ -134,45 +144,52 @@ path_seg= 1.0
 path_svel= 1.0
 
 [danvt]
+jobid = hund
+dircounts= 25
+
 mol = danvt
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
+n    = 2.,3.,4.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
 #environ = 01.vac,02.imp,03.exp
 #e times = imp,2procs: 150/1500(25min)
 #environ = 02.imp
 environ = 03.exp
-gate = steele2
+#gate = steele2
+gate = ggatecpu2
 comp = cpu
 cn   = 2
 ppn_env = 01.vac:1,02.imp:cn,03.exp:cn
-wallt= mwt
+wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
-queue= standby
-q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
-lnspc   = True
+queue = standby
+q_env = 01.vac:queue,02.imp:queue,03.exp:queue
+lnspc = True
 path_seg= 0.1
 path_svel= 1.0
 freq = 50,50,50,50,50
-#owmany=100,16,15,2,1
-howmany=100,7,7,2,1
+howmany=100,4,4,1,1
 langevD = 5
 
 [danvt_smd]
+jobid = hund
+dircounts= 40
+
 mol = danvt
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
-environ = 01.vac,02.imp,03.exp
+n    = 2.,3.,4.
+#environ = 01.vac,02.imp,03.exp
+environ = 03.exp
 gate = ggatecpu2
 cn   = 2
-ppn_env = 01.vac:1,02.imp:cn,03.exp:3
+ppn_env = 01.vac:1,02.imp:cn,03.exp:cn
 wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
 queue= workq
@@ -291,52 +308,59 @@ howmany=100,5,51,2,1
 langevD = 5
 
 [da_r3]
+jobid = hund
+dircounts= 20
+
 mol = da_r3
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
+n    = 2.,3.,4.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
-#environ = 02.imp
-environ = 03.exp
-gate = steele2
+environ = 02.imp
+#environ = 03.exp
+#gate = steele2
+#gate = sth2
 #gate = ggatecpu2
-cn   = 2
+gate = ggatecpu2
+cn   = 1
 comp = cpu
-ppn_env = 01.vac:1,02.imp:cn,03.exp:3
+ppn_env = 01.vac:1,02.imp:cn,03.exp:1
 #wallt= mwt
-wallt= mwt
-wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
+wallt= lwt
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
 queue= standby
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = True
 path_seg= 0.1
 path_svel= 1.0
-freq = 50,50,20,50,50
-# owmany=100,15,15,2,1
-howmany=100,7,7,2,1
+freq = 50,50,50,50,50
+howmany=100,5,5,2,1
 langevD = 5
 
 [da_r3_smd]
+jobid = hund
+dircounts= 40
+
 mol = da_r3
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
-#environ = 01.vac,02.imp,03.exp
+n    = 2.,3.,4.
+#nviron = 01.vac,02.imp,03.exp
 environ = 02.imp
-gate = fgatecpu2
+gate = ggatecpu2
 cn   = 2
 ppn_env = 01.vac:1,02.imp:cn,03.exp:3
-wallt= dwt
+wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:dwt
 queue= workq
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = False  # means use actual length of path_seq etc.
 path_seg= 1.0
 path_svel= 1.0
-howmany=100,50,50,2,1
+howmany=100,20,20,2,1
 langevD = 5

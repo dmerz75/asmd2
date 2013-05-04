@@ -45,6 +45,7 @@ def run_namd(i):
     os.rename('smdforces.out','%d-tef.dat.%s' % (i,seed))
     os.rename('daOut.coor','daOut.coor.%s' % (seed))
     os.rename('daOut.vel','daOut.vel.%s' % (seed))
+    os.rename('daOut.dcd','daOut.dcd.%s' % (seed))
     os.system('python ../hb.py %d %s' % (i,seed))
     return tt
 
