@@ -32,7 +32,7 @@ dircounts= 20
 
 [da]
 jobid = hund
-dircounts= 5
+dircounts= 5,2327,92
 
 mol = da
 zcrd = 13.0
