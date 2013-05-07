@@ -115,12 +115,14 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
         seeds = dct_sd_hb.keys()
         b_data = np.array([[charac_bond2(dct_sd_hb[s][0],n) for s in seeds] \
                      for n in [3,4,5]])
+        '''
         if stage=='01':
             d = np.linspace(spos,spos+domain[phase],b_data.shape[2])
         elif stage !='01':
             d = np.linspace(spos+domain[phase-1],spos+domain[phase], \
                                  b_data.shape[2])
         acc_d.append(d)
+        '''
         acc_b.append(b_data)
 #_____________________________________________________________________________
 def main_bond(sel,indx_clr=[(0,'k-','')]):
@@ -150,8 +152,22 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     if sel == 'ihb':
         [plot_pkl(st,sel,acc_domain,acc_bond,indx_clr[0][0],indx_clr[0][1],\
                   indx_clr[0][2]) for st in sorted(dirs)]
-        ext = np.concatenate(acc_domain,axis=0)
-        bnd = np.concatenate(acc_bond,axis=2)
+        print acc_bond[0].shape
+        acc_count_traj = []
+        for ab in acc_bond:
+            print ab.shape
+            print ab.shape[1]
+            acc_count_traj.append(ab.shape[1])
+        min_val = min(acc_count_traj)
+        print type(min_val),'min_val',min_val
+        acc_count_trim_traj = []
+        for ab in acc_bond:
+            b = ab[:,:min_val,:]
+            print b.shape
+            acc_count_trim_traj.append(b)
+        bnd = np.concatenate(acc_count_trim_traj,axis=2)
+        print bnd.shape
+        ext = np.linspace(spos,spos+dist,bnd.shape[2])
         plt.plot(ext,bnd[0,::,::].mean(axis=0),'r-',linewidth=1.0, \
                                               label=r"i$\rightarrow$i+3")
         plt.plot(ext,bnd[1,::,::].mean(axis=0),'k-',linewidth=1.0, \
