@@ -126,41 +126,41 @@ def  print_dict(dt):
         print key,value
         print ''
 #_____CODE_____________________________________________________________________
-def asmd(dircount):
-    def a_work_dir():
-        w = a_make_JobDirSmd(ngn[0],mol,zcrd,workdir,jobdir,pack_dir)
-        subdir = w.a_makeJobDir()
+def asmd(dircount,tps,v):
+    def work_dir():
+        w = est_JobDir(ngn[0],mol,zcrd,workdir,jobdir,\
+                pack_dir)
+        subdir = w.makeJobDir()
         w.reg_exp(subdir)
-    def call_a_Struc(ng,mol,env,workdir,jobdir,pack_dir):
-        s = a_Struc_Dirs(ng,mol,env,workdir,jobdir,pack_dir)
-        s.a_makeStrucDir()
-    def call_a_Smd(ng,mol,env,v,zc,workdir,jobdir,pack_dir):
+    def make_struc(ng,mol,env,workdir,jobdir,pack_dir):
+        s = est_StrucDir(ng,mol,env,workdir,jobdir,pack_dir)
+        s.makeStrucDir()
+    def make_asmd(ng,mol,env,v,zc,workdir,jobdir,\
+            pack_dir):
         config = super_pickle(int(v))
         stages = len(config[int(v)][0][5])
         print 'ASMD is ready with',ng,'for',mol,'in',env,'at velocity',v, \
               'assembled inside',jobdir+'.'
-        f=a_Smd_Method(ng,mol,env,v,ts,zc,langevD,workdir,jobdir,pack_dir,\
-              gate,ppn_env[env],comp,wt_env[env],q_env[env],dircount,stages, \
-              direct,dist,config)
-        f.a_makeEnvDir()
-        f.a_makeVelDir()
-        f.a_makeContainDir()
-        f.a_savepickle()
-        f.a_makeSubDir()
-        f.a_steering_control()
-    # asmd():
+        f=AsmdMethod(ng,mol,env,v,ts,zc,langevD,workdir,jobdir,pack_dir,gate, \
+            ppn_env[env],comp,wt_env[env],q_env[env],dircount,stages,direct, \
+            dist,config)
+        f.makeEnvDir()
+        f.makeVelDir()
+        f.makeContainDir()
+        f.savePickle()
+        f.makeSubDir()
+        f.steering_control()
+    # begin def asmd():
     pack_dir=ngn[0][0]+molec+'_'+jobid
-        # molec[0]
     workdir=os.path.abspath(os.path.dirname(__file__))
-    jobdir =ngn[0][0]+molec+str(dircount)+'_'+jobid
-        # molec[0]
-    a_work_dir()
-    [call_a_Struc(ng,mol,env,workdir,jobdir,pack_dir) for ng in ngn \
-         for env in environ]
-         # for mol in molec
-    [call_a_Smd(ng,mol,env,v,envdist[env],workdir,jobdir,pack_dir) for ng \
-         in ngn for env in environ for v in n]
-         # for mol in molec
+    # formerly, jobdir =ngn[0][0]+molec+str(dircount)+'_'+jobid
+    # declare in asmdwork.py
+    jobdir = tps
+    work_dir()
+    [make_struc(ng,mol,env,workdir,jobdir,pack_dir) \
+            for ng in ngn for env in environ]
+    [make_asmd(ng,mol,env,v,envdist[env],workdir,jobdir, \
+            pack_dir) for ng in ngn for env in environ]
     os.chdir(my_dir)
     return pack_dir
 
@@ -170,7 +170,6 @@ def tar_ball(t_dir):
     tar.add(t_dir)
     tar.close()
 #______________________________________________________________________________
-for d in dircounts:
-    pd=asmd(str(d))
-tar_ball(pd)                            # tarball
+pd=[asmd(str(d),str(int(hows_l[int(v)-1])*int(d)),v) for d in dircounts for v in n]
+tar_ball(pd[0]) # tarball
 #[asmd(str(d)) for d in dircounts]
