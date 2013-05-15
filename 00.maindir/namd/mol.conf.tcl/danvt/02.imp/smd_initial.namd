@@ -21,6 +21,7 @@ temperature         300
 # gbis implicit solvent
 GBIS                 on
 SASA                 on
+ionConcentration    0.3
 
 # Force-Field Parameters
 exclude             scaled1-4

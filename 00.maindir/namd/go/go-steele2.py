@@ -4,7 +4,7 @@ from glob import glob
 import numpy as np
 from random import randint
 
-JOBID = os.environ['PBS_JOBID'].split('.')[0]
+#JOBID = os.environ['PBS_JOBID'].split('.')[0]
 
 my_dir=os.path.abspath(os.path.dirname(__file__))
 num   =my_dir.split('/')[-2]

@@ -10,58 +10,37 @@ import matplotlib.pyplot as plt
 my_dir = os.path.abspath(os.path.dirname(__file__))
 num=sys.argv[1]
 
-class mdict(dict):
-    def __setitem__(self,key,value):
-        self.setdefault(key,[]).append(value)
-def print_dict(dct):
-    for key,val in dct.items():
-        print key,val
-        print ''
-    return key
-
-config = pickle.load(open('config.pkl','rb'))
-key = print_dict(config)
-
-vel  = key
-dist = config[vel][0][0]
-ts   = config[vel][0][1]
-path_seg   = config[vel][0][2]
-path_svel  = config[vel][0][3]
-path_vel   = config[vel][0][4]
-path_steps = config[vel][0][5]
-dct        = config[vel][0][6]       # 'freq'  50*ts/1000
-dt         = dct['freq']*ts/1000
-path_v_aps = path_vel/ts*1000
-domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
-
-spos=xxsposxx
-beta=-0.6
-quota=xxquotaxx*xxhowmanyxx
-
 def pack_pkl(stage):
-    dct_s_hb={}
-    dct_s_whb={}
-    phase = int(stage)-1
-    # protein - protein
-    for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*pr*.pkl.*' % stage)):
-        print path
-        seed = path.split('.')[-1]
-        sample_i = pickle.load(open(path,'rb'))
-        if len(sample_i)==xxlenbpklxx:
-            dct_s_hb[seed]=[sample_i]
-            os.remove(path)
-    if len(dct_s_hb)>0:
-        pickle.dump(dct_s_hb,open('%s-sd_hb.pkl' % stage,'w'))
-    if my_dir.split('/')[-2].split('.')[1]=='exp':
-        for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*segid*.pkl.*' % stage)):
+    ''' Combine bonding pickles into 1 file.
+        hb_protein-protein.pkl  =>  01-sd_hb.pkl
+    '''
+    with open('%s-sd_hb.pkl' % stage,'w') as hpk:
+        for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*pr*.pkl.*' % stage)):
+            dct_s_hb={}
             print path
             seed = path.split('.')[-1]
             sample_i = pickle.load(open(path,'rb'))
-            if len(sample_i)==100:
-                dct_s_whb[seed]=[sample_i]
+            if len(sample_i)==xxlenbpklxx:
+                dct_s_hb[seed]=[sample_i]
                 os.remove(path)
-        if len(dct_s_hb)>0:
-            pickle.dump(dct_s_whb,open('%s-sd_wp.pkl' % stage,'w'))
+            if len(dct_s_hb)>0:
+                pickle.dump(dct_s_hb,hpk) 
+
+    ''' Combine bonding pickles into 1 file.
+        protein-water           =>  01-sd_wp.pkl
+    '''
+    if my_dir.split('/')[-2].split('.')[1]=='exp':
+        with open('%s-sd_wp.pkl' % stage,'w') as wpk:
+            for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*segid*.pkl.*' % stage)):
+                dct_s_whb={}
+                print path
+                seed = path.split('.')[-1]
+                sample_i = pickle.load(open(path,'rb'))
+                if len(sample_i)==xxlenbpklxx:
+                    dct_s_whb[seed]=[sample_i]
+                    os.remove(path)
+                if len(dct_s_hb)>0:
+                    pickle.dump(dct_s_whb,wpk)
 
 # main call
 pack_pkl(num)
