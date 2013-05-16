@@ -221,7 +221,8 @@ if quota[0] > 99:
 else:
     n = str(quota[0])
 
-lst_name[0]=('pmf_namd_da_')
+####  plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')
+lst_name[0]=('pmf_xxngnxx_xxmoleculexx_')
 lst_name[1]=my_dir.split('/')[-2].split('.')[1]+'_'
 lst_name[2]='v'+dct_vel[velcode]+'_'
 lst_name[3]='n'+n+'_'

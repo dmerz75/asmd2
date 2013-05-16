@@ -68,51 +68,53 @@ def main():
         print 'stderr >> ',stderr
         #cdict[stage]=stout.split('.')[0]
 
-    def find_job(f,vel,solv,st):
-        for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s/*/job.sh'%(f,solv,vel,st))):
-            fd =(path.split('/')[-6])
-            num=(path.split('/')[-4])
-            sol=(path.split('/')[-5]).split('.')[1]
-            stg=(path.split('/')[-3])
-            jtype=num+sol+stg
-            acc.append(jtype)
-            if path.split('/')[0]=='export':
-                root='/'+'/'.join(path.split('/')[2:-1])
-                path='/'+'/'.join(path.split('/')[2:])
-            else:
-                root='/'.join(path.split('/')[:-1])
-            print root
-            print path
-            os.chdir(root)
-            qsub_job(stg,path)
-        for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s-job.sh'%(f,solv,vel,st))):
-            fd =(path.split('/')[-4])
-            num=(path.split('/')[-2])
-            sol=(path.split('/')[-3]).split('.')[1]
-            stg=(path.split('/')[-1]).split('-')[0]
-            if path.split('/')[0]=='export':
-                root='/'+'/'.join(path.split('/')[2:-1])
-                path='/'+'/'.join(path.split('/')[2:])
-            else:
-                root='/'.join(path.split('/')[:-1])
-            print root
-            print path
-            os.chdir(root)
-            qsub_jobc(stg,path)
-        for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s-jobh.sh'%(f,solv,vel,st))):
-            fd =(path.split('/')[-4])
-            num=(path.split('/')[-2])
-            sol=(path.split('/')[-3]).split('.')[1]
-            stg=(path.split('/')[-1]).split('-')[0]
-            if path.split('/')[0]=='export':
-                root='/'+'/'.join(path.split('/')[2:-1])
-                path='/'+'/'.join(path.split('/')[2:])
-            else:
-                root='/'.join(path.split('/')[:-1])
-            print root
-            print path
-            os.chdir(root)
-            qsub_jobh(stg,path)
+    def find_job(f,vel,solv,stages):
+        def job_stage(st):
+            for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s/*/job.sh'%(f,solv,vel,st))):
+                fd =(path.split('/')[-6])
+                num=(path.split('/')[-4])
+                sol=(path.split('/')[-5]).split('.')[1]
+                stg=(path.split('/')[-3])
+                jtype=num+sol+stg
+                acc.append(jtype)
+                if path.split('/')[0]=='export':
+                    root='/'+'/'.join(path.split('/')[2:-1])
+                    path='/'+'/'.join(path.split('/')[2:])
+                else:
+                    root='/'.join(path.split('/')[:-1])
+                print root
+                print path
+                os.chdir(root)
+                qsub_job(stg,path)
+            for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s-job.sh'%(f,solv,vel,st))):
+                fd =(path.split('/')[-4])
+                num=(path.split('/')[-2])
+                sol=(path.split('/')[-3]).split('.')[1]
+                stg=(path.split('/')[-1]).split('-')[0]
+                if path.split('/')[0]=='export':
+                    root='/'+'/'.join(path.split('/')[2:-1])
+                    path='/'+'/'.join(path.split('/')[2:])
+                else:
+                    root='/'.join(path.split('/')[:-1])
+                print root
+                print path
+                os.chdir(root)
+                qsub_jobc(stg,path)
+            for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s-jobh.sh'%(f,solv,vel,st))):
+                fd =(path.split('/')[-4])
+                num=(path.split('/')[-2])
+                sol=(path.split('/')[-3]).split('.')[1]
+                stg=(path.split('/')[-1]).split('-')[0]
+                if path.split('/')[0]=='export':
+                    root='/'+'/'.join(path.split('/')[2:-1])
+                    path='/'+'/'.join(path.split('/')[2:])
+                else:
+                    root='/'.join(path.split('/')[:-1])
+                print root
+                print path
+                os.chdir(root)
+                qsub_jobh(stg,path)
+        [job_stage(st) for st in stages]
 
     #__________________________________________________________________________
     # submitted 02:
@@ -129,9 +131,8 @@ def main():
     # alternatively, limit stages to ['01','02','03']
     # MAIN SUBMISSION CALL
     # alternatively, qsub_job('01','vac')
-    [find_job(dirs[0],v,s,st) for v in velocities for s in solvents for st in stages]
-    #[find_job(f,v,s,st) for f in dirs for v in velocities for s in solvents \
-    #          for st in stages]
+    [find_job(dirs[0],v,s,stages) for s in solvents for v in velocities]
+    #[find_job(f,v,s,stages) for f in dirs for v in velocities for s in solvents]
     #__________________________________________________________________________
 
     # informational purposes only

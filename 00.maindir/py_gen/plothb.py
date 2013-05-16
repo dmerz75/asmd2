@@ -130,7 +130,7 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     fig=plt.figure()
     plt.clf()
     # TITLE
-    plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')
+    #plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')
     # FONTSIZE
     fpropxxl=matplotlib.font_manager.FontProperties(size='xx-large')
     fpropxl=matplotlib.font_manager.FontProperties(size='x-large')
@@ -187,14 +187,57 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     leg.draw_frame(False)
     # DRAW
     plt.draw()
-    # SAVE:  ../../tex_workdir/fig_bond/plotname.png|.eps
-    texdir = os.path.join(('/'.join(my_dir.split('/')[0:-2])), \
-                       'tex_%s/fig_bond' % my_dir.split('/')[-3])
-    if not os.path.exists(texdir): os.makedirs(texdir)
-    plotname = 'xxplotnamexx_%s' % sel
-    plt.savefig('%s/%s.png' % (texdir,plotname))
-    plt.savefig('%s/%s.eps' % (texdir,plotname))
+
+    '''
+    def tex_pic(num,name):
+        # SAVE:  ../../tex_workdir/fig_bond/plotname.png|.eps
+        texdir = os.path.join(('/'.join(my_dir.split('/')[0:-3])), \
+                       'tex_%s/fig_bond' % my_dir.split('/')[-4])
+        if not os.path.exists(texdir): os.makedirs(texdir)
+        plotname = 'xxplotnamexx_%s' % sel
+        plt.savefig('%s/%s.png' % (texdir,plotname))
+        plt.savefig('%s/%s.eps' % (texdir,plotname))
     # matplotlib - end
+    '''
+
+    def tex_pic(num,name):
+        texdir = os.path.join(('/'.join(my_dir.split('/')[0:-3])), \
+                'tex_%s/fig_bond') % my_dir.split('/')[-4]
+        if not os.path.exists(texdir): os.makedirs(texdir)
+        plt.savefig('%s/%s.png' %(texdir,name))
+        plt.savefig('%s/%s.eps' %(texdir,name))
+    def cwd_pic(num,name):
+        plt.savefig('%s.png' % name)
+        plt.savefig('%s.eps' % name)
+    def final_pic(num,name):
+        plt.savefig('../../../../fig/%s.png' % name)
+        plt.savefig('../../../../fig/%s.eps' % name)
+
+    lst_name=['','','','','']
+    velcode=my_dir.split('/')[-1]
+    dct_vel={'01':'1000','02':'100','03':'10','04':'1','05':'p1'}
+    dct_case={100:'100',150:'150',200:'200',250:'250',400:'400',600:'600',800:'800'}
+    if quota[0] > 99:
+        n = dct_case.get(quota[0],dct_case[min(dct_case.keys(), \
+                                 key=lambda k:abs(k-quota[0]))])
+    else:
+        n = str(quota[0])
+
+    #plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')
+    lst_name[0]=('bond_xxngnxx_xxmoleculexx_')
+    lst_name[1]=my_dir.split('/')[-2].split('.')[1]+'_'
+    lst_name[2]='v'+dct_vel[velcode]+'_'
+    lst_name[3]='n'+n+'_'
+    if int(num) > 1:
+        lst_name[4]='asmd'
+    else:
+        lst_name[4]='smd'
+    print ''.join(lst_name)
+    name = ''.join(lst_name)
+
+    tex_pic(num,name)
+    #cwd_pic(num,name)
+    #final_pic(num,name)
 
 #___main_call_'hb','wp','ihb'_________________________________________________
 main_bond('hb')

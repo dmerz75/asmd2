@@ -135,24 +135,23 @@ path_seg= 1.0
 path_svel= 1.0
 
 [danvt]
-jobid = idn_1248
-dircounts= 10,20,40,80
+jobid = eta
+dircounts= 3,4
 mol = danvt
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.,4.
+n    = 2.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
-#environ = 01.vac,02.imp,03.exp
-environ = 02.imp
-gate = ggatecpu2
-#gate = sth2
+environ = 01.vac,02.imp,03.exp
+#gate = ggatecpu2
+gate = sth2
 comp = cpu
 cn   = 1
-ppn_env = 01.vac:1,02.imp:cn,03.exp:cn
-wallt= lwt
+ppn_env = 01.vac:1,02.imp:cn,03.exp:2
+wallt= mwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
 queue = standby
 q_env = 01.vac:queue,02.imp:queue,03.exp:queue
@@ -160,7 +159,7 @@ lnspc = True
 path_seg= 0.1
 path_svel= 1.0
 freq = 50,50,50,50,50
-howmany=100,10,10,1,1
+howmany=100,3,3,1,1
 langevD = 5
 
 [danvt_smd]
