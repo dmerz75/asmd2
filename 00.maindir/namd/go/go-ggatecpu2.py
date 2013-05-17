@@ -4,11 +4,12 @@ from glob import glob
 import numpy as np
 from random import randint
 
-#JOBID = os.environ['PBS_JOBID'].split('.')[0]
-
 my_dir=os.path.abspath(os.path.dirname(__file__))
+
 num   =my_dir.split('/')[-2]
 prev_num=str(int(num)-1).zfill(2)
+cwd_num =int(my_dir.split('/')[-1])
+
 predir1='/'.join(my_dir.split('/')[0:-1])
 predir2='/'.join(my_dir.split('/')[0:-2])
 cfile =os.path.join(predir2,'%s-continue.py' % prev_num)
@@ -16,7 +17,6 @@ cfile =os.path.join(predir2,'%s-continue.py' % prev_num)
 howmany= xxhowmanyxx
 quota  = xxquotaxx*xxhowmanyxx
 t_data = np.array([])
-slist  = []
 
 def cp_file(f_dir,f,d_dir,d):
     shutil.copy(os.path.join(f_dir,f),os.path.join(d_dir,d))
@@ -30,11 +30,17 @@ def reg_ex(script,subout,subin,n):
     o.write(text)
     o.close()
 
-def run_namd(i):
-    seed = randint(10000,99999)
-    while seed in slist:
-        seed = randint(10000,99999)
-    slist.append(seed)
+def run_namd(i,st_num,c_num):
+    ''' 01.txt:
+             dir = the number of columns
+             tpd = len(column)
+        # parameters
+        i     : i in howmany
+        st_num: stage
+        c_num : current directory
+    '''
+    sd_arr = np.loadtxt('../%s.txt' % st_num)
+    seed = int(sd_arr[i-1,c_num])
     cp_file(my_dir,'smd.namd',my_dir,'smd.namd.%s' % (seed))
     script = os.path.join(my_dir,'smd.namd.%s' % (seed))
     reg_ex(script,'xxxxx',str(seed),i)
@@ -63,7 +69,7 @@ def check_vel(pnum):
 check_vel(prev_num)
 
 for i in range(1,howmany+1):
-    t1 = run_namd(i)
+    t1 = run_namd(i,num,cwd_num)
     t_data = np.append(t_data,t1)
     if i%howmany==0:
         np.savetxt('time.dat',t_data,fmt='%.4f')

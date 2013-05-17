@@ -14,8 +14,8 @@ predir1='/'.join(my_dir.split('/')[0:-1])
 predir2='/'.join(my_dir.split('/')[0:-2])
 cfile =os.path.join(predir2,'%s-continue.py' % prev_num)
 
-howmany= xxhowmanyxx
-quota  = xxquotaxx*xxhowmanyxx
+howmany= 5
+quota  = 3*5
 t_data = np.array([])
 
 def cp_file(f_dir,f,d_dir,d):
@@ -39,15 +39,14 @@ def run_namd(i,st_num,c_num):
         st_num: stage
         c_num : current directory
     '''
+    index = i - 1
     sd_arr = np.loadtxt('../%s.txt' % st_num)
-    seed = int(sd_arr[i-1,c_num])
+    seed = int(sd_arr[index,c_num])
     cp_file(my_dir,'smd.namd',my_dir,'smd.namd.%s' % (seed))
     script = os.path.join(my_dir,'smd.namd.%s' % (seed))
     reg_ex(script,'xxxxx',str(seed),i)
     st = time.time()
-    os.system('charmrun ++local +pxxnodecountxx \
-              /apps/rhel5/namd/NAMD_2.9b2_Linux-x86_64-ibverbs/namd2 \
-              smd.namd.%s > run.log' % (seed))
+    os.system('namd2 +p1 smd.namd.%s > run.log' % seed)
     tt = time.time()-st
     os.remove(script)
     os.rename('smdforces.out','%d-tef.dat.%s' % (i,seed))

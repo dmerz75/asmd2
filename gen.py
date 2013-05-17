@@ -136,14 +136,14 @@ def asmd(dircount,tps,v):
         s = est_StrucDir(ng,mol,env,workdir,jobdir,pack_dir)
         s.makeStrucDir()
     def make_asmd(ng,mol,env,v,zc,workdir,jobdir,\
-            pack_dir):
+            pack_dir,tpd):
         config = super_pickle(int(v))
         stages = len(config[int(v)][0][5])
         print 'ASMD is ready with',ng,'for',mol,'in',env,'at velocity',v, \
               'assembled inside',jobdir+'.'
         f=AsmdMethod(ng,mol,env,v,ts,zc,langevD,workdir,jobdir,pack_dir,gate, \
             ppn_env[env],comp,wt_env[env],q_env[env],dircount,stages,direct, \
-            dist,config)
+            dist,config,tpd)
         f.makeEnvDir()
         f.makeVelDir()
         f.makeContainDir()
@@ -156,11 +156,12 @@ def asmd(dircount,tps,v):
     # formerly, jobdir =ngn[0][0]+molec+str(dircount)+'_'+jobid
     # declare in asmdwork.py
     jobdir = tps
+    tpd = int(tps)/int(d)
     work_dir()
     [make_struc(ng,mol,env,workdir,jobdir,pack_dir) \
             for ng in ngn for env in environ]
     [make_asmd(ng,mol,env,v,envdist[env],workdir,jobdir, \
-            pack_dir) for ng in ngn for env in environ]
+            pack_dir,tpd) for ng in ngn for env in environ]
     os.chdir(my_dir)
     return pack_dir
 

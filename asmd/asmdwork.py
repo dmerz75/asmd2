@@ -1,4 +1,5 @@
 import shutil,os,itertools,re,random,fnmatch,time,pickle,sys
+import numpy as np
 #_______DICTIONARY_____________________________________________________________
 confign={'1':{'gpu':'nodes=1:ppn=1:gpus=1:TESLA','cpu':'nodes=1:ppn=1'},
          '2':{'gpu':'nodes=1:ppn=2:gpus=1:TESLA','cpu':'nodes=1:ppn=2'},
@@ -103,7 +104,7 @@ class est_StrucDir:
 #__class_a_Smd_Method__________________________________________________________
 class AsmdMethod:
     def __init__(self,ngn,mol,env,v,ts,zc,lD,workdir,jobdir,pack_dir,\
-          gate,cn,comp,wallt,queue,howmany,stages,direct,dist,config):
+          gate,cn,comp,wallt,queue,howmany,stages,direct,dist,config,tpd):
         self.ngn  = ngn
         self.mol  = mol
         self.env  = env                     # 01.vac
@@ -130,6 +131,9 @@ class AsmdMethod:
         self.edir = os.path.join(self.jdir,self.env)  # i.e. 02.imp
         self.vdir = os.path.join(self.edir,self.v0)   # i.e. 02,03,...
         self.hm   = howmany
+        print self.hm
+        self.hmtpd= tpd
+        print self.hmtpd
         self.st   = stages
         self.cfg  = config   # << print_dict(self.cfg)
         #print_dict(self.cfg)
@@ -233,7 +237,27 @@ class AsmdMethod:
         pickle.dump(self.cfg,open('config.pkl','w'))
 #_____________________________________________________________________________
     def makeSubDir(self):
-        def reg_exp(subdir,ds):
+        def gen_all_seeds():
+            #print type(self.st),self.st
+            #print type(self.hm),self.hm
+            #print type(self.hmtpd),self.hmtpd
+            sds = np.random.randint(10000,high=99999,size=(self.st,self.hmtpd,int(self.hm)))
+            print sds
+            print type(sds)
+            fname = 'seeds.txt'
+            print sds.shape
+            with file('seeds.txt','w') as outfile:
+                outfile.write('# %s stages' % sds.shape[0])
+                outfile.write(" %s directories per stage" % sds.shape[2])
+                outfile.write(" %s trajectories per directory\n" % sds.shape[1])
+                outfile.write('# {0}\n'.format(sds.shape))
+                for stg_slice in sds:
+                    outfile.write('# stage\n')
+                    np.savetxt(outfile,stg_slice,fmt='%5.0d')
+            return sds
+        def reg_exp(subdir,ds,seed_list):
+            with file('%s/%s.txt' %(ds,ds) ,'w') as outfile:
+                np.savetxt(outfile,seed_list,fmt='%5.0d')
             def call_expavg(script):
                 tefdir='0'+self.vel+'.*/*-tef.dat*'
                 reg_ex(script,'xxtefdirxx',tefdir)
@@ -284,20 +308,8 @@ class AsmdMethod:
                         call_smd(script)
                     elif idn=='smd.in':
                         call_smd(script)
-                    #elif idn =='expavg.py':
-                    #    call_expavg(script)
                     elif idn=='tm.tex':
                         call_expavg(script)
-                    #elif idn=='dualplot.py':
-                    #    call_expavg(script)
-                    #elif idn=='npy.py':
-                    #    call_expavg(script)
-                    #elif idn=='allhb.py':
-                    #    call_expavg(script)
-                    #elif idn=='allwp.py':
-                        #call_expavg(script)
-                    #elif idn=='ihbond.py':
-                        #call_expavg(script)
                     elif idn=='smdforce.tcl':       # NAMD STEERING FILE
                         phase = int(script.split('/')[-3])-1
                         reg_ex(script,'xxvelocityxx',str(self.pv[phase]))
@@ -320,8 +332,10 @@ class AsmdMethod:
                             reg_ex(script,'xxsposxx',str(self.spos+zdist[phase-1]))
                             reg_ex(script,'xxeposxx',str(self.spos+zdist[phase]))
         def how_many(tmpdir):
-            rlist=[]
+            #rlist=[]
+            #rlist=[str(x).zfill(3) for x in range(int(self.hm))]
             for i in range(int(self.hm)):
+                '''
                 def reg_seed(subdir,seed):
                     if self.ngn=='namd':
                         f1=os.path.join(subdir,'smd.namd')
@@ -331,14 +345,19 @@ class AsmdMethod:
                 while r in rlist:
                     r=random.randint(10000,99999)
                 rlist.append(r)
+                '''
+
                 tdi='/'.join(tmpdir.split('/')[0:-1])
-                td=os.path.join(tdi,str(r))
+                td=os.path.join(tdi,str(i).zfill(3))
                 shutil.copytree(tmpdir,td)
-                reg_seed(td,r)
+                #reg_seed(td,r)
             shutil.rmtree(tmpdir)
         dls=[]
         [dls.append(d) for d in os.listdir(self.vdir) if \
              os.path.isdir(os.path.join(self.vdir,d))]
+        gs = gen_all_seeds()
+        print gs.shape
+        print 'HELLO'
         for ds in dls:
             ddir=os.path.join(self.vdir,ds,'tmp')
             os.makedirs(ddir)
@@ -378,7 +397,7 @@ class AsmdMethod:
                             'smd_r.in',ddir,'smd.in')
                     cp_file(os.path.join(self.ndir,'mol.conf',self.mol,self.env),\
                             'dist.RST',ddir,'dist.RST')
-            reg_exp(ddir,ds)
+            reg_exp(ddir,ds,gs[int(ds)-1])
             how_many(ddir)
     def steering_control(self):
         def reg_exp(dir_loc,idn):
