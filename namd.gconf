@@ -26,7 +26,7 @@ gates: fgatecpu2,ggatecpu2,steele2,keene,stibv2,sth2
 
 [da]
 jobid = drag
-dircounts= 3
+dircounts= 1,2
 mol = da
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd

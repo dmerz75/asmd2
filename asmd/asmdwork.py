@@ -131,9 +131,7 @@ class AsmdMethod:
         self.edir = os.path.join(self.jdir,self.env)  # i.e. 02.imp
         self.vdir = os.path.join(self.edir,self.v0)   # i.e. 02,03,...
         self.hm   = howmany
-        print self.hm
         self.hmtpd= tpd
-        print self.hmtpd
         self.st   = stages
         self.cfg  = config   # << print_dict(self.cfg)
         #print_dict(self.cfg)
@@ -241,23 +239,24 @@ class AsmdMethod:
             #print type(self.st),self.st
             #print type(self.hm),self.hm
             #print type(self.hmtpd),self.hmtpd
-            sds = np.random.randint(10000,high=99999,size=(self.st,self.hmtpd,int(self.hm)))
-            print sds
-            print type(sds)
+            sds = np.random.randint(10000,high=99999,size=(self.st,int(self.hm),self.hmtpd))
+            #print sds
+            #print type(sds)
             fname = 'seeds.txt'
-            print sds.shape
+            #print sds.shape
             with file('seeds.txt','w') as outfile:
                 outfile.write('# %s stages' % sds.shape[0])
-                outfile.write(" %s directories per stage" % sds.shape[2])
-                outfile.write(" %s trajectories per directory\n" % sds.shape[1])
+                outfile.write(" %s directories per stage" % sds.shape[1])
+                outfile.write(" %s trajectories per directory\n" % sds.shape[2])
                 outfile.write('# {0}\n'.format(sds.shape))
                 for stg_slice in sds:
+                    ss = np.transpose(stg_slice)
                     outfile.write('# stage\n')
-                    np.savetxt(outfile,stg_slice,fmt='%5.0d')
+                    np.savetxt(outfile,ss,fmt='%5.0d')
             return sds
         def reg_exp(subdir,ds,seed_list):
             with file('%s/%s.txt' %(ds,ds) ,'w') as outfile:
-                np.savetxt(outfile,seed_list,fmt='%5.0d')
+                np.savetxt(outfile,np.transpose(seed_list),fmt='%5.0d')
             def call_expavg(script):
                 tefdir='0'+self.vel+'.*/*-tef.dat*'
                 reg_ex(script,'xxtefdirxx',tefdir)
