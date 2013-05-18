@@ -256,7 +256,10 @@ class AsmdMethod:
             return sds
         def reg_exp(subdir,ds,seed_list):
             with file('%s/%s.txt' %(ds,ds) ,'w') as outfile:
-                np.savetxt(outfile,np.transpose(seed_list),fmt='%5.0d')
+                if seed_list.shape[1]==1:
+                    np.savetxt(outfile,seed_list,fmt='%5.0d')
+                else:
+                    np.savetxt(outfile,np.transpose(seed_list),fmt='%5.0d')
             def call_expavg(script):
                 tefdir='0'+self.vel+'.*/*-tef.dat*'
                 reg_ex(script,'xxtefdirxx',tefdir)

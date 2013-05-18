@@ -231,7 +231,7 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     # LEGEND
     plt.legend(loc='upper right',prop={'size':12})
     plt.gca().set_ylim(ymin=-0.3)
-    plt.gca().set_ylim(ymax=+0.3)
+    #plt.gca().set_ylim(ymax=+0.3) #doesn't seem to work, may18
     leg = plt.gca().get_legend()
     leg.draw_frame(False)
 
