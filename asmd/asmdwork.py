@@ -356,8 +356,6 @@ class AsmdMethod:
         [dls.append(d) for d in os.listdir(self.vdir) if \
              os.path.isdir(os.path.join(self.vdir,d))]
         gs = gen_all_seeds()
-        print gs.shape
-        print 'HELLO'
         for ds in dls:
             ddir=os.path.join(self.vdir,ds,'tmp')
             os.makedirs(ddir)

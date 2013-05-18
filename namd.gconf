@@ -135,7 +135,7 @@ path_seg= 1.0
 path_svel= 1.0
 
 [danvt]
-jobid = 5x1
+jobid = 4xf
 dircounts= 10
 mol = danvt
 zcrd = 13.0
@@ -148,12 +148,13 @@ n    = 4.
 # try e time= exp,6proc: 04-??
 environ = 02.imp,03.exp
 #gate = ggatecpu2
-gate = sth2
+#gate = sth2
 #gate = steele2
+gate = fgatecpu2
 comp = cpu
-cn   = 5
-ppn_env = 01.vac:1,02.imp:3,03.exp:5
-wallt= mwt
+cn   = 4
+ppn_env = 01.vac:1,02.imp:2,03.exp:4
+wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
 queue = standby
 q_env = 01.vac:queue,02.imp:queue,03.exp:queue

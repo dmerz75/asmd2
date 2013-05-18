@@ -40,7 +40,10 @@ def run_namd(i,st_num,c_num):
         c_num : current directory
     '''
     sd_arr = np.loadtxt('../%s.txt' % st_num)
-    seed = int(sd_arr[index,c_num])
+    if len(sd_arr.shape)==1:
+        seed = int(sd_arr[c_num])
+    else:
+        seed = int(sd_arr[i-1,c_num])
     cp_file(my_dir,'smd.namd',my_dir,'smd.namd.%s' % (seed))
     script = os.path.join(my_dir,'smd.namd.%s' % (seed))
     reg_ex(script,'xxxxx',str(seed),i)

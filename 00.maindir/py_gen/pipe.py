@@ -77,7 +77,7 @@ def main():
                 stg=(path.split('/')[-3])
                 jtype=num+sol+stg
                 acc.append(jtype)
-                if path.split('/')[0]=='export':
+                if path.split('/')[1]=='export':
                     root='/'+'/'.join(path.split('/')[2:-1])
                     path='/'+'/'.join(path.split('/')[2:])
                 else:
@@ -91,7 +91,7 @@ def main():
                 num=(path.split('/')[-2])
                 sol=(path.split('/')[-3]).split('.')[1]
                 stg=(path.split('/')[-1]).split('-')[0]
-                if path.split('/')[0]=='export':
+                if path.split('/')[1]=='export':
                     root='/'+'/'.join(path.split('/')[2:-1])
                     path='/'+'/'.join(path.split('/')[2:])
                 else:
@@ -105,7 +105,7 @@ def main():
                 num=(path.split('/')[-2])
                 sol=(path.split('/')[-3]).split('.')[1]
                 stg=(path.split('/')[-1]).split('-')[0]
-                if path.split('/')[0]=='export':
+                if path.split('/')[1]=='export':
                     root='/'+'/'.join(path.split('/')[2:-1])
                     path='/'+'/'.join(path.split('/')[2:])
                 else:
