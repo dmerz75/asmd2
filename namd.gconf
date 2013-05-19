@@ -25,19 +25,19 @@ configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
 gates: fgatecpu2,ggatecpu2,steele2,keene,stibv2,sth2
 
 [da]
-jobid = test
-dircounts= 2
+jobid = yah
+dircounts= 3
 mol = da
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.
-gate = ggatecpu2
+n    = 3.
+gate = fgatecpu2
 environ = 01.vac
-howmany = 10,4,6,2,1
+howmany = 10,4,4,2,1
 cn   = 1
-wallt= lwt
+wallt= mwt
 queue= standby
 ppn_env = 01.vac:1,02.imp:cn,03.exp:cn
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
@@ -156,7 +156,7 @@ path_seg= 1.0
 path_svel= 1.0
 
 [danvt]
-jobid = 4onef
+jobid = pst465
 dircounts= 10
 mol = danvt
 zcrd = 13.0
@@ -167,15 +167,16 @@ n    = 4.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
 # try e time= exp,6proc: 04-??
-environ = 02.imp,03.exp
+#environ = 02.imp
+environ = 03.exp
 #gate = ggatecpu2
 #gate = sth2
-#gate = steele2
-gate = fgatecpu2
+gate = steele2
+#gate = fgatecpu2
 comp = cpu
 cn   = 2
-ppn_env = 01.vac:1,02.imp:2,03.exp:3
-wallt= lwt
+ppn_env = 01.vac:1,02.imp:4,03.exp:8
+wallt= mwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
 queue = standby
 q_env = 01.vac:queue,02.imp:queue,03.exp:queue
