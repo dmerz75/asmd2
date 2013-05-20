@@ -30,7 +30,7 @@ data=np.concatenate(acc,axis=0)
 # variables, simulation parameters;  10,000 steps
 v        = xxvelapsxx           ;#  20 A in 20 ps, 1.0000 A/ps
 dt       = xxdtxx        ;#  2 fs * 50(smd.tcl) / 1000, 0.1 ps
-beta     = -0.6     ;#  8.31 J/K*mol, 4.184 J/cal -> .6 kcal/mol
+beta     = -0.5961     ;#  8.31 J/K*mol, 4.184 J/cal -> .6 kcal/mol
 # columns of data 3D array
 time     = adata[::,::,0].flatten()
 zcoord   = adata[::,::,1].flatten()

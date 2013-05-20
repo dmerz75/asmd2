@@ -34,7 +34,7 @@ path_v_aps = path_vel/ts*1000
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 
 spos=xxsposxx
-beta=-0.6
+beta=-0.5961
 quota=xxquotaxx*xxhowmanyxx
 
 def calc_work(data,st,w_c):

@@ -20,7 +20,7 @@ now=now.strftime("%Y%m%dt%H%M")
 spos=xxsposxx
 v   =xxvelapsxx
 dt  =xxdtxx
-beta=-0.6
+beta=-0.5961
 
 class mdict(dict):
     def __setitem__(self,key,value):

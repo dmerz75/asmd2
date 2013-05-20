@@ -34,7 +34,7 @@ path_v_aps = path_vel/ts*1000
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 
 spos=13.0
-beta=-0.6
+beta=-0.5961
 num =str(len(path_steps)).zfill(2)
 #_____________________________________________________________________________
 

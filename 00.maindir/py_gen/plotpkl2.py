@@ -44,7 +44,7 @@ domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 highest_work = []
 
 spos=13.0
-beta=-0.6
+beta=-0.5961
 
 def plot_work(data,st):
     if st=='01':

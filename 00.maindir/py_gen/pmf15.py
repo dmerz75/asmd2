@@ -38,7 +38,7 @@ def main():
         path_v_aps = path_vel/ts*1000
         domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
         spos=13.0
-        beta=-0.6
+        beta=-0.5961
         quota=56*15
         def plot_work(data,st):
             rnd = np.random.RandomState(0x2913)

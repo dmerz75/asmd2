@@ -156,26 +156,26 @@ path_seg= 1.0
 path_svel= 1.0
 
 [danvt]
-jobid = pst465
-dircounts= 10
+jobid = valid2
+dircounts= 5
 mol = danvt
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 4.
+n    = 2.,3.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
 # try e time= exp,6proc: 04-??
-#environ = 02.imp
-environ = 03.exp
-#gate = ggatecpu2
+environ = 02.imp
+#environ = 03.exp
+gate = ggatecpu2
 #gate = sth2
-gate = steele2
+#gate = steele2
 #gate = fgatecpu2
 comp = cpu
-cn   = 2
-ppn_env = 01.vac:1,02.imp:4,03.exp:8
+cn   = 1
+ppn_env = 01.vac:1,02.imp:cn,03.exp:8
 wallt= mwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
 queue = standby
@@ -184,7 +184,7 @@ lnspc = True
 path_seg= 0.1
 path_svel= 1.0
 freq = 50,50,50,50,50
-howmany=3,3,4,1,1
+howmany=3,4,4,1,1
 langevD = 5
 
 [danvt_smd]

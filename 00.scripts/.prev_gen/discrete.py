@@ -39,7 +39,7 @@ dt         = dct['freq']*ts/1000
 path_v_aps = path_vel/ts*1000
 
 spos=xxsposxx
-beta=-0.6
+beta=-0.5961
 
 pmf_ideal = mdict()
 work_used = mdict()
