@@ -2,6 +2,7 @@
 ts   = 2.0
 n    = 1.,2.,3.,4.,5.
 langevD = 5
+temp = 300
 environ = 01.vac,02.imp,03.exp
 gate = fgatecpu2
 cn   = 1
@@ -44,6 +45,8 @@ wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
 path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+langevD = 5
+temp = 300
 
 [da2]
 jobid = 10d_t1
@@ -65,6 +68,8 @@ wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
 path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+langevD = 5
+temp = 300
 
 [da_smd]
 jobid = pickle
@@ -86,6 +91,8 @@ wt_env  = 01.vac:wallt,02.imp:mwt,03.exp:dwt
 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 path_seg = 1.0
 path_svel= 1.0
+langevD = 5
+temp = 300
 
 [ee2]
 mol = ee2
@@ -102,6 +109,8 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = True
 path_seg= 0.0625
 path_svel= 1.0
+langevD = 5
+temp = 300
 
 [ee2_smd]
 mol = ee2
@@ -118,6 +127,8 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = False  # means use actual length of path_seq etc.
 path_seg= 1.0
 path_svel= 1.0
+langevD = 5
+temp = 300
 
 [le]
 mol = le
@@ -137,6 +148,8 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = True
 path_seg= 0.05
 path_svel= 1.0
+langevD = 5
+temp = 300
 
 [le_smd]
 mol = le
@@ -154,10 +167,12 @@ q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc   = False  # means use actual length of path_seq etc.
 path_seg= 1.0
 path_svel= 1.0
+langevD = 5
+temp = 300
 
 [danvt]
-jobid = valid2
-dircounts= 5
+jobid = valid3
+dircounts= 10
 mol = danvt
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
@@ -184,8 +199,9 @@ lnspc = True
 path_seg= 0.1
 path_svel= 1.0
 freq = 50,50,50,50,50
-howmany=3,4,4,1,1
+howmany=3,2,2,1,1
 langevD = 5
+temp = 300
 
 [danvt_smd]
 jobid = hund4
@@ -212,6 +228,7 @@ path_svel= 1.0
 freq = 50,50,50,50,50
 howmany=100,8,8,2,1
 langevD = 5
+temp = 300
 
 [da_r3]
 jobid = hund
@@ -244,6 +261,7 @@ path_svel= 1.0
 freq = 50,50,50,50,50
 howmany=100,5,5,2,1
 langevD = 5
+temp = 300
 
 [da_r3_smd]
 jobid = hund4
@@ -268,3 +286,4 @@ path_seg= 1.0
 path_svel= 1.0
 howmany=100,10,10,2,1
 langevD = 5
+temp = 300

@@ -16,7 +16,7 @@ outputName         daOut
 seed                xxxxx
 paraTypeCharmm	    on
 parameters          ../../../../toppar/par_all27_prot_lipid.prm
-temperature         300
+temperature         xxtempxx
  
 # gbis implicit solvent
 GBIS                 on
@@ -43,7 +43,7 @@ stepspercycle       10
 # Constant Temperature Control
 langevin            on    ;# do langevin dynamics
 langevinDamping     xxlDxx     ;# damping coefficient (gamma) of 5/ps
-langevinTemp        300
+langevinTemp        xxtempxx 
 langevinHydrogen    no    ;# don't couple langevin bath to hydrogens
 
 # Output

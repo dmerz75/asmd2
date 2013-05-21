@@ -16,8 +16,7 @@ outputName         daOut
 seed                xxxxx
 paraTypeCharmm	    on
 parameters          ../../../../toppar/par_all27_prot_lipid.prm
-set temperature     300
-temperature         $temperature
+temperature         xxtempxx
  
 # Force-Field Parameters
 #margin              2.0
@@ -38,7 +37,7 @@ stepspercycle       10
 # Constant Temperature Control
 langevin            on    ;# do langevin dynamics
 langevinDamping     xxlDxx     ;# damping coefficient (gamma) of 5/ps
-langevinTemp        300
+langevinTemp        xxtempxx
 langevinHydrogen    no    ;# don't couple langevin bath to hydrogens
 
 # Periodic Boundary conditions
@@ -72,7 +71,7 @@ langevinPiston        on
 langevinPistonTarget  1.01325 ;#  in bar -> 1 atm
 langevinPistonPeriod  100.0
 langevinPistonDecay   50.0
-langevinPistonTemp    $temperature
+langevinPistonTemp    xxtempxx
 
 # Output
 binaryoutput        no

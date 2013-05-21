@@ -43,7 +43,7 @@ stepspercycle       10
 # Constant Temperature Control
 langevin            on    ;# do langevin dynamics
 langevinDamping     xxlDxx     ;# damping coefficient (gamma) of 5/ps
-langevinTemp        300
+langevinTemp        xxtempxx
 langevinHydrogen    no    ;# don't couple langevin bath to hydrogens
 
 # Output

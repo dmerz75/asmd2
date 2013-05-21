@@ -104,7 +104,8 @@ class est_StrucDir:
 #__class_a_Smd_Method__________________________________________________________
 class AsmdMethod:
     def __init__(self,ngn,mol,env,v,ts,zc,lD,workdir,jobdir,pack_dir,\
-          gate,cn,comp,wallt,queue,howmany,stages,direct,dist,config,tpd):
+          gate,cn,comp,wallt,queue,howmany,stages,direct,dist,config,tpd,\
+          temp):
         self.ngn  = ngn
         self.mol  = mol
         self.env  = env                     # 01.vac
@@ -115,6 +116,7 @@ class AsmdMethod:
         self.ts   = ts
         self.spos = zc                      # zc ~ zcrd
         self.lD   = lD
+        self.temp = temp
         self.workdir = workdir
         self.mdir = os.path.join(workdir,'00.maindir')   # 00.maindir
         self.ndir = os.path.join(workdir,'00.maindir',ngn) # 00.maindir/namd
@@ -284,6 +286,7 @@ class AsmdMethod:
                 elif self.ngn=='namd':
                     reg_ex(script,'xxtsxx',str(self.ts))
                 reg_ex(script,'xxlDxx',self.lD)
+                reg_ex(script,'xxtempxx',self.temp)
                 reg_ex(script,'xxfreqxx',str(self.dct['freq']))
             for root, dirnames, filenames in os.walk(subdir):
                 for f in filenames:

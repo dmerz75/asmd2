@@ -1,0 +1,119 @@
+da/03.exp/smd_initial.namd:# Constant temperature
+da/03.exp/smd_initial.namd:temperature         xxtempxx
+da/03.exp/smd_initial.namd:# Constant Temperature Control
+da/03.exp/smd_initial.namd:langevinPistonTemp    $temperature
+da/03.exp/smd_continue.namd:# Constant temperature
+da/03.exp/smd_continue.namd:# Constant Temperature Control
+da/03.exp/smd_continue.namd:langevinPistonTemp    $temperature
+da/02.imp/smd_initial.namd:# Constant temperature
+da/02.imp/smd_initial.namd:temperature         xxtempxx
+da/02.imp/smd_initial.namd:# Constant Temperature Control
+da/02.imp/smd_continue.namd:# Constant temperature
+da/02.imp/smd_continue.namd:# Constant Temperature Control
+da/01.vac/smd_initial.namd:# Constant temperature
+da/01.vac/smd_initial.namd:temperature         xxtempxx
+da/01.vac/smd_initial.namd:# Constant Temperature Control
+da/01.vac/smd_continue.namd:# Constant temperature
+da/01.vac/smd_continue.namd:# Constant Temperature Control
+danvt/03.exp/smd_initial.namd:# Constant temperature
+danvt/03.exp/smd_initial.namd:temperature         xxtempxx
+danvt/03.exp/smd_initial.namd:# Constant Temperature Control
+danvt/03.exp/smd_continue.namd:# Constant temperature
+danvt/03.exp/smd_continue.namd:# Constant Temperature Control
+danvt/03.exp/smd_continue.namd:langevinPistonTemp    $temperature
+danvt/02.imp/smd_initial.namd:# Constant temperature
+danvt/02.imp/smd_initial.namd:temperature         xxtempxx
+danvt/02.imp/smd_initial.namd:# Constant Temperature Control
+danvt/02.imp/smd_continue.namd:# Constant temperature
+danvt/02.imp/smd_continue.namd:# Constant Temperature Control
+danvt/01.vac/smd_initial.namd:# Constant temperature
+danvt/01.vac/smd_initial.namd:temperature         xxtempxx
+danvt/01.vac/smd_initial.namd:# Constant Temperature Control
+danvt/01.vac/smd_continue.namd:# Constant temperature
+danvt/01.vac/smd_continue.namd:# Constant Temperature Control
+da_r3/03.exp/smd_initial.namd:# Constant temperature
+da_r3/03.exp/smd_initial.namd:temperature         xxtempxx
+da_r3/03.exp/smd_initial.namd:# Constant Temperature Control
+da_r3/03.exp/smd_continue.namd:# Constant temperature
+da_r3/03.exp/smd_continue.namd:# Constant Temperature Control
+da_r3/03.exp/smd_continue.namd:langevinPistonTemp    $temperature
+da_r3/02.imp/smd_initial.namd:# Constant temperature
+da_r3/02.imp/smd_initial.namd:temperature         xxtempxx
+da_r3/02.imp/smd_initial.namd:# Constant Temperature Control
+da_r3/02.imp/smd_continue.namd:# Constant temperature
+da_r3/02.imp/smd_continue.namd:# Constant Temperature Control
+da_r3/01.vac/smd_initial.namd:# Constant temperature
+da_r3/01.vac/smd_initial.namd:temperature         xxtempxx
+da_r3/01.vac/smd_initial.namd:# Constant Temperature Control
+da_r3/01.vac/smd_continue.namd:# Constant temperature
+da_r3/01.vac/smd_continue.namd:# Constant Temperature Control
+ee/03.exp/smd_initial.namd:# Constant temperature
+ee/03.exp/smd_initial.namd:temperature         xxtempxx
+ee/03.exp/smd_initial.namd:# Constant Temperature Control
+ee/03.exp/smd_continue.namd:# Constant temperature
+ee/03.exp/smd_continue.namd:# Constant Temperature Control
+ee/02.imp/smd_initial.namd:# Constant temperature
+ee/02.imp/smd_initial.namd:temperature         xxtempxx
+ee/02.imp/smd_initial.namd:# Constant Temperature Control
+ee/02.imp/smd_continue.namd:# Constant temperature
+ee/02.imp/smd_continue.namd:# Constant Temperature Control
+ee/01.vac/smd_initial.namd:# Constant temperature
+ee/01.vac/smd_initial.namd:temperature         xxtempxx
+ee/01.vac/smd_initial.namd:# Constant Temperature Control
+ee/01.vac/smd_continue.namd:# Constant temperature
+ee/01.vac/smd_continue.namd:# Constant Temperature Control
+ee2/03.exp/smd_initial.namd:# Constant temperature
+ee2/03.exp/smd_initial.namd:temperature         xxtempxx 
+ee2/03.exp/smd_initial.namd:# Constant Temperature Control
+ee2/03.exp/smd_continue.namd:# Constant temperature
+ee2/03.exp/smd_continue.namd:# Constant Temperature Control
+ee2/02.imp/smd_initial.namd:# Constant temperature
+ee2/02.imp/smd_initial.namd:temperature         xxtempxx
+ee2/02.imp/smd_initial.namd:# Constant Temperature Control
+ee2/02.imp/smd_continue.namd:# Constant temperature
+ee2/02.imp/smd_continue.namd:# Constant Temperature Control
+ee2/01.vac/smd_initial.namd:# Constant temperature
+ee2/01.vac/smd_initial.namd:temperature         xxtempxx
+ee2/01.vac/smd_initial.namd:# Constant Temperature Control
+ee2/01.vac/smd_continue.namd:# Constant temperature
+ee2/01.vac/smd_continue.namd:# Constant Temperature Control
+el/01.vac/smd_initial.namd:# Constant temperature
+el/01.vac/smd_initial.namd:temperature         xxtempxx
+el/01.vac/smd_initial.namd:# Constant Temperature Control
+el/01.vac/smd_continue.namd:# Constant temperature
+el/01.vac/smd_continue.namd:# Constant Temperature Control
+le/03.exp/smd_initial.namd:# Constant temperature
+le/03.exp/smd_initial.namd:temperature         xxtempxx
+le/03.exp/smd_initial.namd:# Constant Temperature Control
+le/03.exp/smd_continue.namd:# Constant temperature
+le/03.exp/smd_continue.namd:# Constant Temperature Control
+le/02.imp/smd_initial.namd:# Constant temperature
+le/02.imp/smd_initial.namd:temperature         xxtempxx
+le/02.imp/smd_initial.namd:# Constant Temperature Control
+le/02.imp/smd_continue.namd:# Constant temperature
+le/02.imp/smd_continue.namd:# Constant Temperature Control
+le/01.vac/smd_initial.namd:# Constant temperature
+le/01.vac/smd_initial.namd:temperature         xxtempxx
+le/01.vac/smd_initial.namd:# Constant Temperature Control
+le/01.vac/smd_continue.namd:# Constant temperature
+le/01.vac/smd_continue.namd:# Constant Temperature Control
+rda/03.exp/smd_initial.namd:# Constant temperature
+rda/03.exp/smd_initial.namd:temperature         xxtempxx
+rda/03.exp/smd_initial.namd:# Constant Temperature Control
+rda/03.exp/smd_continue.namd:# Constant temperature
+rda/03.exp/smd_continue.namd:# Constant Temperature Control
+rda/02.imp/smd_initial.namd:# Constant temperature
+rda/02.imp/smd_initial.namd:temperature         xxtempxx
+rda/02.imp/smd_initial.namd:# Constant Temperature Control
+rda/02.imp/smd_continue.namd:# Constant temperature
+rda/02.imp/smd_continue.namd:# Constant Temperature Control
+rda/01.vac/smd_initial.namd:# Constant temperature
+rda/01.vac/smd_initial.namd:temperature         xxtempxx
+rda/01.vac/smd_initial.namd:# Constant Temperature Control
+rda/01.vac/smd_continue.namd:# Constant temperature
+rda/01.vac/smd_continue.namd:# Constant Temperature Control
+ti/02.imp/smd_initial.namd:# Constant temperature
+ti/02.imp/smd_initial.namd:temperature         xxtempxx
+ti/02.imp/smd_initial.namd:# Constant Temperature Control
+ti/02.imp/smd_continue.namd:# Constant temperature
+ti/02.imp/smd_continue.namd:# Constant Temperature Control

@@ -10,7 +10,6 @@ structure          ../../../../00.struc/03.exp/00.psf
 coordinates        ../../../../00.struc/03.exp/00.pdb
 outputName         daOut
 
-set temperature     300
 #############################################################
 ## SIMULATION PARAMETERS                                   ##
 #############################################################
@@ -18,7 +17,7 @@ set temperature     300
 seed                xxxxx
 paraTypeCharmm	    on
 parameters          ../../../../toppar/par_all27_prot_lipid.prm
-temperature         $temperature
+temperature         xxtempxx
  
 # Force-Field Parameters
 exclude             scaled1-4
@@ -38,7 +37,7 @@ stepspercycle       10
 # Constant Temperature Control
 langevin            on    ;# do langevin dynamics
 langevinDamping     xxlDxx     ;# damping coefficient (gamma) of 5/ps
-langevinTemp        300
+langevinTemp        xxtempxx
 langevinHydrogen    no    ;# don't couple langevin bath to hydrogens
 
 # Periodic Boundary conditions
@@ -72,7 +71,7 @@ langevinPiston        on
 langevinPistonTarget  1.01325 ;#  in bar -> 1 atm
 langevinPistonPeriod  100.0
 langevinPistonDecay   50.0
-langevinPistonTemp    $temperature
+langevinPistonTemp    xxtempxx
 
 # Output
 binaryoutput        no

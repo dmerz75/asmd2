@@ -39,6 +39,7 @@ environ = []
 for ei in range(len(env_cnf.split(','))):
     environ.append(str(env_cnf.split(',')[ei]))
 langevD = config.get(molec,'langevD')
+temp    = config.get(molec,'temp')
 direct  = config.get(molec,'direct')
 gate    = config.get(molec,'gate')
 cn      = config.get(molec,'cn')
@@ -143,7 +144,7 @@ def asmd(dircount,tps,v):
               'assembled inside',jobdir+'.'
         f=AsmdMethod(ng,mol,env,v,ts,zc,langevD,workdir,jobdir,pack_dir,gate, \
             ppn_env[env],comp,wt_env[env],q_env[env],dircount,stages,direct, \
-            dist,config,tpd)
+            dist,config,tpd,temp)
         f.makeEnvDir()
         f.makeVelDir()
         f.makeContainDir()
