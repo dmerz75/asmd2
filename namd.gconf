@@ -171,7 +171,7 @@ langevD = 5
 temp = 300
 
 [danvt]
-jobid = valid7
+jobid = valid8
 dircounts= 10
 mol = danvt
 zcrd = 13.0
@@ -190,7 +190,7 @@ gate = ggatecpu2
 #gate = fgatecpu2
 comp = cpu
 cn   = 1
-ppn_env = 01.vac:1,02.imp:cn,03.exp:8
+ppn_env = 01.vac:1,02.imp:cn,03.exp:4
 wallt= mwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
 queue = standby

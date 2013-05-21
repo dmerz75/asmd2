@@ -182,6 +182,7 @@ class AsmdMethod:
             reg_ex(script,'xxngnxx',self.ngn.upper())
             reg_ex(script,'xxstartconstraintxx',str(self.spos))
             reg_ex(script,'xxsposxx',str(self.spos))
+            reg_ex(script,'xxtempxx',str(self.temp))
             plotname=self.mol+self.ngn+self.e \
                     +'v'+confige[self.vel]+'asmd'
             reg_ex(script,'xxplotnamexx',plotname)
