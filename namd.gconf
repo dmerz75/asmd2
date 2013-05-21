@@ -171,7 +171,7 @@ langevD = 5
 temp = 300
 
 [danvt]
-jobid = valid3
+jobid = valid7
 dircounts= 10
 mol = danvt
 zcrd = 13.0

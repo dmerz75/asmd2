@@ -145,6 +145,11 @@ def asmd(dircount,tps,v):
         f=AsmdMethod(ng,mol,env,v,ts,zc,langevD,workdir,jobdir,pack_dir,gate, \
             ppn_env[env],comp,wt_env[env],q_env[env],dircount,stages,direct, \
             dist,config,tpd,temp)
+        jdir = os.path.join(workdir,pack_dir,jobdir)
+        asmd_mod = os.path.join(workdir,'asmd')
+        if not os.path.exists(os.path.join(jdir,'asmd')):
+            shutil.copytree(asmd_mod,os.path.join(jdir,'asmd'))
+        pickle.dump(f,open('%s/AsmdMethod.pkl' % jdir,'w'))
         f.makeEnvDir()
         f.makeVelDir()
         f.makeContainDir()
