@@ -155,7 +155,7 @@ class AsmdMethod:
             print '?@#$! total distance doesn\'t match path_seg dist'
             sys.exit()
         #len_hb_pkl=500 # length of the hydrogen bond pkl
-        self.hb_l = 200 # length of the hydrogen bond pkl
+        self.hb_l = 500 # length of the hydrogen bond pkl
         #___CONFIG_SECTION_END
     def makeEnvDir(self):            # i.e.   02.imp or 03.exp
         if not os.path.exists(self.edir):os.makedirs(self.edir)
@@ -191,7 +191,13 @@ class AsmdMethod:
         for i in range(1,int(self.st)+1):
             # write job.sh, jobh.sh, continue.py + stage
             os.makedirs(os.path.join(self.vdir,str(i).zfill(2)))
-            cp_file(os.path.join(self.ndir,'continue'),'continue.py', \
+            #cp_file(os.path.join(self.ndir,'continue'),'continue.py', \
+                            #self.vdir,str(i).zfill(2)+'-continue.py')
+            ''' switching from work-corrected to pmf-corrected
+            '''
+            #cp_file(os.path.join(self.ndir,'continue'),'perpetuate.py', \
+            #                self.vdir,str(i).zfill(2)+'-continue.py')
+            cp_file(os.path.join(self.ndir,'continue'),'pmf_no_corr.py', \
                             self.vdir,str(i).zfill(2)+'-continue.py')
             cp_file(os.path.join(self.ndir,'jobc'),'job-'+self.gate+'.sh',\
                             self.vdir,str(i).zfill(2)+'-job.sh')
@@ -200,6 +206,10 @@ class AsmdMethod:
             stage=str(i).zfill(2)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-continue.py'),stage,i)
+            #reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
+            #      '-perpetuate.py'),stage,i)
+            ''' because perpetuate.py is now 01-continue.py
+            '''
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-job.sh'),stage,i)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
@@ -210,7 +220,8 @@ class AsmdMethod:
         #        '-hb_pkl.py'),stage,i)
         # ^ changing hb_pkl / continue
         #cp_file(self.pydir,'plotpkl.py',self.vdir,'plotpkl.py')
-        cp_file(self.pydir,'plotpkl2.py',self.vdir,'plotpkl.py')
+        #cp_file(self.pydir,'plotpkl2.py',self.vdir,'plotpkl.py')
+        cp_file(self.pydir,'plot_pmf_no_corr.py',self.vdir,'plotpkl.py')
         cp_file(self.pydir,'plothb.py',self.vdir,'plothb.py')
         cp_file(self.pydir,'mpmf.py',self.pdir,'mpmf.py')
         cp_file(self.pydir,'pmf15.py',self.pdir,'pmf15.py')
