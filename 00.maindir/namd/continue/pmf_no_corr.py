@@ -62,8 +62,6 @@ class asmd_calcs:
         stdir = os.path.join(my_dir,st)
         folds=[os.path.join(stdir,f) for f in os.listdir(stdir) \
                 if os.path.isdir(os.path.join(stdir,f))]
-        #seeds=[(p.split('/')[-2],p.split('/')[-1].split('.')[2]) for f in folds \
-               #for p in glob(os.path.join(f,'*tef.dat*'))]
         seeds=[p.split('/')[-1].split('.')[2] for f in folds \
                  for p in glob(os.path.join(f,'*tef.dat*'))]
         for path in glob(os.path.join(my_dir,'%s/*/*tef.dat*' % st)):
@@ -75,8 +73,6 @@ class asmd_calcs:
                 self.wrk[st][seed]={}
                 acc.append(sample_i)
                 data_1=np.array(sample_i)
-                #print data_1.shape
-                #print data_1[-10::,::]
                 tew,wf=calc_work(data_1,st,self.w_c,self.pmf_c)#sample_i/data => tew
                 self.wrk[st][seed]=folder,tew,wf
                 #os.remove(path)
@@ -84,10 +80,6 @@ class asmd_calcs:
                 pass
                 #os.remove(path)
         data=np.array(acc)
-        #print data.shape
-        #time.sleep(4)
-        #print data[9,-10::,::]
-        #time.sleep(6)
         JA=calc_pmf(data,st,self.w_c,self.pmf_c)               # get JA
         wf_sd=dict([(self.wrk[st][s][2],s) for s in seeds])
         sel_seed=wf_sd.get(JA, wf_sd[min(wf_sd.keys(), key=lambda k: abs(k-JA))])

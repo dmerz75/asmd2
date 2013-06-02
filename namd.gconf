@@ -171,7 +171,7 @@ langevD = 5
 temp = 300
 
 [danvt]
-jobid = eagle
+jobid = pmfno
 dircounts= 2
 mol = danvt
 zcrd = 13.0
@@ -199,7 +199,7 @@ lnspc = True
 path_seg= 0.1
 path_svel= 1.0
 freq = 50,50,50,50,50
-howmany=3,5,5,1,1
+howmany=3,25,25,1,1
 langevD = 5
 temp = 300
 

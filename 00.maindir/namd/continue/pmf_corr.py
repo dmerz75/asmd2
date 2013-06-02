@@ -34,10 +34,9 @@ path_v_aps = path_vel/ts*1000
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 
 spos=xxsposxx
-#beta=-0.5961
 kb=-0.001987
 temp=xxtempxx
-beta=kb*temp
+beta=kb*temp  #beta=-0.5961 @ 300
 quota=xxquotaxx*xxhowmanyxx
 
 def calc_work(data,st,w_c,pmf_c):
@@ -86,32 +85,24 @@ class asmd_calcs:
         self.wrk[st]={}
         self.d_cp[st]={}
         stdir = os.path.join(my_dir,st)
-        folds=[f for f in os.listdir(stdir) if os.path.isdir(os.path.join( \
-                                                        stdir,f))]
-        # condense above and below   ^ v
-        foldp=[os.path.join(stdir,f) for f in folds]
-        seeds=[(p.split('/')[-2],p.split('/')[-1].split('.')[2]) for f in foldp \
-               for p in glob(os.path.join(f,'*tef.dat*'))]
-        seeds=[p.split('/')[-1].split('.')[2] for f in foldp \
+        folds=[os.path.join(stdir,f) for f in os.listdir(stdir) \
+                if os.path.isdir(os.path.join(stdir,f))]
+        seeds=[p.split('/')[-1].split('.')[2] for f in folds \
                  for p in glob(os.path.join(f,'*tef.dat*'))]
-        for path in glob(os.path.join(my_dir,'%s/*/*tef.dat*' % st)):
-            folder = path.split('/')[-2]
-            seed = path.split('/')[-1].split('.')[2]
-            self.wrk[st][seed]={}
         for path in glob(os.path.join(my_dir,'%s/*/*tef.dat*' % st)):
             folder = path.split('/')[-2]
             seed = path.split('/')[-1].split('.')[2]
             sample_i = np.loadtxt(path)
             # errcheck
-            if len(sample_i)!= xxlenarrayxx:
-                #os.remove(path)
-                del self.wrk[st][seed]
-                seeds.remove(seed)
-            else:
+            if len(sample_i)==xxlenarrayxx:
+                self.wrk[st][seed]={}
                 acc.append(sample_i)
                 data_1=np.array(sample_i)
                 tew,wf=calc_work(data_1,st,self.w_c,self.pmf_c)#sample_i/data => tew
                 self.wrk[st][seed]=folder,tew,wf
+                #os.remove(path)
+            else:
+                pass
                 #os.remove(path)
         data=np.array(acc)
         JA=calc_pmf(data,st,self.w_c,self.pmf_c)               # get JA
