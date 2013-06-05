@@ -197,7 +197,7 @@ class AsmdMethod:
             '''
             #cp_file(os.path.join(self.ndir,'continue'),'perpetuate.py', \
             #                self.vdir,str(i).zfill(2)+'-continue.py')
-            cp_file(os.path.join(self.ndir,'continue'),'pmf_no_corr.py', \
+            cp_file(os.path.join(self.ndir,'continue'),'pmf_corr.py', \
                             self.vdir,str(i).zfill(2)+'-continue.py')
             cp_file(os.path.join(self.ndir,'jobc'),'job-'+self.gate+'.sh',\
                             self.vdir,str(i).zfill(2)+'-job.sh')
@@ -221,7 +221,7 @@ class AsmdMethod:
         # ^ changing hb_pkl / continue
         #cp_file(self.pydir,'plotpkl.py',self.vdir,'plotpkl.py')
         #cp_file(self.pydir,'plotpkl2.py',self.vdir,'plotpkl.py')
-        cp_file(self.pydir,'plot_pmf_no_corr.py',self.vdir,'plotpkl.py')
+        cp_file(self.pydir,'plot_pmf_corr.py',self.vdir,'plotpkl.py')
         cp_file(self.pydir,'plothb.py',self.vdir,'plothb.py')
         cp_file(self.pydir,'mpmf.py',self.pdir,'mpmf.py')
         cp_file(self.pydir,'pmf15.py',self.pdir,'pmf15.py')
