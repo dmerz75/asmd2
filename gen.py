@@ -6,20 +6,19 @@ import numpy as np
 import ConfigParser
 
 # EXAMPLE
-#>>> ./gen.py namd da
-#    ./gen.py ngn  molecule
-ngn  =[sys.argv[1]]
-molc =[sys.argv[2]]
+
+ngn  =[sys.argv[1]] # >>> ./gen.py namd da
+molc =[sys.argv[2]] # >>> ./gen.py ngn  molecule
 
 #_____________________________________________________________________________
 config = ConfigParser.ConfigParser()
-config.read('%s.gconf' % ngn[0])
+config.read('%s.gconf' % ngn[0])   # get configurations from ngn.gconf
 
-molec= molc[0]  # now it's da or da_smd
+molec= molc[0]                     # now it's da or da_smd
 mol     = config.get(molec,'mol')  # now it's da. w/ molec = da_smd or da
 print 'molec',molec,'mol',mol
-zcrd    = float(config.get(molec,'zcrd'))
-envdists= config.get(molec,'envdist')
+zcrd    = float(config.get(molec,'zcrd')) # z-coordinate
+envdists= config.get(molec,'envdist') # distance per environment
 envdist = {}
 for entry in envdists.split(','):
     env = entry.split(':')[0]
@@ -27,23 +26,23 @@ for entry in envdists.split(','):
         envdist[env]=zcrd
     else:
         envdist[env]=float(entry.split(':')[1])
-dist    = float(config.get(molec,'dist'))
-ts      = float(config.get(molec,'ts'))
+dist    = float(config.get(molec,'dist')) # total distance pulled
+ts      = float(config.get(molec,'ts'))   # timestep: ~ 1,2 fs
 n_conf  = config.get(molec,'n')
-n       = []
-for ni in range(len(n_conf.split(','))):
+n       = []                              # 1,2,3,4,5
+for ni in range(len(n_conf.split(','))):  # 1000,100,10,1,0.1
     n.append(float(n_conf.split(',')[ni]))
 #env_cnf = config.get(mol,'environ')
 env_cnf = config.get(molec,'environ')
-environ = []
+environ = []                              # 01.vac,02.imp,03.exp
 for ei in range(len(env_cnf.split(','))):
     environ.append(str(env_cnf.split(',')[ei]))
-langevD = config.get(molec,'langevD')
-temp    = config.get(molec,'temp')
-direct  = config.get(molec,'direct')
-gate    = config.get(molec,'gate')
-cn      = config.get(molec,'cn')
-ppn_envs= config.get(molec,'ppn_env')
+langevD = config.get(molec,'langevD')     # langevin Damping: 0.2,1,5
+temp    = config.get(molec,'temp')        # temperature: 300
+direct  = config.get(molec,'direct')      # direction: !! may not work yet !!
+gate    = config.get(molec,'gate')        # gate: cluster name
+cn      = config.get(molec,'cn')          # cn: processors per node
+ppn_envs= config.get(molec,'ppn_env')     # procs per node, by environment
 ppn_env = {}
 for entry in ppn_envs.split(','):
     env = entry.split(':')[0]
@@ -51,9 +50,9 @@ for entry in ppn_envs.split(','):
         ppn_env[env]=cn
     else:
         ppn_env[env]=entry.split(':')[1]
-comp    = config.get(molec,'comp')
-wallt   = config.get(molec,'wallt')
-wt_envs = config.get(molec,'wt_env')
+comp    = config.get(molec,'comp')        # computation: cpu or gpu
+wallt   = config.get(molec,'wallt')       # walltime: see asmdwork.py
+wt_envs = config.get(molec,'wt_env')      # walltime by environment
 wt_env  = {}
 for entry in wt_envs.split(','):
     env = entry.split(':')[0]
@@ -61,7 +60,7 @@ for entry in wt_envs.split(','):
         wt_env[env]=wallt
     else:
         wt_env[env]=entry.split(':')[1]
-queue   = config.get(molec,'queue')
+queue   = config.get(molec,'queue')       # queue: in case job.sh requires queue
 q_envs  = config.get(molec,'q_env')
 q_env   = {}
 for entry in q_envs.split(','):
@@ -71,9 +70,9 @@ for entry in q_envs.split(','):
     else:
         q_env[env]=entry.split(':')[1]
 # constructing path_seg, path_svel
-p_seg   = config.get(molec,'path_seg')
-p_svel  = config.get(molec,'path_svel')
-ln_spc  = config.get(molec,'lnspc')
+p_seg   = config.get(molec,'path_seg')    # path_segmentation: decimal, sum to 1
+p_svel  = config.get(molec,'path_svel')   # path scaled velocity: scaling factor
+ln_spc  = config.get(molec,'lnspc')       # linspace: 'evenly discretized'
 path_seg = []
 path_svel= []
 if ln_spc == 'False':
@@ -89,12 +88,12 @@ else:
     path_seg = np.linspace(pseg,pseg,parts)
     path_svel= np.linspace(psvel,psvel,parts)
 
-vels    = config.get(molec,'vels')
-vels_l  = [int(v) for v in vels.split(',')]
-hows    = config.get(molec,'howmany')
-hows_l  = [(h) for h in hows.split(',')]
+vels    = config.get(molec,'vels')          # 1,2,3,4,5
+vels_l  = [int(v) for v in vels.split(',')] 
+hows    = config.get(molec,'howmany')       # 5,10,10,2,1
+hows_l  = [(h) for h in hows.split(',')]    # tpd: traj / directory
 freqs   = config.get(molec,'freq')
-freq_l  = [int(f)for f in freqs.split(',')]
+freq_l  = [int(f)for f in freqs.split(',')] # tcl freq, controls dt interval
 
 setup={}
 for i in range(len(vels_l)):
@@ -102,14 +101,21 @@ for i in range(len(vels_l)):
     setup[vels_l[i]]['howmany']=hows_l[i]
     setup[vels_l[i]]['freq']=freq_l[i]
 
-jobid   = config.get(molec,'jobid')
-dirs    = config.get(molec,'dircounts')
-dircounts=[d for d in dirs.split(',')]
+jobid   = config.get(molec,'jobid')        # jobdir specific name
+dirs    = config.get(molec,'dircounts')    # #num of directories, in which
+dircounts=[d for d in dirs.split(',')]     #   tpd will be acquired
 
 #_________pickle_______________________________________________________________
 def super_pickle(nset):
+    ''' needs to be deprecated, will be pickling the class from now on!
+    '''
     config = mdict()
     def construct(n):
+        ''' converts 1 into 1000 A/ns
+                     2 into 100  A/ns
+                     3 into 10   A/ns
+                     etc ...
+        '''
         vel = 1/(100*10**n)
         path_vel=np.linspace(vel,vel,len(path_seg))*ts*path_svel
         return path_vel
@@ -118,6 +124,7 @@ def super_pickle(nset):
     config[float(nset)]=dist,ts,path_seg,path_svel,path_vel, \
             path_steps,setup[nset]
     return config
+
 #_____mdict____________________________________________________________________
 class mdict(dict):
     def __setitem__(self,key,value):
@@ -126,18 +133,37 @@ def  print_dict(dt):
     for key,value in dt.items():
         print key,value
         print ''
+
 #_____CODE_____________________________________________________________________
 def asmd(dircount,tps,v):
+    ''' asmd method arguments: 1 dircount, tps:traj/stage, v(velocity, ~100)
+    '''
+
     def work_dir():
+        ''' makes the jobdir inside pack_dir
+        '''
         w = est_JobDir(ngn[0],mol,zcrd,workdir,jobdir,\
                 pack_dir)
         subdir = w.makeJobDir()
         w.reg_exp(subdir)
+
     def make_struc(ng,mol,env,workdir,jobdir,pack_dir):
+        ''' copies the appropriate starting structure according to the
+            environment selected
+        '''
         s = est_StrucDir(ng,mol,env,workdir,jobdir,pack_dir)
         s.makeStrucDir()
+
     def make_asmd(ng,mol,env,v,zc,workdir,jobdir,\
             pack_dir,tpd):
+        ''' establishes the class AsmdMethod from asmdwork.py
+              subcalls:
+              makeEnvDir - make directory for environment - 01.vac
+              makeVelDir - make directory for velocity - 02 or 03
+              makeSubDir - stage dirs created - 01,02,03,04
+              steering_control - tcl file or appropriate steering file
+                                 placed
+        '''
         config = super_pickle(int(v))
         stages = len(config[int(v)][0][5])
         print 'ASMD is ready with',ng,'for',mol,'in',env,'at velocity',v, \
@@ -157,6 +183,7 @@ def asmd(dircount,tps,v):
         f.savePickle()
         f.makeSubDir()
         f.steering_control()
+        
     # begin def asmd():
     pack_dir=ngn[0][0]+molec+'_'+jobid
     workdir=os.path.abspath(os.path.dirname(__file__))
@@ -173,6 +200,8 @@ def asmd(dircount,tps,v):
     return pack_dir
 
 def tar_ball(t_dir):
+    ''' pack_dir is tarred
+    '''
     import tarfile
     tar = tarfile.open('%s.tar.gz' % t_dir,'w:gz')
     tar.add(t_dir)
@@ -181,3 +210,6 @@ def tar_ball(t_dir):
 pd=[asmd(str(d),str(int(hows_l[int(v)-1])*int(d)),v) for d in dircounts for v in n]
 tar_ball(pd[0]) # tarball
 #[asmd(str(d)) for d in dircounts]
+
+
+

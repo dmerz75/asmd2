@@ -46,7 +46,7 @@ highest_work = []
 spos=xxsposxx
 kb  =-0.001987
 temp=xxtempxx
-beta=kb*temp
+beta=1/(kb*temp) # 1/kb*T
 quota=xxquotaxx*xxhowmanyxx
 
 def plot_work(data,st,w_c):

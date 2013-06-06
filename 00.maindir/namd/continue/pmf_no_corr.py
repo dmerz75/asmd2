@@ -36,7 +36,7 @@ domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 spos=xxsposxx
 kb=-0.001987  
 temp=xxtempxx
-beta=kb*temp  #beta=-0.5961 @ 300
+beta=1/(kb*temp) # 1/kb*T
 quota=xxquotaxx*xxhowmanyxx
 
 def calc_work(data,st,w_c,pmf_c):

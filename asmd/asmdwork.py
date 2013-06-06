@@ -1,6 +1,12 @@
 import shutil,os,itertools,re,random,fnmatch,time,pickle,sys
 import numpy as np
 #_______DICTIONARY_____________________________________________________________
+'''
+    confign: regular expressions for substituting the xxnodesxx from job.sh
+    configw: regular expressions for substituting the xxwalltimexx from job.sh
+    configq: regular expressions for substituting the xxqueuexx from job.sh
+    confige: almost unnecessary
+'''
 confign={'1':{'gpu':'nodes=1:ppn=1:gpus=1:TESLA','cpu':'nodes=1:ppn=1'},
          '2':{'gpu':'nodes=1:ppn=2:gpus=1:TESLA','cpu':'nodes=1:ppn=2'},
          '3':{'gpu':'nodes=1:ppn=3:gpus=1:TESLA','cpu':'nodes=1:ppn=3'},
@@ -16,20 +22,33 @@ configw={'sst':'walltime=15:00','swt':'walltime=00:90:00','mwt': \
 configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
          'standby-8':'standby-8','debug':'tg_debug'}
 confige={'1':'v1000','2':'v100','3':'v10','4':'v1','5':'vp1'}
-dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
+# dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
+
 #__________global_____use______________________________________________________
 class mdict(dict):
+    ''' needs to be deprecated / removed once AsmdMethod_pkl is fully implemented
+    '''
     def __setitem__(self,key,value):
         self.setdefault(key,[]).append(value)
+
 def print_dict(dct):
     for key,value in dct.items():
         print key,value
         print ''
+
 def cp_file(f_dir,f,d_dir,d):
+    ''' used extensively for copying a single template file into a temporary dir
+    '''
     shutil.copy(os.path.join(f_dir,f),os.path.join(d_dir,d))
+
 def cp_tree(f_dir,f,d_dir,d):
+    ''' used extensively for copying a template dir into a created directory
+    '''
     shutil.copytree(os.path.join(f_dir,f),os.path.join(d_dir,d))
+
 def reg_ex(script,subout,subin):
+    ''' performs all regular expressions when a text file is opened
+    '''
     o=open(script,'r+')
     text=o.read()
     text=re.sub(subout,subin,text)
@@ -37,6 +56,7 @@ def reg_ex(script,subout,subin):
     o=open(script,'w+')
     o.write(text)
     o.close()
+    
 #__class_a_make_JobDirSmd______________________________________________________
 class est_JobDir:
     def __init__(self,ngn,mol,zc,workdir,jobdir,pack_dir):
@@ -197,7 +217,7 @@ class AsmdMethod:
             '''
             #cp_file(os.path.join(self.ndir,'continue'),'perpetuate.py', \
             #                self.vdir,str(i).zfill(2)+'-continue.py')
-            cp_file(os.path.join(self.ndir,'continue'),'pmf_corr.py', \
+            cp_file(os.path.join(self.ndir,'continue'),'pmf_no_corr.py', \
                             self.vdir,str(i).zfill(2)+'-continue.py')
             cp_file(os.path.join(self.ndir,'jobc'),'job-'+self.gate+'.sh',\
                             self.vdir,str(i).zfill(2)+'-job.sh')
@@ -221,7 +241,7 @@ class AsmdMethod:
         # ^ changing hb_pkl / continue
         #cp_file(self.pydir,'plotpkl.py',self.vdir,'plotpkl.py')
         #cp_file(self.pydir,'plotpkl2.py',self.vdir,'plotpkl.py')
-        cp_file(self.pydir,'plot_pmf_corr.py',self.vdir,'plotpkl.py')
+        cp_file(self.pydir,'plot_pmf_no_corr.py',self.vdir,'plotpkl.py')
         cp_file(self.pydir,'plothb.py',self.vdir,'plothb.py')
         cp_file(self.pydir,'mpmf.py',self.pdir,'mpmf.py')
         cp_file(self.pydir,'pmf15.py',self.pdir,'pmf15.py')
@@ -278,7 +298,7 @@ class AsmdMethod:
                 tefdir='0'+self.vel+'.*/*-tef.dat*'
                 reg_ex(script,'xxtefdirxx',tefdir)
                 reg_ex(script,'xxnumxx',self.v0)
-                reg_ex(script,'xxpfxx',str(dictpf[self.vel]))
+                # gone - june 6: reg_ex(script,'xxpfxx',str(dictpf[self.vel]))
                 plotname=self.mol+self.ngn+self.e+\
                          str(confige[self.vel])+str(self.spos)
                 reg_ex(script,'xxplotnamexx',plotname)
