@@ -10,6 +10,6 @@ function sc {
 echo $1
 CURRENT=`pwd`
 
-D=dmerz3@tg-steele.purdue.teragrid.org:/scratch/scratch96/d/dmerz3/valiant/steele/00.interim/
+D=dmerz3@tg-steele.purdue.teragrid.org:/scratch/scratch96/d/dmerz3/valiant/steele/
 S=$CURRENT/$1
 sc $S $D

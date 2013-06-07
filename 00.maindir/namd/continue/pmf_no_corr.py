@@ -75,10 +75,10 @@ class asmd_calcs:
                 data_1=np.array(sample_i)
                 tew,wf=calc_work(data_1,st,self.w_c,self.pmf_c)#sample_i/data => tew
                 self.wrk[st][seed]=folder,tew,wf
-                #os.remove(path)
+                os.remove(path)
             else:
-                pass
-                #os.remove(path)
+                #pass
+                os.remove(path)
         data=np.array(acc)
         JA=calc_pmf(data,st,self.w_c,self.pmf_c)               # get JA
         wf_sd=dict([(self.wrk[st][s][2],s) for s in seeds])
@@ -122,8 +122,8 @@ def main_call(st,w_c,pmf_c,d_cp):
                     if any_seed == s:
                         pass
                     else:
-                        #os.remove(path)
-                        pass
+                        os.remove(path)
+                        #pass
     pickle.dump(w_c,open('%s-wc.pkl' % st,'w'))
     pickle.dump(pmf_c,open('%s-pmfc.pkl' % st,'w'))
     pickle.dump(wrk_pkl,open('%s-sfwf.pkl' % st,'w'))

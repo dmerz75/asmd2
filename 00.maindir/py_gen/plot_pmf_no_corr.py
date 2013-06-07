@@ -50,76 +50,41 @@ beta=1/(kb*temp) # 1/kb*T
 quota=xxquotaxx*xxhowmanyxx
 
 def plot_work(data,st,w_c):
-    if st=='01':
-        rnd = np.random.RandomState(0x2913)
-        indices = np.arange(data.shape[0])
-        rnd.shuffle(indices)
-        plot_indices = indices[1:data.shape[0]:1]   # plot this many
-        phase = int(st)-1
-        if phase == 0:
-            d = np.linspace(spos,spos+domain[phase],data.shape[1])
-        else:
-            d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[1])
-        data[::,::,3] = data[::,::,3] + w_c[-2]
-        plt.plot(d,data[0,::,3],'k',linewidth=0.4,label='Work(i)')
-        for index in plot_indices:
-            w_i = data[index,::,3]
-            plt.plot(d,w_i,'k',linewidth=0.4)
-            highest_work.append(w_i[-1])
+    rnd = np.random.RandomState(0x2913)
+    indices = np.arange(data.shape[0])
+    rnd.shuffle(indices)
+    plot_indices = indices[1:data.shape[0]:1]   # plot this many
+    phase = int(st)-1
+    if phase == 0:
+        d = np.linspace(spos,spos+domain[phase],data.shape[1])
     else:
-        rnd = np.random.RandomState(0x2913)
-        indices = np.arange(data.shape[0])
-        rnd.shuffle(indices)
-        plot_indices = indices[1:data.shape[0]:1]   # plot this many
-        phase = int(st)-1
-        if phase == 0:
-            d = np.linspace(spos,spos+domain[phase],data.shape[1])
-        else:
-            d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[1])
-        data[::,::,3] = data[::,::,3] + w_c[-2]
-        for index in plot_indices:
-            w_i = data[index,::,3]
-            plt.plot(d,w_i,'#000000',linewidth=0.3)
-            highest_work.append(w_i[-1])
+        d = np.linspace(spos+domain[phase-1],spos+domain[phase],data.shape[1])
+    data[::,::,3] = data[::,::,3] + w_c[-2]
+    if st=='01':
+        plt.plot(d,data[0,::,3],'k',linewidth=0.4,label='Work(i)')
+    for index in plot_indices:
+        w_i = data[index,::,3]
+        plt.plot(d,w_i,'k',linewidth=0.3)
+        highest_work.append(w_i[-1])
         
 def plot_pmf(data,st,w_c):
+    phase = int(st)-1
+    print data.shape[0]
+    deltaf= np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
     if st=='01':
-        print data.shape[0]
-        phase = int(st)-1
-        deltaf= np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
-        '''
-        if phase == 0:
-            d = np.linspace(spos,spos+domain[phase],deltaf.shape[0])
-        else:
-            d = np.linspace(spos+domain[phase-1],spos+domain[phase],deltaf.shape[0])
-        '''
-        d = np.linspace(spos,spos+domain[phase],deltaf.shape[0]) # stg 1 specific
-        lb = st+' '+str(data.shape[0])
-        plt.plot(d,deltaf,'r-',linewidth=4.0,label='PMF')
-        plt.plot(d,deltaf,'k--',linewidth=1.4)
+        d = np.linspace(spos,spos+domain[phase],deltaf.shape[0])
     else:
-        print data.shape[0]
-        phase = int(st)-1
-        deltaf= np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
-        '''
-        if phase == 0:
-            d = np.linspace(spos,spos+domain[phase],deltaf.shape[0])
-        else:
-            d = np.linspace(spos+domain[phase-1],spos+domain[phase],deltaf.shape[0])
-        '''
         d = np.linspace(spos+domain[phase-1],spos+domain[phase],deltaf.shape[0])
-        lb = st+' '+str(data.shape[0])
-        plt.plot(d,deltaf,'r-',linewidth=4.0)
-        plt.plot(d,deltaf,'k--',linewidth=1.4)
+    return (d,deltaf)
 
 quota = []
+collect_deltaf = []
 def main_call(st,w_c,d_cp):
     phase = int(st)-1
     acc = []
     wrk_pkl={}
     wrk_pkl= pickle.load(open('%s-sfwf.pkl' % st,'rb'))
     pcorr = pickle.load(open('%s-pmfc.pkl' % st,'rb'))
-    print pcorr
     p_arr = np.array(pcorr.values()) 
     w_c   = np.cumsum(p_arr)
     print w_c
@@ -132,7 +97,8 @@ def main_call(st,w_c,d_cp):
     print data.shape
     quota.append(data.shape[0])
     plot_work(data,st,w_c)
-    plot_pmf(data,st,w_c)
+    tup_pmf = plot_pmf(data,st,w_c)
+    collect_deltaf.append(tup_pmf)
 
 w_c={}
 w_c[0]=0
@@ -148,6 +114,12 @@ dirs = []
 for i in range(1,int(num)+1):
     dirs.append(str(i).zfill(2))
 [main_call(st,w_c,d_cp) for st in sorted(dirs)]
+
+pmf_2d = np.hstack(collect_deltaf)
+#plt.plot(pmf_2d[0,::50],pmf_2d[1,::50],'bs')
+plt.plot(pmf_2d[0,::],pmf_2d[1,::],'r-',linewidth=4.0,label='PMF')
+plt.plot(pmf_2d[0,::],pmf_2d[1,::],'k--',linewidth=1.4)
+pickle.dump(pmf_2d,open('pmf_2d.pkl','w'))
 
 # matplotlib end
 ####  plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')

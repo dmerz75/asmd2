@@ -171,25 +171,22 @@ langevD = 5
 temp = 300
 
 [danvt]
-jobid = pmfmh3
-dircounts= 2
+jobid = e2
+# v23, i23, e23
+dircounts=4,8,16,32
 mol = danvt
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.
+n    = 2.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
 # try e time= exp,6proc: 04-??
-environ = 01.vac
-#environ = 03.exp
-gate = ggatecpu2
-#gate = sth2
-#gate = steele2
-#gate = fgatecpu2
+environ = 03.exp
+gate = steele2
 comp = cpu
-cn   = 1
+cn   = 2
 ppn_env = 01.vac:1,02.imp:cn,03.exp:cn
 wallt= mwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
@@ -198,8 +195,9 @@ q_env = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc = True
 path_seg= 0.1
 path_svel= 1.0
-freq = 50,50,50,50,50
-howmany=3,25,25,1,1
+freq = 50,
+50,50,50,50
+howmany=3,25,4,1,1
 langevD = 5
 temp = 300
 
