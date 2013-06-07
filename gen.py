@@ -105,17 +105,11 @@ jobid   = config.get(molec,'jobid')        # jobdir specific name
 dirs    = config.get(molec,'dircounts')    # #num of directories, in which
 dircounts=[d for d in dirs.split(',')]     #   tpd will be acquired
 
+'''
 #_________pickle_______________________________________________________________
 def super_pickle(nset):
-    ''' needs to be deprecated, will be pickling the class from now on!
-    '''
     config = mdict()
     def construct(n):
-        ''' converts 1 into 1000 A/ns
-                     2 into 100  A/ns
-                     3 into 10   A/ns
-                     etc ...
-        '''
         vel = 1/(100*10**n)
         path_vel=np.linspace(vel,vel,len(path_seg))*ts*path_svel
         return path_vel
@@ -125,7 +119,6 @@ def super_pickle(nset):
             path_steps,setup[nset]
     return config
 
-'''
 #_____mdict____________________________________________________________________
 class mdict(dict):
     def __setitem__(self,key,value):

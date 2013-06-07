@@ -17,6 +17,7 @@ for path in glob(os.path.join(my_dir,'*-sfwf.pkl*')):
     count +=1
 num = str(count).zfill(2)
 
+'''
 class mdict(dict):
     def __setitem__(self,key,value):
         self.setdefault(key,[]).append(value)
@@ -40,6 +41,36 @@ dct        = config[vel][0][6]       # 'freq'  50*ts/1000
 dt         = dct['freq']*ts/1000
 path_v_aps = path_vel/ts*1000
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
+'''
+def print_params():
+    print vel
+    print dist
+    print ts
+    print path_seg
+    print path_svel
+    print path_vel
+    print dct
+    print dt
+    print path_v_aps
+    print domain
+print_params()
+
+# load AsmdMethod_solv_vel_stage.pkl
+# ex.: AsmdMethod_vac_02_10.pkl
+solvent = my_dir.split('/')[-2].split('.')[1]
+vel_dir = str(int(my_dir.split('/')[-1]))
+total_stages = num
+asmd_pkl_name = 'AsmdMethod_%s_%s_%s.pkl' % (solvent,vel_dir,total_stages)
+dir_loc_AsmdMethod_pkl = '/'.join(my_dir.split('/')[0:-2])
+asmd_pkl = os.path.join(dir_loc_AsmdMethod_pkl,asmd_pkl_name)
+sys.path.append(dir_loc_AsmdMethod_pkl)
+from asmd.asmdwork import *
+c_asmd = pickle.load(open(asmd_pkl,'r'))
+
+print dir(c_asmd)
+
+print_params()
+
 
 highest_work = []
 

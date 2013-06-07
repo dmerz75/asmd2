@@ -25,9 +25,8 @@ confige={'1':'v1000','2':'v100','3':'v10','4':'v1','5':'vp1'}
 # dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
 
 #__________global_____use______________________________________________________
+'''
 class mdict(dict):
-    ''' needs to be deprecated / removed once AsmdMethod_pkl is fully implemented
-    '''
     def __setitem__(self,key,value):
         self.setdefault(key,[]).append(value)
 
@@ -35,6 +34,7 @@ def print_dict(dct):
     for key,value in dct.items():
         print key,value
         print ''
+'''
 
 def cp_file(f_dir,f,d_dir,d):
     ''' used extensively for copying a single template file into a temporary dir
