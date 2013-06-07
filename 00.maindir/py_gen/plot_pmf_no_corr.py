@@ -115,11 +115,11 @@ for i in range(1,int(num)+1):
     dirs.append(str(i).zfill(2))
 [main_call(st,w_c,d_cp) for st in sorted(dirs)]
 
-pmf_2d = np.hstack(collect_deltaf)
+pmf_2d = np.transpose(np.hstack(collect_deltaf))
 #plt.plot(pmf_2d[0,::50],pmf_2d[1,::50],'bs')
 plt.plot(pmf_2d[0,::],pmf_2d[1,::],'r-',linewidth=4.0,label='PMF')
 plt.plot(pmf_2d[0,::],pmf_2d[1,::],'k--',linewidth=1.4)
-pickle.dump(pmf_2d,open('pmf_2d.pkl','w'))
+#pickle.dump(pmf_2d,open('pmf_2d.pkl','w'))
 
 # matplotlib end
 ####  plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')
@@ -198,7 +198,7 @@ lst_name=['','','','','']
 velcode=my_dir.split('/')[-1]
 dct_vel={'01':'1000','02':'100','03':'10','04':'1','05':'p1'}
 dct_case={100:'100',150:'150',200:'200',250:'250',400:'400',600:'600',800:'800'}
-if quota[0] > 99:
+if quota[0] > 91:
     n = dct_case.get(quota[0],dct_case[min(dct_case.keys(), \
                                  key=lambda k:abs(k-quota[0]))])
 else:
@@ -215,7 +215,9 @@ else:
 print ''.join(lst_name)
 name = ''.join(lst_name)
 
-#tex_pic(num,name)
+pickle.dump(pmf_2d,open('%s.pkl' % name,'w'))
+np.savetxt('%s.dat' % name,pmf_2d,fmt=['%3.4f','%3.11f'],delimiter=' ')
 cwd_pic(num,name)
+#tex_pic(num,name)
 #final_pic(num,name)
 

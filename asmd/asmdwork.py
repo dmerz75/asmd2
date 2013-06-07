@@ -124,8 +124,8 @@ class est_StrucDir:
 #__class_a_Smd_Method__________________________________________________________
 class AsmdMethod:
     def __init__(self,ngn,mol,env,v,ts,zc,lD,workdir,jobdir,pack_dir,\
-          gate,cn,comp,wallt,queue,howmany,stages,direct,dist,config,tpd,\
-          temp):
+          gate,cn,comp,wallt,queue,stages,direct,\
+          dist,path_seg,path_svel,path_vel,path_steps,freq,dps,tpd,tps,temp):
         self.ngn  = ngn
         self.mol  = mol
         self.env  = env                     # 01.vac
@@ -152,15 +152,29 @@ class AsmdMethod:
         self.q    = queue
         self.edir = os.path.join(self.jdir,self.env)  # i.e. 02.imp
         self.vdir = os.path.join(self.edir,self.v0)   # i.e. 02,03,...
-        self.hm   = howmany
-        self.hmtpd= tpd
+        self.tpd  = tpd  # T   D   T
+        self.dps  = dps  # / = / * / ; traj/stage = dir/stage * traj/dir
+        self.tps  = tps  # S   S   D
+        #self.hm   = howmany
+        #self.hmtpd= tpd
         self.st   = stages
+        # replacement
+        self.dist = dist
+        self.path_seg = path_seg
+        self.path_svel= path_svel
+        self.path_vel = path_vel
+        self.path_steps=path_steps
+        self.freq = freq
+        self.dt   = freq*ts/1000
+        self.pv_aps=self.path_vel/ts*1000
+        self.pv_ans=self.path_vel/ts*(10**6)
+        '''
         self.cfg  = config   # << print_dict(self.cfg)
         #print_dict(self.cfg)
         # DESCRIPTION: writing the config.pkl
         #___CONFIG_SECTION_BEGIN
-        self.d  = self.cfg[v][0][0]    # total distance
-        self.ts = self.cfg[v][0][1]    # timestep
+        #self.d  = self.cfg[v][0][0]    # total distance
+        #self.ts = self.cfg[v][0][1]    # timestep
         #path.seg=self.cfg[v][0][2]    # path_seg
         #path.sv =self.cfg[v][0][3]    # path_svel
         self.pv = self.cfg[v][0][4]    # path_vel
@@ -169,8 +183,10 @@ class AsmdMethod:
         self.dt   = self.dct['freq']*ts/1000
         self.pv_aps=self.pv/ts*1000
         self.pv_ans=self.pv/ts*(10**6)
-        zdist_c = format((self.pv*self.ps).cumsum()[-1],'.2f')
-        dist_c  = format(self.d,'.2f')
+        '''
+        # back to normal
+        zdist_c = format((self.path_vel*self.path_steps).cumsum()[-1],'.2f')
+        dist_c  = format(self.dist,'.2f')
         if zdist_c!=dist_c:
             print '?@#$! total distance doesn\'t match path_seg dist'
             sys.exit()
@@ -185,11 +201,14 @@ class AsmdMethod:
         def reg_exp_contd(script,stage,i):
             phase = i-1
             reg_ex(script,'xxcstagexx',stage)
-            reg_ex(script,'xxquotaxx',str(self.hm))
-            reg_ex(script,'xxhowmanyxx',str(self.dct['howmany']))
+            # before tps = tpd * dps
+            reg_ex(script,'xxquotaxx',str(self.dps))
+            #reg_ex(script,'xxquotaxx',str(self.hm))
+            #reg_ex(script,'xxhowmanyxx',str(self.dct['howmany']))
+            reg_ex(script,'xxhowmanyxx',str(self.tpd))
             reg_ex(script,'xxenvironxx',self.e)
             reg_ex(script,'xxvelxx',str(self.pv_ans[0]))
-            lenarray=self.ps[phase]/self.dct['freq']+1
+            lenarray=self.path_seg[phase]/self.freq+1
             #print 'lenarray',lenarray
             #print 'self.ps[phase]',self.ps[phase]
             #print 'self.dct[freq]',self.dct['freq']+1
@@ -262,22 +281,20 @@ class AsmdMethod:
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.pdir,'weighthb.py')
         reg_exp_contd(d_vis,stage,1)
+        '''  june 7
     def savePickle(self):      # dumps config.pkl in
         os.chdir(self.jdir)    # pdir = nda_jobid
         pickle.dump(self.cfg,open('config%s_%s.pkl' %(self.vel,self.st),'w'))
         os.chdir(self.vdir)
         pickle.dump(self.cfg,open('config.pkl','w'))
+        '''
 #_____________________________________________________________________________
     def makeSubDir(self):
         def gen_all_seeds():
-            #print type(self.st),self.st
-            #print type(self.hm),self.hm
-            #print type(self.hmtpd),self.hmtpd
-            sds = np.random.randint(10000,high=99999,size=(self.st,int(self.hm),self.hmtpd))
-            #print sds
-            #print type(sds)
+            os.chdir(self.vdir)
+            sds = np.random.randint(10000,high=99999, \
+                              size=(self.st,int(self.tpd),self.dps))
             fname = 'seeds.txt'
-            #print sds.shape
             with file('seeds.txt','w') as outfile:
                 outfile.write('# %s stages' % sds.shape[0])
                 outfile.write(" %s directories per stage" % sds.shape[1])
@@ -289,6 +306,7 @@ class AsmdMethod:
                     np.savetxt(outfile,ss,fmt='%5.0d')
             return sds
         def reg_exp(subdir,ds,seed_list):
+            os.chdir(self.vdir)
             with file('%s/%s.txt' %(ds,ds) ,'w') as outfile:
                 if seed_list.shape[1]==1:
                     np.savetxt(outfile,seed_list,fmt='%5.0d')
@@ -309,9 +327,9 @@ class AsmdMethod:
                 reg_ex(script,'xxdtxx',str(self.dt))
             def call_smd(script):
                 phase = int(script.split('/')[-3])-1
-                reg_ex(script,'xxstepsxx',str(int(self.ps[phase])))
+                reg_ex(script,'xxstepsxx',str(int(self.path_seg[phase])))
                 # len_hb_pkl, self.hb_l
-                reg_ex(script,'xxdcdxx',str(int(self.ps[phase]) \
+                reg_ex(script,'xxdcdxx',str(int(self.path_seg[phase]) \
                            /self.hb_l))
                 if self.ngn=='amb':
                     reg_ex(script,'xxtsxx',str(self.ts/1000))
@@ -319,7 +337,7 @@ class AsmdMethod:
                     reg_ex(script,'xxtsxx',str(self.ts))
                 reg_ex(script,'xxlDxx',self.lD)
                 reg_ex(script,'xxtempxx',self.temp)
-                reg_ex(script,'xxfreqxx',str(self.dct['freq']))
+                reg_ex(script,'xxfreqxx',str(self.freq))
             for root, dirnames, filenames in os.walk(subdir):
                 for f in filenames:
                     if len(f.split('-'))==1:
@@ -329,17 +347,17 @@ class AsmdMethod:
                     script=os.path.join(root,f)
                     if idn=='job.sh':
                         bashjobname=self.mol+self.ngn[0]+\
-                            str(int(self.pv[0]/2*(10**6)))+self.e[0]+ds
+                            str(int(self.path_vel[0]/2*(10**6)))+self.e[0]+ds
                         reg_ex(script,'xxjobnamexx',bashjobname)
                         reg_ex(script,'xxqueuexx',configq[self.q])
                         reg_ex(script,'xxnodesxx',confign[self.cn][self.comp])
                         reg_ex(script,'xxwalltimexx',configw[self.wt])
                     elif idn=='go.py':
-                        hw=str(self.dct['howmany'])
-                        reg_ex(script,'xxhowmanyxx',hw)
+                        #hw=str(self.dct['howmany'])
+                        reg_ex(script,'xxhowmanyxx',str(self.tpd))
                         reg_ex(script,'xxnodecountxx',self.cn)
                         reg_ex(script,'xxstartconstraintxx',str(self.spos))
-                        reg_ex(script,'xxquotaxx',self.hm)
+                        reg_ex(script,'xxquotaxx',str(self.dps))
                         reg_ex(script,'xxstrucequilxx',self.env)
                     elif idn=='smd.namd':
                         call_smd(script)
@@ -349,19 +367,19 @@ class AsmdMethod:
                         call_expavg(script)
                     elif idn=='smdforce.tcl':       # NAMD STEERING FILE
                         phase = int(script.split('/')[-3])-1
-                        reg_ex(script,'xxvelocityxx',str(self.pv[phase]))
+                        reg_ex(script,'xxvelocityxx',str(self.path_vel[phase]))
                         reg_ex(script,'xxzcoordxx',str(self.spos))
-                        zdist = (self.pv*self.ps).cumsum()
+                        zdist = (self.path_vel*self.path_seg).cumsum()
                         if phase == 0:
                             reg_ex(script,'xxcur_zxx',str(0))
                         else:
                             reg_ex(script,'xxcur_zxx',str(zdist[phase-1]))
                         reg_ex(script,'xxtsxx',str(self.ts))
-                        reg_ex(script,'xxfreqxx',str(self.dct['freq']))
+                        reg_ex(script,'xxfreqxx',str(self.freq))
                         reg_ex(script,'yyyyy',str(int(script.split('/')[-3])-1))
                     elif idn=='dist.RST':           # AMB STEERING FILE
                         phase = int(script.split('/')[-3])-1
-                        zdist = (self.pv*self.ps).cumsum()
+                        zdist = (self.path_vel*self.path_seg).cumsum()
                         if phase == 0:
                             reg_ex(script,'xxsposxx',str(self.spos))
                             reg_ex(script,'xxeposxx',str(self.spos+zdist[phase]))
@@ -371,7 +389,9 @@ class AsmdMethod:
         def how_many(tmpdir):
             #rlist=[]
             #rlist=[str(x).zfill(3) for x in range(int(self.hm))]
-            for i in range(int(self.hm)):
+            # change v (below) on june 7
+            #for i in range(int(self.hm)):
+            for i in range(int(self.dps)):
                 '''
                 def reg_seed(subdir,seed):
                     if self.ngn=='namd':

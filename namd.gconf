@@ -26,17 +26,17 @@ configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
 gates: fgatecpu2,ggatecpu2,steele2,keene,stibv2,sth2
 
 [da]
-jobid = pmfnocorr2
-dircounts= 2
+jobid = latest
+dircounts= 3
 mol = da
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 3.
+n    = 2.
 gate = fgatecpu2
 environ = 01.vac
-howmany = 10,5,5,2,1
+howmany = 10,15,15,2,1
 cn   = 1
 wallt= mwt
 queue= standby
@@ -195,8 +195,7 @@ q_env = 01.vac:queue,02.imp:queue,03.exp:queue
 lnspc = True
 path_seg= 0.1
 path_svel= 1.0
-freq = 50,
-50,50,50,50
+freq = 50,50,50,50,50
 howmany=3,25,4,1,1
 langevD = 5
 temp = 300

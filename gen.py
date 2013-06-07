@@ -125,6 +125,7 @@ def super_pickle(nset):
             path_steps,setup[nset]
     return config
 
+'''
 #_____mdict____________________________________________________________________
 class mdict(dict):
     def __setitem__(self,key,value):
@@ -133,9 +134,10 @@ def  print_dict(dt):
     for key,value in dt.items():
         print key,value
         print ''
+'''
 
 #_____CODE_____________________________________________________________________
-def asmd(dircount,tps,v):
+def asmd(dps,tps,v):
     ''' asmd method arguments: 1 dircount, tps:traj/stage, v(velocity, ~100)
     '''
 
@@ -164,23 +166,29 @@ def asmd(dircount,tps,v):
               steering_control - tcl file or appropriate steering file
                                  placed
         '''
-        config = super_pickle(int(v))
-        stages = len(config[int(v)][0][5])
+        #config = super_pickle(int(v))
+        # umpire
+        vel = 1/(100*10**v)
+        path_vel=np.linspace(vel,vel,len(path_seg))*ts*path_svel
+        path_steps=np.rint(path_seg*dist/path_vel)
+        stages = len(path_steps)
         print 'ASMD is ready with',ng,'for',mol,'in',env,'at velocity',v, \
               'assembled inside',jobdir+'.'
         f=AsmdMethod(ng,mol,env,v,ts,zc,langevD,workdir,jobdir,pack_dir,gate, \
-            ppn_env[env],comp,wt_env[env],q_env[env],dircount,stages,direct, \
-            dist,config,tpd,temp)
+            ppn_env[env],comp,wt_env[env],q_env[env],stages,direct, \
+            dist,path_seg,path_svel,path_vel,path_steps,freq_l[int(v)-1],tpd, \
+            dps,tps,temp)
+            #dist,path_seg,path_svel,path_vel,path_steps,,tpd,temp)
         jdir = os.path.join(workdir,pack_dir,jobdir)
         asmd_mod = os.path.join(workdir,'asmd')
         if not os.path.exists(os.path.join(jdir,'asmd')):
             shutil.copytree(asmd_mod,os.path.join(jdir,'asmd'))
         pickle.dump(f,open('%s/AsmdMethod_%s_%s_%s.pkl' % (jdir, \
-                env.split('.')[1],str(int(v)),stages),'w'))
+                env.split('.')[1],str(int(v)).zfill(2),stages),'w'))
         f.makeEnvDir()
         f.makeVelDir()
         f.makeContainDir()
-        f.savePickle()
+        #f.savePickle()  remove june 7
         f.makeSubDir()
         f.steering_control()
         
@@ -210,6 +218,4 @@ def tar_ball(t_dir):
 pd=[asmd(str(d),str(int(hows_l[int(v)-1])*int(d)),v) for d in dircounts for v in n]
 tar_ball(pd[0]) # tarball
 #[asmd(str(d)) for d in dircounts]
-
-
 
