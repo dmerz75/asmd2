@@ -162,7 +162,6 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
                      for n in [3,4,5]])
         acc_b.append(b_data)
 #_____________________________________________________________________________
-
 def main_bond(sel,indx_clr=[(0,'k-','')]):
     # matplotlib
     fig,(ax1)=plt.subplots(1)
@@ -244,6 +243,9 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
                                               label=r"i$\rightarrow$i+4")
         plt.plot(ext[::x_d],bnd[2,::,::y_d].mean(axis=0),'g-',linewidth=1.0, \
                                               label=r"i$\rightarrow$i+5")
+    tup_data = (ext,bnd2,bnd[0,::,::].mean(axis=0),bnd[1,::,::].mean(axis=0), \
+                    bnd[2,::,::].mean(axis=0))
+    bond_data = np.transpose(np.array(tup_data))
     sel = 'hb'
     # LEGEND
     plt.legend(loc='upper right',prop={'size':12})
@@ -257,31 +259,6 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     # DRAW
     plt.draw()
 
-    '''
-    def tex_pic(num,name):
-        # SAVE:  ../../tex_workdir/fig_bond/plotname.png|.eps
-        texdir = os.path.join(('/'.join(my_dir.split('/')[0:-3])), \
-                       'tex_%s/fig_bond' % my_dir.split('/')[-4])
-        if not os.path.exists(texdir): os.makedirs(texdir)
-        plotname = 'danvtnamdexpvv1000asmd_%s' % sel
-        plt.savefig('%s/%s.png' % (texdir,plotname))
-        plt.savefig('%s/%s.eps' % (texdir,plotname))
-    # matplotlib - end
-    '''
-
-    def tex_pic(num,name):
-        texdir = os.path.join(('/'.join(my_dir.split('/')[0:-3])), \
-                'tex_%s/fig_bond') % my_dir.split('/')[-4]
-        if not os.path.exists(texdir): os.makedirs(texdir)
-        plt.savefig('%s/%s.png' %(texdir,name))
-        plt.savefig('%s/%s.eps' %(texdir,name))
-    def cwd_pic(num,name):
-        plt.savefig('%s.png' % name)
-        plt.savefig('%s.eps' % name)
-    def final_pic(num,name):
-        plt.savefig('../../../../fig/%s.png' % name)
-        plt.savefig('../../../../fig/%s.eps' % name)
-
     lst_name=['','','','','','']
     velcode=my_dir.split('/')[-1]
     dct_vel={'01':'1000','02':'100','03':'10','04':'1','05':'p1'}
@@ -292,6 +269,7 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
                                  key=lambda k:abs(k-quota[0]))])
     else:
         n = str(quota[0])
+
     # TITLE
     #plt.title('xxmoleculexx - xxngnxx - ASMD \n xxenvironxx xxvelxx $\AA$/ns')
     lst_name[0]=('bond_xxngnxx_xxmoleculexx_')
@@ -306,12 +284,24 @@ def main_bond(sel,indx_clr=[(0,'k-','')]):
     print ''.join(lst_name)
     name = ''.join(lst_name)
 
-    tex_pic(num,name)
-    #cwd_pic(num,name)
-    #final_pic(num,name)
+    def save_pic_data(i,subdir,fname):
+        content_dir = os.path.join('/'.join(my_dir.split('/')[0:i]),subdir)
+        if not os.path.exists(content_dir): os.makedirs(content_dir)
+        abs_file_name = os.path.join(content_dir,fname)
+        plt.savefig('%s.png' % abs_file_name)
+        plt.savefig('%s.eps' % abs_file_name)
+        os.chdir(content_dir)
+        pickle.dump(bond_data,open('%s.pkl' % fname,'w'))
+        np.savetxt('%s.dat' % fname,bond_data,fmt='%3.4f',delimiter=' ')
+
+    # levels back, -4:beyond,-3:default,-2:count,-1:env,'':cwd
+    # save_pic_data(levels_back,subdir,name)
+    # example: save_pic_data(-4,'fig',name)
+    save_pic_data(-3,'bond',name)
+    #save_pic_data(-3,'',name)
 
 #___main_call_'hb','wp','ihb'_________________________________________________
 main_bond('hb')
-main_bond('ihb')
+#main_bond('ihb')
 if my_dir.split('/')[-2].split('.')[1]=='exp':
     main_bond('wp')

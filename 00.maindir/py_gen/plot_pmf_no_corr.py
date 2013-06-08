@@ -16,6 +16,9 @@ count = 0
 for path in glob(os.path.join(my_dir,'*-sfwf.pkl*')):
     count +=1
 num = str(count).zfill(2)
+if '00' == num:
+    print num,'no data acquired'
+    sys.exit()
 
 # load AsmdMethod_solv_vel_stage.pkl
 # ex.: AsmdMethod_vac_02_10.pkl
@@ -194,18 +197,16 @@ fig.set_size_inches(7.12,4.4)
 # DRAW
 plt.draw()
 
-def tex_pic(num,name):
-    texdir = os.path.join(('/'.join(my_dir.split('/')[0:-3])), \
-             'tex_%s/fig_pmf') % my_dir.split('/')[-4]
-    if not os.path.exists(texdir): os.makedirs(texdir)
-    plt.savefig('%s/%s.png' %(texdir,name))
-    plt.savefig('%s/%s.eps' %(texdir,name))
-def cwd_pic(num,name):
-    plt.savefig('%s.png' % name)
-    plt.savefig('%s.eps' % name)
-def final_pic(num,name):
-    plt.savefig('../../../../fig/%s.png' % name)
-    plt.savefig('../../../../fig/%s.eps' % name)
+def save_pic_data(i,subdir,fname):
+    content_dir = os.path.join('/'.join(my_dir.split('/')[0:i]),subdir)
+    if not os.path.exists(content_dir): os.makedirs(content_dir)
+    abs_file_name = os.path.join(content_dir,fname)
+    plt.savefig('%s.png' % abs_file_name)
+    plt.savefig('%s.eps' % abs_file_name)
+    os.chdir(content_dir)
+    pickle.dump(pmf_2d,open('%s.pkl' % fname,'w'))
+    np.savetxt('%s.dat' % fname,pmf_2d,fmt=['%3.4f','%3.11f'],delimiter=' ')
+
 
 lst_name=['','','','','']
 velcode=my_dir.split('/')[-1]
@@ -227,10 +228,8 @@ else:
     lst_name[4]='smd'
 print ''.join(lst_name)
 name = ''.join(lst_name)
-
-pickle.dump(pmf_2d,open('%s.pkl' % name,'w'))
-np.savetxt('%s.dat' % name,pmf_2d,fmt=['%3.4f','%3.11f'],delimiter=' ')
-cwd_pic(num,name)
-#tex_pic(num,name)
-#final_pic(num,name)
-
+# levels back, -4:beyond,-3:default,-2:count,-1:env,'':cwd
+# save_pic_data(levels_back,subdir,name)
+# example: save_pic_data(-4,'fig',name)
+# example: save_pic_data(-3,'',name)
+save_pic_data(-3,'fig',name)

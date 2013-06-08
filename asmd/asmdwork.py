@@ -88,6 +88,8 @@ class est_JobDir:
         cp_file(self.pydir,'del.py',self.pdir,'del.py')
         cp_file(self.workdir,'%s.gconf' % self.ngn,self.pdir,'.%s.gconf' % \
                 self.ngn)
+        cp_file(os.path.join(self.workdir,'00.scripts'),'run_on_laptop.py',\
+                self.pdir,'')
         if self.ngn == 'namd':    # NAMD
             if not os.path.exists(os.path.join(self.jdir,'toppar')):
                 cp_tree(self.ndir,'toppar',self.jdir,'toppar')
@@ -190,7 +192,7 @@ class AsmdMethod:
         if zdist_c!=dist_c:
             print '?@#$! total distance doesn\'t match path_seg dist'
         #len_hb_pkl=500 # length of the hydrogen bond pkl
-        self.hb_l = 500 # length of the hydrogen bond pkl
+        self.hb_l = 100 # length of the hydrogen bond pkl
         #___CONFIG_SECTION_END
     def makeEnvDir(self):            # i.e.   02.imp or 03.exp
         if not os.path.exists(self.edir):os.makedirs(self.edir)

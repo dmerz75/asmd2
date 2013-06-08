@@ -8,35 +8,34 @@ import itertools
 def main():
     my_dir = os.path.abspath(os.path.dirname(__file__))
     acc=[]
-
     def find_job(f,vel,solv,stages):
         def job_stage(st):
             print st
-            count = 0
+            traj_dirs = []
             for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s/*/go.py'%(f,solv,vel,st))):
-                count +=1
-                fd =(path.split('/')[-6])
-                num=(path.split('/')[-4])
-                sol=(path.split('/')[-5]).split('.')[1]
-                stg=(path.split('/')[-3])
-                jtype=num+sol+stg
-                acc.append(jtype)
-                if path.split('/')[1]=='export':
-                    root='/'+'/'.join(path.split('/')[2:-1])
-                    path='/'+'/'.join(path.split('/')[2:])
-                else:
-                    root='/'.join(path.split('/')[:-1])
-                print root
+                traj_dirs.append(path.split('/')[-2])
                 print path
-                os.chdir(root)
-                pipe=subprocess.call(['/usr/bin/python',path],stdin=subprocess.PIPE, \
-                        stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-                #qsub_job(stg,path)
-                if count >= 5:
-                    break
-            count = 0
+            for traj_dir in sorted(traj_dirs):
+                for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s/%s/go.py' \
+                                                     %(f,solv,vel,st,traj_dir))):
+                    fd =(path.split('/')[-6])
+                    num=(path.split('/')[-4])
+                    sol=(path.split('/')[-5]).split('.')[1]
+                    stg=(path.split('/')[-3])
+                    jtype=num+sol+stg
+                    acc.append(jtype)
+                    if path.split('/')[1]=='export':
+                        root='/'+'/'.join(path.split('/')[2:-1])
+                        path='/'+'/'.join(path.split('/')[2:])
+                    else:
+                        root='/'.join(path.split('/')[:-1])
+                    print root
+                    print path,'submitted'
+                    os.chdir(root)
+                    pipe=subprocess.call(['/usr/bin/python',path],stdin=subprocess.PIPE, \
+                          stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+                    #qsub_job(stg,path)
             for path in glob(os.path.join(my_dir,'%s/*.%s/%s/%s-continue.py'%(f,solv,vel,st))):
-                count +=1
                 fd =(path.split('/')[-4])
                 num=(path.split('/')[-2])
                 sol=(path.split('/')[-3]).split('.')[1]
@@ -52,11 +51,7 @@ def main():
                 pipe=subprocess.call(['/usr/bin/python',path,st],stdin=subprocess.PIPE, \
                         stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
                 #qsub_jobc(stg,path)
-                if count >= 1:
-                    break
-            count = 0
             for path in glob(os.path.join(my_dir,'%s/*.%s/%s/00-hb_pkl.py'%(f,solv,vel))):
-                count +=1
                 fd =(path.split('/')[-4])
                 num=(path.split('/')[-2])
                 sol=(path.split('/')[-3]).split('.')[1]
@@ -72,8 +67,6 @@ def main():
                 pipe=subprocess.call(['/usr/bin/python',path,st],stdin=subprocess.PIPE, \
                         stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
                 #qsub_jobh(stg,path)
-                if count >= 1:
-                    break
         [job_stage(st) for st in stages]
 
     #__________________________________________________________________________

@@ -120,8 +120,16 @@ def main():
     # submitted 02:
     # submitted 03:
     #__________________________________________________________________________
-    dirs = [str(d) for d in sorted([int(f) for f in os.listdir(my_dir) \
+    def get_folder(f):
+        try:
+            return int(f)
+        except:
+            return ''
+
+    dirs = [str(d) for d in sorted([get_folder(f) for f in os.listdir(my_dir) \
                          if os.path.isdir(f)])]
+    print dirs
+
     velocities = ['02']
     #velocities = ['02','03','04','05']
     solvents   = ['vac']
