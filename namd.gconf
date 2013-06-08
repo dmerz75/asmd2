@@ -194,24 +194,26 @@ langevD = 5
 temp = 300
 
 [danvt]
-jobid = e2
+jobid = ucg_e3_test
 # v23, i23, e23
-dircounts=4,8,16,32
+dircounts=25,50,100,200
 mol = danvt
 zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.,3.,4.
+n    = 3.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
 # try e time= exp,6proc: 04-??
 environ = 03.exp
-gate = steele2
+#gate = steele2
+gate = fgatecpu2
 comp = cpu
 cn   = 2
 ppn_env = 01.vac:1,02.imp:cn,03.exp:cn
-wallt= mwt
+#wallt= mwt
+wallt= lwt
 wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
 queue = standby
 q_env = 01.vac:queue,02.imp:queue,03.exp:queue

@@ -52,7 +52,7 @@ def run_namd(i,st_num,c_num):
     reg_ex(script,'xxxxx',str(seed),i)
     st = time.time()
     os.system('charmrun ++local +pxxnodecountxx \
-              /apps/rhel5/namd/NAMD_2.9b2_Linux-x86_64-TCP/namd2 \
+              /apps/rhel5/namd/NAMD_2.9_Linux-x86_64-TCP/namd2 \
               smd.namd.%s > run.log' % (seed))
     tt = time.time()-st
     os.remove(script)
