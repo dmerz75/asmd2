@@ -12,7 +12,7 @@ num=sys.argv[1]
 # load AsmdMethod_solv_vel_stage.pkl
 # ex.: AsmdMethod_vac_02_10.pkl
 solvent = my_dir.split('/')[-2].split('.')[1]
-vel_dir = str(int(my_dir.split('/')[-1])).zfill(2)
+vel_dir = my_dir.split('/')[-1]
 total_stages = '10' # num
 asmd_pkl_name = 'AsmdMethod_%s_%s_%s.pkl' % (solvent,vel_dir,total_stages)
 dir_loc_AsmdMethod_pkl = '/'.join(my_dir.split('/')[0:-2])
