@@ -200,6 +200,7 @@ class AsmdMethod:
         def reg_exp_contd(script,stage,i):
             phase = i-1
             reg_ex(script,'xxcstagexx',stage)
+            reg_ex(script,'xxtot_stagesxx',str(self.st))
             # before tps = tpd * dps
             #print self.dps,self.tpd
             # june 7

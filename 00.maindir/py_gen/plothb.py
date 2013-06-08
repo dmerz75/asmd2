@@ -11,38 +11,54 @@ from pylab import *
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
 
-class mdict(dict):
-    def __setitem__(self,key,value):
-        self.setdefault(key,[]).append(value)
-def print_dict(dct):
-    for key,val in dct.items():
-        print key,val
-        print ''
-    return key
+count = 0
+for path in glob(os.path.join(my_dir,'*-sfwf.pkl*')):
+    count +=1
+num = str(count).zfill(2)
 
-config = pickle.load(open('config.pkl','rb'))
-key = print_dict(config)
+# load AsmdMethod_solv_vel_stage.pkl
+# ex.: AsmdMethod_vac_02_10.pkl
+solvent = my_dir.split('/')[-2].split('.')[1]
+vel_dir = my_dir.split('/')[-1]
+total_stages = 'xxtot_stagesxx'
+asmd_pkl_name = 'AsmdMethod_%s_%s_%s.pkl' % (solvent,vel_dir,total_stages)
+dir_loc_AsmdMethod_pkl = '/'.join(my_dir.split('/')[0:-2])
+asmd_pkl = os.path.join(dir_loc_AsmdMethod_pkl,asmd_pkl_name)
+sys.path.append(dir_loc_AsmdMethod_pkl)
+from asmd.asmdwork import *
+c_asmd = pickle.load(open(asmd_pkl,'r'))
 
-vel  = key
-dist = config[vel][0][0]
-ts   = config[vel][0][1]
-path_seg   = config[vel][0][2]
-path_svel  = config[vel][0][3]
-path_vel   = config[vel][0][4]
-path_steps = config[vel][0][5]
-dct        = config[vel][0][6]       # 'freq'  50*ts/1000
-dt         = dct['freq']*ts/1000
-path_v_aps = path_vel/ts*1000
+print dir(c_asmd)
+
+vel  = c_asmd.v
+dist = c_asmd.dist
+ts   = c_asmd.ts
+path_seg   = c_asmd.path_seg
+path_svel  = c_asmd.path_svel
+path_vel   = c_asmd.path_vel
+path_steps = c_asmd.path_steps
+dt         = c_asmd.dt
+path_v_aps = c_asmd.pv_aps
 domain     = np.cumsum(((path_steps*ts)/1000)*path_v_aps)
 
+print vel
+print dist
+print ts
+print path_seg
+print path_svel
+print path_vel
+print path_steps
+print dt
+print path_v_aps
+print domain
+
 spos=xxsposxx
-beta=-0.5961
-#num =str(len(path_steps)).zfill(2)
-count = 0
-for path in glob(os.path.join(my_dir,'*-sd_hb.pkl*')):
-    count+=1
-num = str(count).zfill(2)
+kb  =-0.001987
+temp=xxtempxx
+beta=1/(kb*temp) # 1/kb*T
+quota=xxquotaxx*xxhowmanyxx
 quota = []
+
 #_____________________________________________________________________________
 def pack(stage):
     seed_bond={}
@@ -146,6 +162,7 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
                      for n in [3,4,5]])
         acc_b.append(b_data)
 #_____________________________________________________________________________
+
 def main_bond(sel,indx_clr=[(0,'k-','')]):
     # matplotlib
     fig,(ax1)=plt.subplots(1)

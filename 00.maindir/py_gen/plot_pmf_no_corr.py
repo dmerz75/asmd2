@@ -21,7 +21,7 @@ num = str(count).zfill(2)
 # ex.: AsmdMethod_vac_02_10.pkl
 solvent = my_dir.split('/')[-2].split('.')[1]
 vel_dir = my_dir.split('/')[-1]
-total_stages = '10' #num
+total_stages = 'xxtot_stagesxx'
 asmd_pkl_name = 'AsmdMethod_%s_%s_%s.pkl' % (solvent,vel_dir,total_stages)
 dir_loc_AsmdMethod_pkl = '/'.join(my_dir.split('/')[0:-2])
 asmd_pkl = os.path.join(dir_loc_AsmdMethod_pkl,asmd_pkl_name)
@@ -60,7 +60,9 @@ kb  =-0.001987
 temp=xxtempxx
 beta=1/(kb*temp) # 1/kb*T
 quota=xxquotaxx*xxhowmanyxx
+quota = []
 
+#_____________________________________________________________________________
 def plot_work(data,st,w_c):
     rnd = np.random.RandomState(0x2913)
     indices = np.arange(data.shape[0])
@@ -89,7 +91,6 @@ def plot_pmf(data,st,w_c):
         d = np.linspace(spos+domain[phase-1],spos+domain[phase],deltaf.shape[0])
     return (d,deltaf)
 
-quota = []
 collect_deltaf = []
 def main_call(st,w_c,d_cp):
     phase = int(st)-1
@@ -129,8 +130,8 @@ for i in range(1,int(num)+1):
 
 pmf_2d = np.transpose(np.hstack(collect_deltaf))
 #plt.plot(pmf_2d[0,::50],pmf_2d[1,::50],'bs')
-plt.plot(pmf_2d[0,::],pmf_2d[1,::],'r-',linewidth=4.0,label='PMF')
-plt.plot(pmf_2d[0,::],pmf_2d[1,::],'k--',linewidth=1.4)
+plt.plot(pmf_2d[::,0],pmf_2d[::,1],'r-',linewidth=4.0,label='PMF')
+plt.plot(pmf_2d[::,0],pmf_2d[::,1],'k--',linewidth=1.4)
 #pickle.dump(pmf_2d,open('pmf_2d.pkl','w'))
 
 # matplotlib end
