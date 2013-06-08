@@ -25,8 +25,31 @@ configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
          'standby-8':'standby-8','debug':'tg_debug'}
 gates: fgatecpu2,ggatecpu2,steele2,keene,stibv2,sth2
 
+[test]
+jobid = test
+dircounts= 5,7
+mol = da
+zcrd = 13.0
+envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
+dist = 20.0
+ts   = 2.0
+n    = 2.,3.
+gate = ggatecpu2
+environ = 01.vac
+howmany = 10,2,2,2,1
+cn   = 1
+wallt= mwt
+queue= standby
+ppn_env = 01.vac:1,02.imp:cn,03.exp:cn
+wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:lwt
+q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
+path_seg = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
+path_svel= 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+langevD = 5
+temp = 300
+
 [da]
-jobid = latest
+jobid = latest7
 dircounts= 3
 mol = da
 zcrd = 13.0
@@ -34,7 +57,7 @@ envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
 n    = 2.
-gate = fgatecpu2
+gate = ggatecpu2
 environ = 01.vac
 howmany = 10,15,15,2,1
 cn   = 1
@@ -179,7 +202,7 @@ zcrd = 13.0
 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
 dist = 20.0
 ts   = 2.0
-n    = 2.
+n    = 2.,3.,4.
 #e times = imp,2procs: 150/1500(25min)
 #e times = exp,3procs: 03-28min
 # try e time= exp,6proc: 04-??

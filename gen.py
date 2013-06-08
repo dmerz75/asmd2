@@ -169,8 +169,8 @@ def asmd(dps,tps,v):
               'assembled inside',jobdir+'.'
         f=AsmdMethod(ng,mol,env,v,ts,zc,langevD,workdir,jobdir,pack_dir,gate, \
             ppn_env[env],comp,wt_env[env],q_env[env],stages,direct, \
-            dist,path_seg,path_svel,path_vel,path_steps,freq_l[int(v)-1],tpd, \
-            dps,tps,temp)
+            dist,path_seg,path_svel,path_vel,path_steps,freq_l[int(v)-1],dps, \
+            tpd,tps,temp)
             #dist,path_seg,path_svel,path_vel,path_steps,,tpd,temp)
         jdir = os.path.join(workdir,pack_dir,jobdir)
         asmd_mod = os.path.join(workdir,'asmd')

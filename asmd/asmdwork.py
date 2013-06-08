@@ -121,7 +121,7 @@ class est_StrucDir:
         if not os.path.exists(os.path.join(self.jdir,'00.struc',self.env)):
             cp_tree(os.path.join(self.ndir,'struc',self.mol,self.env),'',\
                 os.path.join(self.jdir,'00.struc'),self.env)
-#__class_a_Smd_Method__________________________________________________________
+#__class_AsmdMethod____________________________________________________________
 class AsmdMethod:
     def __init__(self,ngn,mol,env,v,ts,zc,lD,workdir,jobdir,pack_dir,\
           gate,cn,comp,wallt,queue,stages,direct,\
@@ -189,7 +189,6 @@ class AsmdMethod:
         dist_c  = format(self.dist,'.2f')
         if zdist_c!=dist_c:
             print '?@#$! total distance doesn\'t match path_seg dist'
-            sys.exit()
         #len_hb_pkl=500 # length of the hydrogen bond pkl
         self.hb_l = 500 # length of the hydrogen bond pkl
         #___CONFIG_SECTION_END
@@ -202,13 +201,15 @@ class AsmdMethod:
             phase = i-1
             reg_ex(script,'xxcstagexx',stage)
             # before tps = tpd * dps
+            #print self.dps,self.tpd
+            # june 7
             reg_ex(script,'xxquotaxx',str(self.dps))
             #reg_ex(script,'xxquotaxx',str(self.hm))
             #reg_ex(script,'xxhowmanyxx',str(self.dct['howmany']))
             reg_ex(script,'xxhowmanyxx',str(self.tpd))
             reg_ex(script,'xxenvironxx',self.e)
             reg_ex(script,'xxvelxx',str(self.pv_ans[0]))
-            lenarray=self.path_seg[phase]/self.freq+1
+            lenarray=self.path_steps[phase]/self.freq+1
             #print 'lenarray',lenarray
             #print 'self.ps[phase]',self.ps[phase]
             #print 'self.dct[freq]',self.dct['freq']+1
@@ -293,7 +294,7 @@ class AsmdMethod:
         def gen_all_seeds():
             os.chdir(self.vdir)
             sds = np.random.randint(10000,high=99999, \
-                              size=(self.st,int(self.tpd),self.dps))
+                              size=(self.st,int(self.dps),self.tpd))
             fname = 'seeds.txt'
             with file('seeds.txt','w') as outfile:
                 outfile.write('# %s stages' % sds.shape[0])
@@ -327,9 +328,9 @@ class AsmdMethod:
                 reg_ex(script,'xxdtxx',str(self.dt))
             def call_smd(script):
                 phase = int(script.split('/')[-3])-1
-                reg_ex(script,'xxstepsxx',str(int(self.path_seg[phase])))
+                reg_ex(script,'xxstepsxx',str(int(self.path_steps[phase])))
                 # len_hb_pkl, self.hb_l
-                reg_ex(script,'xxdcdxx',str(int(self.path_seg[phase]) \
+                reg_ex(script,'xxdcdxx',str(int(self.path_steps[phase]) \
                            /self.hb_l))
                 if self.ngn=='amb':
                     reg_ex(script,'xxtsxx',str(self.ts/1000))
@@ -369,7 +370,9 @@ class AsmdMethod:
                         phase = int(script.split('/')[-3])-1
                         reg_ex(script,'xxvelocityxx',str(self.path_vel[phase]))
                         reg_ex(script,'xxzcoordxx',str(self.spos))
-                        zdist = (self.path_vel*self.path_seg).cumsum()
+                        #zdist = (self.path_vel*self.path_seg).cumsum()
+                        # june 7
+                        zdist = (self.path_vel*self.path_steps).cumsum()
                         if phase == 0:
                             reg_ex(script,'xxcur_zxx',str(0))
                         else:
@@ -379,7 +382,9 @@ class AsmdMethod:
                         reg_ex(script,'yyyyy',str(int(script.split('/')[-3])-1))
                     elif idn=='dist.RST':           # AMB STEERING FILE
                         phase = int(script.split('/')[-3])-1
-                        zdist = (self.path_vel*self.path_seg).cumsum()
+                        #zdist = (self.path_vel*self.path_seg).cumsum()
+                        zdist = (self.path_vel*self.path_steps).cumsum()
+                        print zdist
                         if phase == 0:
                             reg_ex(script,'xxsposxx',str(self.spos))
                             reg_ex(script,'xxeposxx',str(self.spos+zdist[phase]))
