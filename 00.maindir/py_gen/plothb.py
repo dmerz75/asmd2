@@ -15,6 +15,9 @@ count = 0
 for path in glob(os.path.join(my_dir,'*-sfwf.pkl*')):
     count +=1
 num = str(count).zfill(2)
+if '00' == num:
+    print num,'no data acquired'
+    sys.exit()
 
 # load AsmdMethod_solv_vel_stage.pkl
 # ex.: AsmdMethod_vac_02_10.pkl
