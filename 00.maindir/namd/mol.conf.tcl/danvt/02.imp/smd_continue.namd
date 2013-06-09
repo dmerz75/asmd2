@@ -47,7 +47,7 @@ langevinHydrogen    no    ;# don't couple langevin bath to hydrogens
 # Output
 binaryoutput        no
 dcdfreq             xxdcdxx   ;# 500steps = every 1ps
-outputEnergies      1000
+outputEnergies      500
 
 #############################################################
 ## EXTRA PARAMETERS                                        ##
