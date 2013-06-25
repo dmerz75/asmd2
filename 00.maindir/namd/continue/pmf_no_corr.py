@@ -13,7 +13,7 @@ num=sys.argv[1]
 # ex.: AsmdMethod_vac_02_10.pkl
 solvent = my_dir.split('/')[-2].split('.')[1]
 vel_dir = my_dir.split('/')[-1]
-total_stages = '10' # num
+total_stages = str(int(num))
 asmd_pkl_name = 'AsmdMethod_%s_%s_%s.pkl' % (solvent,vel_dir,total_stages)
 dir_loc_AsmdMethod_pkl = '/'.join(my_dir.split('/')[0:-2])
 asmd_pkl = os.path.join(dir_loc_AsmdMethod_pkl,asmd_pkl_name)
