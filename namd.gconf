@@ -25,6 +25,32 @@ configq={'short':'tg_short','workq':'tg_workq','standby':'standby',
          'standby-8':'standby-8','debug':'tg_debug'}
 gates: fgatecpu2,ggatecpu2,steele2,keene,stibv2,sth2
 
+[create]
+molecule    = Decaalanine
+molecule_id = da
+job_id      = jobid
+solvents    = vac,imp,exp
+start_coord = 13.0
+end_to_end  = 33.0
+extension   = 20.0
+dct_solv_extension = vac:24.0,imp:ext,exp:ext
+velocities  = 100.0,10.0
+total_trajs = 24
+traj_per_dir= 3,6,12,24
+timestep    = 2.0
+cluster     = fgatecpu2
+ppn         = 1
+dct_solv_ppn= vac:1,imp:ppn,exp:ppn
+walltime    = 072:00:00
+dct_solv_walltime = vac:walltime,imp:walltime,exp:400
+queue       = standby
+dct_solv_queue = vac:queue,imp:queue,exp:tg_work
+path_seg    = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
+path_svel   = 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+langevD     = 5.0
+temperature = 300
+
+
 [test]
 jobid = test22
 dircounts= 3,5,7
