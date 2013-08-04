@@ -1,7 +1,9 @@
 #!/usr/bin/env python
-import sys,os,itertools,shutil,re,pickle,time
+import sys,os,itertools,shutil,re,time
+import cPickle as pickle
 my_dir=os.path.abspath(os.path.dirname(__file__))
-from asmd.asmdwork import *
+sys.path.append(my_dir)
+from asmd.asmdmethod import *
 import numpy as np
 import ConfigParser
 
@@ -25,7 +27,6 @@ def parse_gconf(ngn,selection):
     config.read('%s.gconf' % ngn)
     '''
     Example from namd.gconf:
-    
     [create]
     molecule    = Decaalanine                   (variable _ string)
     molecule_id = da                            (variable _ string)
@@ -34,20 +35,20 @@ def parse_gconf(ngn,selection):
     start_coord = 13.0                          (variable _ float)
     end_to_end  = 33.0                          (variable _ float)
     extension   = 20.0                          (variable _ float)
-    dct_solv_extension = vac:zcrd,imp:zcrd,exp:zcrd     (dct)
+    dct_solv_extension = vac:24.0,imp:ext,exp:ext       (dct)
     velocities  = 100.0,10.0                    (list of floats)
     total_trajs = 24                            (list of integers)
     traj_per_dir= 3,6,12,24                     (list of integers)
     timestep    = 2.0                           (variable _ float)
     cluster     = fgatecpu2                     (variable _ string)
     ppn         = 1                             (variable _ integer)
-    dct_solv_ppn= vac:1,imp:cn,exp:cn           (dct)
+    dct_solv_ppn= vac:1,imp:ppn,exp:ppn         (dct)
     walltime    = 072:00:00                     (variable _ string)
-    dct_solv_walltime = vac:walltime,imp:walltime,exp:400:00:00   (dct)
+    dct_solv_walltime = vac:walltime,imp:walltime,exp:400   (dct)
     queue       = standby                       (variable _ string)
-    dct_solv_queue = vac:queue,imp:queue,exp:queue     (dct)
-    path_seg    = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1    (list of floats)
-    path_svel   = 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0    (list of floats)
+    dct_solv_queue = vac:queue,imp:queue,exp:tg_work    (dct)
+    path_seg    = 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1  (list of floats)
+    path_svel   = 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0  (list of floats)
     langevD     = 5.0                           (variable _ float)
     temperature = 300                           (variable _ integer)
     '''
@@ -75,6 +76,8 @@ def parse_gconf(ngn,selection):
     path_svel   = config.get(selection,'path_svel')
     langevD     = float(config.get(selection,'langevD'))
     temperature = int(config.get(selection,'temperature'))
+    hbpkl_length= float(config.get(selection,'hbpkl_length'))
+    freq_force_pr= int(config.get(selection,'freq_force_pr'))
     # debugging by type
     def print_type(*args):
         for i,obj in enumerate(*args):
@@ -93,11 +96,13 @@ def parse_gconf(ngn,selection):
         return return_list
     # list of ints
     traj_per_dir = conversion(traj_per_dir.split(','),'int')
-    total_trajs = conversion(total_trajs.split(','),'int')
+    total_trajs  = conversion(total_trajs.split(','),'int')
+    ### freq_force_pr= conversion(freq_force_pr.split(','),'int')
     # list of floats
     velocities = conversion(velocities.split(','))
     path_seg   = conversion(path_seg.split(','))
     path_svel  = conversion(path_svel.split(','))
+    ### hbpkl_length = conversion(hbpkl_length.split(','))
     # list of strings
     solvents = solvents.split(',')
     # CHECK: lists
@@ -117,6 +122,8 @@ def parse_gconf(ngn,selection):
                     return_dct[key]=value + end
                 elif place_holder == 'ext':
                     return_dct[key]=float(value)
+                elif place_holder == 'ppn':
+                    return_dct[key]=int(value)
                 else:
                     return_dct[key]=value
         return return_dct
@@ -124,6 +131,7 @@ def parse_gconf(ngn,selection):
     dct_solv_extension = build_dct(dct_solv_extension,extension,'ext')
     dct_solv_walltime  = build_dct(dct_solv_walltime,walltime,'walltime')
     dct_solv_queue     = build_dct(dct_solv_queue,queue,'queue')
+    dct_solv_ppn       = build_dct(dct_solv_ppn,ppn,'ppn')
     # CHECK: dct's
     print_type([dct_solv_extension,dct_solv_walltime,dct_solv_queue])
 
@@ -138,111 +146,66 @@ def parse_gconf(ngn,selection):
         number traj_per_dir,   2 * 3 * 1 * 4 = 24;
     '''
     def build_svtt_dct(*args):
+        ''' Creates a dictionary with the following keys:
+        '''
         keys = ['solvent','velocity','total_traj','traj_per_dir']
         dct = dict(zip(keys,*args))
-        print dct
         return dct
-    dct_list = [build_svtt_dct([s,v,t,tpd]) for s in solvents for v in \
-                velocities for t in total_trajs for tpd in \
-                traj_per_dir]
-    print dct_list
 
-    # Now create the class
-    class asmdmethod
+    def build_params_dct(*args):
+        ''' Creates a dictionary with the following keys:
+            ngn,molecule,molecule_id,job_id, \
+            start_coord,end_to_end,extension,dct_solv_extension, \
+            timestep,cluster,ppn,dct_solv_ppn,walltime, \
+            dct_solv_walltime,queue,dct_solv_queue,path_seg,path_svel, \
+            langevD,temperature
+        '''
+        keys = ['ngn','my_dir','molecule','molecule_id','job_id', \
+                'start_coord','end_to_end','extension', \
+                'dct_solv_extension','timestep','cluster','ppn', \
+                'dct_solv_ppn','walltime','dct_solv_walltime', \
+                'queue','dct_solv_queue','path_seg','path_svel',\
+                'langevD','temperature','hbpkl_length','freq_force_pr']
+        dct = dict(zip(keys,*args))
+        return dct
+
+    def combine_all_asmd_params(ssvt_params,all_params):
+        ''' gconf has all the parameters for a varied range of datasets.
+            the dict returned from combine_all_asmd_params
+            represents all the essential but with zero excess parameters stored
+            as a python dictionary required to build an AsmdMethod class.
+        '''
+        dct_combined = dict(all_params.items() + ssvt_params.items())
+        return dct_combined
+
+    def create_AsmdMethod(dct):
+        ''' AsmdMethod called with dct which contains all essential elements
+            for a single asmd implementation.
+        '''
+        f = AsmdMethod(dct)
+        print dir(f)
+        attrs = vars(f)
+        print ' \n'.join("%s: %s" % item for item in attrs.items())
+        f.make_proj_and_work_dir()
+        name_pkl = '%s/AsmdMethod_%s_%s_%s.pkl' % (f.fpath_work_dir, \
+                    f.solvent,str(f.velocity),str(len(f.path_seg)))
+        pickle.dump(f,open(name_pkl,'wb'))
+
+    # call build_svtt_dct()
+    svtt_list = [build_svtt_dct([s,v,t,tpd]) for s in solvents for v in \
+                 velocities for t in total_trajs for tpd in \
+                 traj_per_dir]
+    # call_build_params_dct()
+    dct_all_params = build_params_dct([ngn,my_dir,molecule,molecule_id,job_id, \
+              start_coord,end_to_end,extension,dct_solv_extension, \
+              timestep,cluster,ppn,dct_solv_ppn,walltime, \
+              dct_solv_walltime,queue,dct_solv_queue,path_seg,path_svel, \
+              langevD,temperature,hbpkl_length,freq_force_pr])
+    # call combine_all_asmd_params()
+    asmd_list = [combine_all_asmd_params(svtt,dct_all_params) for svtt \
+                 in svtt_list]
+    # call create_AsmdMethod
+    [create_AsmdMethod(asmd_dct) for asmd_dct in asmd_list]
     
 # parse_gconf(namd,create)
 parse_gconf(sys.argv[1],sys.argv[2])
-
-'''
-
-molec= molc[0]                     # now it's da or da_smd
-mol     = config.get(molec,'mol')  # now it's da. w/ molec = da_smd or da
-print 'molec',molec,'mol',mol
-zcrd    = float(config.get(molec,'zcrd')) # z-coordinate
-envdists= config.get(molec,'envdist') # distance per environment
-envdist = {}
-for entry in envdists.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1] =='zcrd':
-        envdist[env]=zcrd
-    else:
-        envdist[env]=float(entry.split(':')[1])
-dist    = float(config.get(molec,'dist')) # total distance pulled
-ts      = float(config.get(molec,'ts'))   # timestep: ~ 1,2 fs
-n_conf  = config.get(molec,'n')
-n       = []                              # 1,2,3,4,5
-for ni in range(len(n_conf.split(','))):  # 1000,100,10,1,0.1
-    n.append(float(n_conf.split(',')[ni]))
-#env_cnf = config.get(mol,'environ')
-env_cnf = config.get(molec,'environ')
-environ = []                              # 01.vac,02.imp,03.exp
-for ei in range(len(env_cnf.split(','))):
-    environ.append(str(env_cnf.split(',')[ei]))
-langevD = config.get(molec,'langevD')     # langevin Damping: 0.2,1,5
-temp    = config.get(molec,'temp')        # temperature: 300
-direct  = config.get(molec,'direct')      # direction: !! may not work yet !!
-gate    = config.get(molec,'gate')        # gate: cluster name
-cn      = config.get(molec,'cn')          # cn: processors per node
-ppn_envs= config.get(molec,'ppn_env')     # procs per node, by environment
-ppn_env = {}
-for entry in ppn_envs.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1]=='cn':
-        ppn_env[env]=cn
-    else:
-        ppn_env[env]=entry.split(':')[1]
-comp    = config.get(molec,'comp')        # computation: cpu or gpu
-wallt   = config.get(molec,'wallt')       # walltime: see asmdwork.py
-wt_envs = config.get(molec,'wt_env')      # walltime by environment
-wt_env  = {}
-for entry in wt_envs.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1]=='wallt':
-        wt_env[env]=wallt
-    else:
-        wt_env[env]=entry.split(':')[1]
-queue   = config.get(molec,'queue')       # queue: in case job.sh requires queue
-q_envs  = config.get(molec,'q_env')
-q_env   = {}
-for entry in q_envs.split(','):
-    env = entry.split(':')[0]
-    if entry.split(':')[1]=='queue':
-        q_env[env]=queue
-    else:
-        q_env[env]=entry.split(':')[1]
-# constructing path_seg, path_svel
-p_seg   = config.get(molec,'path_seg')    # path_segmentation: decimal, sum to 1
-p_svel  = config.get(molec,'path_svel')   # path scaled velocity: scaling factor
-ln_spc  = config.get(molec,'lnspc')       # linspace: 'evenly discretized'
-path_seg = []
-path_svel= []
-if ln_spc == 'False':
-    for i in range(len(p_seg.split(','))):
-        path_seg.append(float(p_seg.split(',')[i]))
-        path_svel.append(float(p_svel.split(',')[i]))
-    path_seg = np.array(path_seg)
-    path_svel= np.array(path_svel)
-else:
-    pseg = float(p_seg)
-    psvel= float(p_svel)
-    parts= int(1/pseg)
-    path_seg = np.linspace(pseg,pseg,parts)
-    path_svel= np.linspace(psvel,psvel,parts)
-
-vels    = config.get(molec,'vels')          # 1,2,3,4,5
-vels_l  = [int(v) for v in vels.split(',')] 
-hows    = config.get(molec,'howmany')       # 5,10,10,2,1
-hows_l  = [(h) for h in hows.split(',')]    # tpd: traj / directory
-freqs   = config.get(molec,'freq')
-freq_l  = [int(f)for f in freqs.split(',')] # tcl freq, controls dt interval
-
-setup={}
-for i in range(len(vels_l)):
-    setup[vels_l[i]]={}
-    setup[vels_l[i]]['howmany']=hows_l[i]
-    setup[vels_l[i]]['freq']=freq_l[i]
-
-jobid   = config.get(molec,'jobid')        # jobdir specific name
-dirs    = config.get(molec,'dircounts')    # #num of directories, in which
-dircounts=[d for d in dirs.split(',')]     #   tpd will be acquired
-'''
