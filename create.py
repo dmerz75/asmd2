@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys,os,itertools,shutil,re,time
+import sys,os,itertools,shutil,re,time,subprocess
 import cPickle as pickle
 my_dir=os.path.abspath(os.path.dirname(__file__))
 sys.path.append(my_dir)
@@ -190,6 +190,8 @@ def parse_gconf(ngn,selection):
         name_pkl = '%s/AsmdMethod_%s_%s_%s.pkl' % (f.fpath_work_dir, \
                     f.solvent,str(f.velocity),str(len(f.path_seg)))
         pickle.dump(f,open(name_pkl,'wb'))
+        f.place_templates_and_structures()
+        return f.fpath_proj_dir
 
     # call build_svtt_dct()
     svtt_list = [build_svtt_dct([s,v,t,tpd]) for s in solvents for v in \
@@ -205,7 +207,36 @@ def parse_gconf(ngn,selection):
     asmd_list = [combine_all_asmd_params(svtt,dct_all_params) for svtt \
                  in svtt_list]
     # call create_AsmdMethod
-    [create_AsmdMethod(asmd_dct) for asmd_dct in asmd_list]
+    proj_dirs = [create_AsmdMethod(asmd_dct) for asmd_dct in asmd_list]
+    return proj_dirs
     
 # parse_gconf(namd,create)
-parse_gconf(sys.argv[1],sys.argv[2])
+proj_dirs = parse_gconf(sys.argv[1],sys.argv[2])
+
+def expand_pickle(script):
+    print script
+    pipe=subprocess.Popen(['python',script],stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+    stdout,stderr = pipe.communicate()
+    print stdout
+    print 'stderr >> ',stderr
+
+expand_pickle(os.path.join(proj_dirs[0],'build_%s.py' % sys.argv[1]))
+
+              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
