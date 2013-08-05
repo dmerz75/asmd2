@@ -191,6 +191,7 @@ def parse_gconf(ngn,selection):
                     f.solvent,str(f.velocity),str(len(f.path_seg)))
         pickle.dump(f,open(name_pkl,'wb'))
         f.place_templates_and_structures()
+        # f.populate_work_dir()
         return f.fpath_proj_dir
 
     # call build_svtt_dct()

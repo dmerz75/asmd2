@@ -41,6 +41,7 @@ class AsmdMethod:
         self.fpath_main_dir = os.path.join(self.my_dir,'00.maindir')
         self.fpath_py_gen   = os.path.join(self.fpath_main_dir,'py_gen')
         self.temp           = os.path.join(self.fpath_proj_dir,'templates')
+        self.st = len(self.path_seg)
     def make_proj_and_work_dir(self):
         ''' Create a project directory:
             Create a working directory:
@@ -91,6 +92,9 @@ class AsmdMethod:
                 'job-%s.sh' % self.cluster,self.temp,'jobc.sh')
         cp_file('%s/%s/%s' % (self.fpath_main_dir,self.ngn,'jobhb'), \
                 'job-%s.sh' % self.cluster,self.temp,'jobhb.sh')
+        cp_file(self.fpath_py_gen,'plothb.py',self.temp,'plothb.py')
+        cp_file(self.fpath_py_gen,'plot_pmf_no_corr.py',self.temp,\
+                'plotpkl.py')
         if self.ngn == 'namd':
             cp_file('%s/%s/%s/%s/%s' % (self.fpath_main_dir,self.ngn, \
                     'mol.conf.tcl',self.molecule_id,self.solvent),
@@ -104,9 +108,113 @@ class AsmdMethod:
     # called from build_namd.py
     # run build_namd.py to continue from here
     def populate_work_dir(self):
-        print "Hello"
+        ''' da_exp... /   03   /   001    /   ...
+            work_level:   ^  (inside work)
+            stage_level:           ^  (inside a stage, 04)
+            traj_level:      (inside traj folder) ^             
+        '''
+        cwd = os.getcwd()
+        proj_dir = ('/').join(cwd.split('/')[0:-1])
+        dir_temp = os.path.join(proj_dir,'templates')
+        dir_scripts = os.path.join(proj_dir,'00.scripts')
+        # print cwd
+        # print proj_dir
+        # print dir_temp
+        # print dir_scripts
+        def traj_level(tdir,stage):
+            ''' go.py,job.sh,smdforce.tcl,smd.namd
+            '''
+            # tdir = os.path.join(stage_dir,traj_dirname)
+            # print dir_temp
+            # print tdir
+            cp_file(dir_temp,'go.py',tdir,'go.py')
+            cp_file(dir_temp,'job.sh',tdir,'job.sh')
+            cp_file(dir_temp,'smd_force.tcl',tdir,'smdforce.tcl')
+            if stage == '01':
+                cp_file(dir_temp,'smd_initial.namd',tdir,'smd.namd')
+            else:
+                cp_file(dir_temp,'smd_continue.namd',tdir,'smd.namd')
+        def stage_level(stage_dir,i,seeds):
+            ''' 000, 001, 002 directories
+                01.txt
+                hb.py
+            '''
+            stage = str(i).zfill(2)
+            # print stage_dir
+            # print cwd
+            # print proj_dir
+            # print dir_temp
+            # print dir_scripts
+            # print seeds.shape
+            os.chdir(stage_dir)
+            with file('%s.txt' % stage ,'w') as outfile:
+                if seeds.shape[1]==1:
+                    np.savetxt(outfile,seeds,fmt='%5.0d')
+                else:
+                    np.savetxt(outfile,np.transpose(seeds),fmt='%5.0d')
+            cp_file(dir_temp,'hb.py',stage_dir,'hb.py')
+            for t in range(0,self.dirs_per_stage):
+                tdir = os.path.join(stage_dir,str(t).zfill(3))
+                if not os.path.exists(tdir): os.makedirs(tdir)
+                traj_level(tdir,stage)
+        def work_level():
+            ''' 01,02,03,04,05 directories
+                01,02,03 ... - continue.py, jobhb.sh, job.sh
+                00-hb_pkl.py,plothb.py,plotpkl.py,seeds.txt
+            '''
+            def gen_all_seeds():
+                # print 'HEY',os.getcwd()
+                # os.chdir(cwd)
+                sds = np.random.randint(10000,high=99999, \
+                         size=(self.st,self.dirs_per_stage,self.traj_per_dir))
+                fname = 'seeds.txt'
+                with file('seeds.txt','w') as outfile:
+                    outfile.write('# %s stages' % sds.shape[0])
+                    outfile.write(" %s directories per stage" % sds.shape[1])
+                    outfile.write(" %s trajectories per directory\n" % \
+                                  sds.shape[2])
+                    outfile.write('# {0}\n'.format(sds.shape))
+                    for stg_slice in sds:
+                        ss = np.transpose(stg_slice)
+                        outfile.write('# stage\n')
+                        np.savetxt(outfile,ss,fmt='%5.0d')
+                return sds
+            def reg_express(script,stage,i):
+                phase = i-1
+                reg_ex(proj_dir,script,'xxcstagexx',stage)
+            # 00-hb_pkl.py,plothb.py,plotpkl.py,seeds.txt
+            cp_file(dir_temp,'hb_pkl.py',cwd,'00-hb_pkl.py')
+            reg_express(os.path.join(cwd,'00-hb_pkl.py'),'00',1)
+            cp_file(dir_temp,'plothb.py',cwd,'plothb.py')
+            reg_express(os.path.join(cwd,'plothb.py'),'00',1)
+            cp_file(dir_temp,'plotpkl.py',cwd,'plotpkl.py')
+            reg_express(os.path.join(cwd,'plotpkl.py'),'00',1)
+            seeds = gen_all_seeds()
+            # now make directories 01,02,03 ...
+            # and copy 01,02,03 ... - continue.py, jobhb.sh, job.sh
+            for i in range(1,self.st+1):
+                continue_script = '%s-continue.py' % str(i).zfill(2)
+                cp_file(dir_temp,'continue.py',cwd,\
+                        continue_script)
+                reg_express(os.path.join(cwd,continue_script),\
+                            str(i).zfill(2),i)
+                jobhb_script = '%s-jobhb.sh' % str(i).zfill(2)
+                cp_file(dir_temp,'jobhb.sh',cwd,\
+                        jobhb_script)
+                reg_express(os.path.join(cwd,jobhb_script),\
+                            str(i).zfill(2),i)
+                job_script = '%s-job.sh' % str(i).zfill(2)
+                cp_file(dir_temp,'job.sh',cwd,\
+                        job_script)
+                reg_express(os.path.join(cwd,job_script),\
+                            str(i).zfill(2),i)
+                stage_dir = os.path.join(cwd,str(i).zfill(2))
+                if not os.path.exists(stage_dir): os.makedirs(stage_dir)
+                stage_level(stage_dir,i,seeds[i-1])
+        # call work_level, cascade into stage_level, traj_level
+        work_level()
 
-    def makeContainDir(self):
+'''
         def reg_exp_contd(script,stage,i):
             phase = i-1
             reg_ex(script,'xxcstagexx',stage)
@@ -144,8 +252,7 @@ class AsmdMethod:
             os.makedirs(os.path.join(self.vdir,str(i).zfill(2)))
             #cp_file(os.path.join(self.ndir,'continue'),'continue.py', \
                             #self.vdir,str(i).zfill(2)+'-continue.py')
-            ''' switching from work-corrected to pmf-corrected
-            '''
+
             #cp_file(os.path.join(self.ndir,'continue'),'perpetuate.py', \
             #                self.vdir,str(i).zfill(2)+'-continue.py')
             cp_file(os.path.join(self.ndir,'continue'),'pmf_no_corr.py', \
@@ -159,8 +266,8 @@ class AsmdMethod:
                   '-continue.py'),stage,i)
             #reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
             #      '-perpetuate.py'),stage,i)
-            ''' because perpetuate.py is now 01-continue.py
-            '''
+
+
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-job.sh'),stage,i)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
@@ -183,8 +290,6 @@ class AsmdMethod:
         # from above:   def reg_exp_contd(script,stage,i):
         d_vis=os.path.join(self.vdir,'plotpkl.py')
         reg_exp_contd(d_vis,stage,1)
-        #d_vis=os.path.join(self.vdir,'plotpkl2.py')
-        #reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.vdir,'plothb.py')
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.pdir,'mpmf.py')
@@ -193,14 +298,7 @@ class AsmdMethod:
         reg_exp_contd(d_vis,stage,1)
         d_vis=os.path.join(self.pdir,'weighthb.py')
         reg_exp_contd(d_vis,stage,1)
-        '''  june 7
-    def savePickle(self):      # dumps config.pkl in
-        os.chdir(self.jdir)    # pdir = nda_jobid
-        pickle.dump(self.cfg,open('config%s_%s.pkl' %(self.vel,self.st),'w'))
-        os.chdir(self.vdir)
-        pickle.dump(self.cfg,open('config.pkl','w'))
-        '''
-#_____________________________________________________________________________
+
     def makeSubDir(self):
         def gen_all_seeds():
             os.chdir(self.vdir)
@@ -308,7 +406,8 @@ class AsmdMethod:
             # change v (below) on june 7
             #for i in range(int(self.hm)):
             for i in range(int(self.dps)):
-                '''
+
+
                 def reg_seed(subdir,seed):
                     if self.ngn=='namd':
                         f1=os.path.join(subdir,'smd.namd')
@@ -318,7 +417,7 @@ class AsmdMethod:
                 while r in rlist:
                     r=random.randint(10000,99999)
                 rlist.append(r)
-                '''
+
 
                 tdi='/'.join(tmpdir.split('/')[0:-1])
                 td=os.path.join(tdi,str(i).zfill(3))
@@ -393,3 +492,4 @@ class AsmdMethod:
             ddir=os.path.join(self.vdir,ds)
             cp_file(os.path.join(self.ndir,'hb'),'hb.py',ddir,'hb.py')
             reg_exp(ddir,'hb.py')
+'''

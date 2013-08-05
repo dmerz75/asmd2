@@ -19,6 +19,8 @@ def asmd_expansion(dir_loc,pkl):
     os.chdir(dir_loc)
     f = pickle.load(open(pkl,'r'))
     print dir(f)
+    attrs = vars(f)
+    print ' \n'.join("%s: %s" % item for item in attrs.items())
     f.populate_work_dir()
 
 for i in asmdmethods:
@@ -26,6 +28,5 @@ for i in asmdmethods:
     print i
     pkl_dir = ('/').join(i.split('/')[0:-1])
     asmd_expansion(pkl_dir,i)
-    break
     
 
