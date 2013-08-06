@@ -17,6 +17,10 @@ confign={'1':{'gpu':'nodes=1:ppn=1:gpus=1:TESLA','cpu':'nodes=1:ppn=1'},
          '8':{'gpu':'nodes=1:ppn=8:gpus=1:TESLA','cpu':'nodes=1:ppn=8'},
        '16':{'gpu':'nodes=1:ppn=16:gpus=1:TESLA','cpu':'nodes=1:ppn=16'}}
 
+def reg_express(script,stage,i):
+    phase = i-1
+    reg_ex(proj_dir,script,'xxcstagexx',stage)
+
 class AsmdMethod:
     def __init__(self,dictionary):
         for k,v in dictionary.items():
@@ -96,15 +100,10 @@ class AsmdMethod:
         cp_file(self.fpath_py_gen,'plot_pmf_no_corr.py',self.temp,\
                 'plotpkl.py')
         if self.ngn == 'namd':
-            cp_file('%s/%s/%s/%s/%s' % (self.fpath_main_dir,self.ngn, \
+            if not os.path.isdir(os.path.join(self.temp,self.solvent)):
+                cp_tree('%s/%s/%s/%s/%s' % (self.fpath_main_dir,self.ngn, \
                     'mol.conf.tcl',self.molecule_id,self.solvent),
-                    'smd_continue.namd',self.temp,'smd_continue.namd')
-            cp_file('%s/%s/%s/%s/%s' % (self.fpath_main_dir,self.ngn, \
-                    'mol.conf.tcl',self.molecule_id,self.solvent),
-                    'smd_initial.namd',self.temp,'smd_initial.namd')
-            cp_file('%s/%s/%s/%s/%s' % (self.fpath_main_dir,self.ngn, \
-                    'mol.conf.tcl',self.molecule_id,self.solvent),
-                    'smd_force.tcl',self.temp,'smd_force.tcl')
+                    '',self.temp,self.solvent)
     # called from build_namd.py
     # run build_namd.py to continue from here
     def populate_work_dir(self):
@@ -113,6 +112,9 @@ class AsmdMethod:
             stage_level:           ^  (inside a stage, 04)
             traj_level:      (inside traj folder) ^             
         '''
+        # def reg_express(script,stage,i):
+        #     phase = i-1
+        #     reg_ex(proj_dir,script,'xxcstagexx',stage)
         cwd = os.getcwd()
         proj_dir = ('/').join(cwd.split('/')[0:-1])
         dir_temp = os.path.join(proj_dir,'templates')
@@ -127,13 +129,30 @@ class AsmdMethod:
             # tdir = os.path.join(stage_dir,traj_dirname)
             # print dir_temp
             # print tdir
+            dir_temp_solv = os.path.join(dir_temp,self.solvent)
             cp_file(dir_temp,'go.py',tdir,'go.py')
+            reg_ex(tdir,'go.py','xxhowmanyxx','BLANK')
+            reg_ex(tdir,'go.py','xxquotaxx','BLANK')
+            reg_ex(tdir,'go.py','xxnodecountxx','BLANK')
             cp_file(dir_temp,'job.sh',tdir,'job.sh')
-            cp_file(dir_temp,'smd_force.tcl',tdir,'smdforce.tcl')
+            reg_ex(tdir,'job.sh','xxjobnamexx','BLANK')
+            reg_ex(tdir,'job.sh','xxwalltimexx','BLANK')
+            reg_ex(tdir,'job.sh','xxnodesxx','BLANK')
+            cp_file(dir_temp_solv,'smd_force.tcl',tdir,'smdforce.tcl')
+            reg_ex(tdir,'smdforce.tcl','xxfreqxx','BLANK')
+            reg_ex(tdir,'smdforce.tcl','xxzcoordxx','BLANK')
+            reg_ex(tdir,'smdforce.tcl','xxcur_zxx','BLANK')
+            reg_ex(tdir,'smdforce.tcl','xxvelocityxx','BLANK')
+            reg_ex(tdir,'smdforce.tcl','xxtsxx','BLANK')
             if stage == '01':
-                cp_file(dir_temp,'smd_initial.namd',tdir,'smd.namd')
+                cp_file(dir_temp_solv,'smd_initial.namd',tdir,'smd.namd')
             else:
-                cp_file(dir_temp,'smd_continue.namd',tdir,'smd.namd')
+                cp_file(dir_temp_solv,'smd_continue.namd',tdir,'smd.namd')
+            reg_ex(tdir,'smd.namd','xxtsxx','BLANK')
+            reg_ex(tdir,'smd.namd','xxlDxx','BLANK')
+            reg_ex(tdir,'smd.namd','xxtempxx','BLANK')
+            reg_ex(tdir,'smd.namd','xxdcdxx','BLANK')
+            reg_ex(tdir,'smd.namd','xxstepsxx','BLANK')
         def stage_level(stage_dir,i,seeds):
             ''' 000, 001, 002 directories
                 01.txt
@@ -153,6 +172,7 @@ class AsmdMethod:
                 else:
                     np.savetxt(outfile,np.transpose(seeds),fmt='%5.0d')
             cp_file(dir_temp,'hb.py',stage_dir,'hb.py')
+            reg_ex(stage_dir,'hb.py','xxenvironxx','BLANK')
             for t in range(0,self.dirs_per_stage):
                 tdir = os.path.join(stage_dir,str(t).zfill(3))
                 if not os.path.exists(tdir): os.makedirs(tdir)
@@ -163,8 +183,6 @@ class AsmdMethod:
                 00-hb_pkl.py,plothb.py,plotpkl.py,seeds.txt
             '''
             def gen_all_seeds():
-                # print 'HEY',os.getcwd()
-                # os.chdir(cwd)
                 sds = np.random.randint(10000,high=99999, \
                          size=(self.st,self.dirs_per_stage,self.traj_per_dir))
                 fname = 'seeds.txt'
@@ -179,16 +197,29 @@ class AsmdMethod:
                         outfile.write('# stage\n')
                         np.savetxt(outfile,ss,fmt='%5.0d')
                 return sds
-            def reg_express(script,stage,i):
-                phase = i-1
-                reg_ex(proj_dir,script,'xxcstagexx',stage)
             # 00-hb_pkl.py,plothb.py,plotpkl.py,seeds.txt
             cp_file(dir_temp,'hb_pkl.py',cwd,'00-hb_pkl.py')
-            reg_express(os.path.join(cwd,'00-hb_pkl.py'),'00',1)
+            reg_ex(cwd,'00-hb_pkl.py','xxlenbpklxx','BLANK')
             cp_file(dir_temp,'plothb.py',cwd,'plothb.py')
-            reg_express(os.path.join(cwd,'plothb.py'),'00',1)
+            reg_ex(cwd,'plothb.py','xxtot_stagesxx','BLANK')
+            reg_ex(cwd,'plothb.py','xxsposxx','BLANK')
+            reg_ex(cwd,'plothb.py','xxtempxx','BLANK')
+            reg_ex(cwd,'plothb.py','xxquotaxx','BLANK')
+            reg_ex(cwd,'plothb.py','xxhowmanyxx','BLANK')
+            reg_ex(cwd,'plothb.py','xxmoleculexx','BLANK')
+            reg_ex(cwd,'plothb.py','xxngnxx','BLANK')
+            reg_ex(cwd,'plothb.py','xxenvironxx','BLANK')
+            reg_ex(cwd,'plothb.py','xxvelxx','BLANK')
             cp_file(dir_temp,'plotpkl.py',cwd,'plotpkl.py')
-            reg_express(os.path.join(cwd,'plotpkl.py'),'00',1)
+            reg_ex(cwd,'plotpkl.py','xxtot_stagesxx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxsposxx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxtempxx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxquotaxx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxhowmanyxx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxmoleculexx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxngnxx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxenvironxx','BLANK')
+            reg_ex(cwd,'plotpkl.py','xxvelxx','BLANK')
             seeds = gen_all_seeds()
             # now make directories 01,02,03 ...
             # and copy 01,02,03 ... - continue.py, jobhb.sh, job.sh
@@ -196,18 +227,22 @@ class AsmdMethod:
                 continue_script = '%s-continue.py' % str(i).zfill(2)
                 cp_file(dir_temp,'continue.py',cwd,\
                         continue_script)
-                reg_express(os.path.join(cwd,continue_script),\
-                            str(i).zfill(2),i)
+                reg_ex(cwd,continue_script,'xxsposxx','BLANK')
+                reg_ex(cwd,continue_script,'xxtempxx','BLANK')
+                reg_ex(cwd,continue_script,'xxquotaxx','BLANK')
+                reg_ex(cwd,continue_script,'xxhowmanyxx','BLANK')
+                reg_ex(cwd,continue_script,'xxlenarrayxx','BLANK')
                 jobhb_script = '%s-jobhb.sh' % str(i).zfill(2)
                 cp_file(dir_temp,'jobhb.sh',cwd,\
                         jobhb_script)
-                reg_express(os.path.join(cwd,jobhb_script),\
-                            str(i).zfill(2),i)
+                reg_ex(cwd,jobhb_script,'xxjobnamexx','BLANK')
+                reg_ex(cwd,jobhb_script,'xxnumxx','BLANK')
                 job_script = '%s-job.sh' % str(i).zfill(2)
                 cp_file(dir_temp,'job.sh',cwd,\
                         job_script)
-                reg_express(os.path.join(cwd,job_script),\
-                            str(i).zfill(2),i)
+                reg_ex(cwd,job_script,'xxjobnamexx','BLANK')
+                reg_ex(cwd,job_script,'xxwalltimexx','BLANK')
+                reg_ex(cwd,job_script,'xxnodesxx','BLANK')
                 stage_dir = os.path.join(cwd,str(i).zfill(2))
                 if not os.path.exists(stage_dir): os.makedirs(stage_dir)
                 stage_level(stage_dir,i,seeds[i-1])
@@ -215,13 +250,8 @@ class AsmdMethod:
         work_level()
 
 '''
-        def reg_exp_contd(script,stage,i):
-            phase = i-1
             reg_ex(script,'xxcstagexx',stage)
             reg_ex(script,'xxtot_stagesxx',str(self.st))
-            # before tps = tpd * dps
-            #print self.dps,self.tpd
-            # june 7
             reg_ex(script,'xxquotaxx',str(self.dps))
             #reg_ex(script,'xxquotaxx',str(self.hm))
             #reg_ex(script,'xxhowmanyxx',str(self.dct['howmany']))
@@ -229,9 +259,6 @@ class AsmdMethod:
             reg_ex(script,'xxenvironxx',self.e)
             reg_ex(script,'xxvelxx',str(self.pv_ans[0]))
             lenarray=self.path_steps[phase]/self.freq+1
-            #print 'lenarray',lenarray
-            #print 'self.ps[phase]',self.ps[phase]
-            #print 'self.dct[freq]',self.dct['freq']+1
             reg_ex(script,'xxlenarrayxx',str(int(lenarray)))
             #len_hb_pkl=500 # length of the hydrogen bond pkl
             #print str(int(self.ps[phase])/len_hb_pkl)  #xxdcdxx
@@ -267,7 +294,6 @@ class AsmdMethod:
             #reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
             #      '-perpetuate.py'),stage,i)
 
-
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
                   '-job.sh'),stage,i)
             reg_exp_contd(os.path.join(self.vdir,str(i).zfill(2)+ \
@@ -299,29 +325,6 @@ class AsmdMethod:
         d_vis=os.path.join(self.pdir,'weighthb.py')
         reg_exp_contd(d_vis,stage,1)
 
-    def makeSubDir(self):
-        def gen_all_seeds():
-            os.chdir(self.vdir)
-            sds = np.random.randint(10000,high=99999, \
-                              size=(self.st,int(self.dps),self.tpd))
-            fname = 'seeds.txt'
-            with file('seeds.txt','w') as outfile:
-                outfile.write('# %s stages' % sds.shape[0])
-                outfile.write(" %s directories per stage" % sds.shape[1])
-                outfile.write(" %s trajectories per directory\n" % sds.shape[2])
-                outfile.write('# {0}\n'.format(sds.shape))
-                for stg_slice in sds:
-                    ss = np.transpose(stg_slice)
-                    outfile.write('# stage\n')
-                    np.savetxt(outfile,ss,fmt='%5.0d')
-            return sds
-        def reg_exp(subdir,ds,seed_list):
-            os.chdir(self.vdir)
-            with file('%s/%s.txt' %(ds,ds) ,'w') as outfile:
-                if seed_list.shape[1]==1:
-                    np.savetxt(outfile,seed_list,fmt='%5.0d')
-                else:
-                    np.savetxt(outfile,np.transpose(seed_list),fmt='%5.0d')
             def call_expavg(script):
                 tefdir='0'+self.vel+'.*/*-tef.dat*'
                 reg_ex(script,'xxtefdirxx',tefdir)

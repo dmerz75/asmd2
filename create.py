@@ -83,9 +83,9 @@ def parse_gconf(ngn,selection):
         for i,obj in enumerate(*args):
             print i,obj,type(obj)
     # CHECK: strings, floats, ints
-    print_type([molecule,molecule_id,job_id,queue,\
-                start_coord,end_to_end,extension,
-                timestep,langevD,ppn,temperature])
+    # print_type([molecule,molecule_id,job_id,queue,\
+    #             start_coord,end_to_end,extension,
+    #             timestep,langevD,ppn,temperature])
     
     # convert to float,int
     def conversion(list,type='float'):
@@ -106,8 +106,8 @@ def parse_gconf(ngn,selection):
     # list of strings
     solvents = solvents.split(',')
     # CHECK: lists
-    print_type([traj_per_dir,total_trajs,velocities,path_seg,path_svel,\
-                solvents])
+    # print_type([traj_per_dir,total_trajs,velocities,path_seg,path_svel,\
+    #                solvents])
 
     # build 3 dct's; solvent by extension,walltime,queue
     def build_dct(dct_parse,default_assign,place_holder,end=':00:00'):
@@ -133,7 +133,7 @@ def parse_gconf(ngn,selection):
     dct_solv_queue     = build_dct(dct_solv_queue,queue,'queue')
     dct_solv_ppn       = build_dct(dct_solv_ppn,ppn,'ppn')
     # CHECK: dct's
-    print_type([dct_solv_extension,dct_solv_walltime,dct_solv_queue])
+    # print_type([dct_solv_extension,dct_solv_walltime,dct_solv_queue])
 
     ''' All parameters acquired, now construct a # of asmdmethods
         asmd = project_directory/
@@ -183,9 +183,9 @@ def parse_gconf(ngn,selection):
             for a single asmd implementation.
         '''
         f = AsmdMethod(dct)
-        print dir(f)
+        # print dir(f)
         attrs = vars(f)
-        print ' \n'.join("%s: %s" % item for item in attrs.items())
+        # print ' \n'.join("%s: %s" % item for item in attrs.items())
         f.make_proj_and_work_dir()
         name_pkl = '%s/AsmdMethod_%s_%s_%s.pkl' % (f.fpath_work_dir, \
                     f.solvent,str(f.velocity),str(len(f.path_seg)))
@@ -215,9 +215,8 @@ def parse_gconf(ngn,selection):
 proj_dirs = parse_gconf(sys.argv[1],sys.argv[2])
 
 def expand_pickle(script):
-    print script
     pipe=subprocess.Popen(['python',script],stdin=subprocess.PIPE,
-                        stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+                    stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     stdout,stderr = pipe.communicate()
     print stdout
     print 'stderr >> ',stderr

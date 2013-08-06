@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os,sys,time
 
+my_dir = os.path.abspath(os.path.dirname(__file__))
+
 def print_stuff(*args):
     for i,obj in enumerate(*args):
         print i,obj
@@ -26,4 +28,10 @@ dct_list = [print_ab([a,b,c,d]) for a in alist for b in blist for c in clist for
 # print len(dct_list)
 # print dct_list
 
-print time.strftime("%H:%M:%S",60)
+#print time.strftime("%H:%M:%S",60)
+
+print my_dir
+print os.getcwd()
+base = os.path.basename(my_dir)
+print base
+print os.path.lexists(my_dir)
