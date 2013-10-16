@@ -55,7 +55,7 @@ wrapAll             on
 # PME (for full-system periodic electrostatics)
 if {1} {
 PME                  yes
-PMEGridSpacing       1.0
+#PMEGridSpacing       1.0
 #manual grid definition
 PMEGridSizeX         48
 PMEGridSizeY         40
@@ -67,11 +67,11 @@ useGroupPressure      yes ;# needed for rigidBonds
 useFlexibleCell       no
 useConstantArea       no
 
-langevinPiston        on
-langevinPistonTarget  1.01325 ;#  in bar -> 1 atm
-langevinPistonPeriod  100.0
-langevinPistonDecay   50.0
-langevinPistonTemp    xxtempxx
+#langevinPiston        on
+#langevinPistonTarget  1.01325 ;#  in bar -> 1 atm
+#langevinPistonPeriod  100.0
+#langevinPistonDecay   50.0
+#langevinPistonTemp    xxtempxx
 
 # Output
 binaryoutput        no

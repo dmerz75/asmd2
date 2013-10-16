@@ -4,8 +4,11 @@ import os.path,datetime,time
 from glob import glob
 import numpy as np
 from random import *
-import matplotlib
-import matplotlib.pyplot as plt
+
+#removed matplotlib here for keeneland, but it is not
+#needed in general...
+#import matplotlib
+#import matplotlib.pyplot as plt
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
 num=sys.argv[1]

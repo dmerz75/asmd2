@@ -10,12 +10,12 @@ proc calculateDistance {c1 c2} {
 
 # Atoms selected for force application 
 
-set id1 [atomid U 1 CA]]
+set id1 [atomid U 1 CA]
 set grp1 {}
 lappend grp1 $id1
 set a1 [addgroup $grp1]
 
-set id2 [atomid U 12 CA]]
+set id2 [atomid U 12 CA]
 set grp2 {}
 lappend grp2 $id2
 set a2 [addgroup $grp2]

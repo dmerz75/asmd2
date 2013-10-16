@@ -1,0 +1,704 @@
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2012.6.30)  5 SEP 2013 16:18
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**asmd2_userguide.tex
+(./asmd2_userguide.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
+c, armenian, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danis
+h, dutch, ukenglish, usenglishmax, esperanto, estonian, ethiopic, farsi, finnis
+h, french, friulan, galician, german, ngerman, swissgerman, monogreek, greek, h
+ungarian, icelandic, assamese, bengali, gujarati, hindi, kannada, malayalam, ma
+rathi, oriya, panjabi, tamil, telugu, indonesian, interlingua, irish, italian, 
+kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
+ polish, portuguese, romanian, romansh, russian, sanskrit, serbian, serbianc, s
+lovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, uppersorbian, 
+welsh, loaded.
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(./asmd2_userguide.aux)
+\openout1 = `asmd2_userguide.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 15.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 15.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 15.
+ [1
+
+]
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 [da]                   :Name of molecule which is used in
+ the command line[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 jobid = decaalanine    :Job description, Names the workin
+g directories[] 
+ []
+
+
+Overfull \hbox (13.6647pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 zcrd = 13.0            :Distance from the first CA to the
+ last CA[] 
+ []
+
+
+Overfull \hbox (82.64896pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd   :Distance
+ in each enviornment[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 n    = 2., 3.          :Pulling velocity, i.e, 2 = 100A/n
+s, 3 = 10A/ns[] 
+ []
+
+
+Overfull \hbox (71.15158pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 environ = 01.vac       :Specify the enviornment to make w
+orking directories[] 
+ []
+
+
+Overfull \hbox (71.15158pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 howmany = 100,50,25,10,1   :How many trajectories per a d
+irectory, Based on[] 
+ []
+
+
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 87--87
+[]                            \OT1/cmtt/m/n/10.95 velocity,i.e., 100 correspond
+s to the 1000 A/ns,[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 87--87
+[]                            \OT1/cmtt/m/n/10.95 50 to the 100 A/ns, 25 to the
+ 10 A/ns, 10 to[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 wallt= lwt             :Specify the wall time, how long t
+he job will run[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 ppn_env = 01.vac:1,02.imp:cn,03.exp:cn           :Specify
+ nodes for each[] 
+ []
+
+
+Overfull \hbox (48.15683pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 wt_env  = 01.vac:wallt,02.imp:mwt,03.exp:mwt     :Specify
+ wall time for[] 
+ []
+
+
+Overfull \hbox (19.41339pt too wide) in paragraph at lines 87--87
+[]                                                  \OT1/cmtt/m/n/10.95 each en
+viornment[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 q_env   = 01.vac:queue,02.imp:queue,03.exp:queue :Specify
+ queue for each[] 
+ []
+
+
+Overfull \hbox (59.6542pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 path_seg = 0.1         :How many stages, to determine num
+ber of stages it[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 path_svel= 1.0         :Stage velocity, can reduce the st
+age velocity by[] 
+ []
+
+[2]
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 87--87
+[]\OT1/cmtt/m/n/10.95 langevD = 5            :Langevin damping, damping coeffei
+cient (gamma)[] 
+ []
+
+[3]
+Overfull \hbox (94.14633pt too wide) in paragraph at lines 144--144
+[]\OT1/cmtt/m/n/10.95 #______________universe__________________________________
+______________________[] 
+ []
+
+
+Overfull \hbox (94.14633pt too wide) in paragraph at lines 144--144
+[]\OT1/cmtt/m/n/10.95 u = MDAnalysis.Universe('../../../../00.struc/xxenvironxx
+/00.psf','daOut.dcd',\[] 
+ []
+
+[4]
+Overfull \hbox (82.64896pt too wide) in paragraph at lines 144--144
+[]        \OT1/cmtt/m/n/10.95 h = MDAnalysis.analysis.hbonds.HydrogenBondAnalys
+is(univ,seg1,seg2, \[] 
+ []
+
+
+Overfull \hbox (71.15158pt too wide) in paragraph at lines 144--144
+[]                                                 \OT1/cmtt/m/n/10.95 distance
+=4.0, angle=140.0)[] 
+ []
+
+
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 144--144
+[]        \OT1/cmtt/m/n/10.95 pickle.dump(h.timeseries,open('%s-hb_%s_%s.pkl.%s
+' % (sys.argv[1], \[] 
+ []
+
+
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 144--144
+[]                                              \OT1/cmtt/m/n/10.95 name1,name2
+,sys.argv[2]),'w'))[] 
+ []
+
+
+Overfull \hbox (94.14633pt too wide) in paragraph at lines 144--144
+[]\OT1/cmtt/m/n/10.95 #__analyze__bonds________________________________________
+______________________[] 
+ []
+
+[5] [6] [7]
+Overfull \hbox (117.14108pt too wide) in paragraph at lines 273--273
+[]\OT1/cmtt/m/n/10.95 set id1 [atomid U 1 N]     #U is the segment, 1 is the re
+sidue, N is the atom fixed[] 
+ []
+
+
+Overfull \hbox (82.64896pt too wide) in paragraph at lines 273--273
+[]\OT1/cmtt/m/n/10.95 set id2 [atomid U 20 NT] #U is the segment, 20 is the res
+idue, NT is the atom[] 
+ []
+
+[8] [9] [10]
+Overfull \hbox (249.3609pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 CRYST1    0.000    0.000    0.000   0.00   -NaN-154243993
+072403881666760839735915053056.00 P 1           1[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      1  N   ALA B   1       0.166   0.267  -0.304  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      2  HT2 ALA B   1      -0.544   0.183   0.437  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      3  HT3 ALA B   1       0.949   0.817   0.184  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      4  CA  ALA B   1       0.767  -1.116  -0.506  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      5  HA  ALA B   1      -0.011  -1.806  -0.508  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      6  CB  ALA B   1       1.315  -1.243  -1.914  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      7  HB1 ALA B   1       1.652  -2.217  -2.273  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      8  HB2 ALA B   1       0.445  -1.015  -2.585  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM      9  HB3 ALA B   1       2.022  -0.480  -2.148  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM     10  C   ALA B   1       1.877  -1.479   0.519  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM     11  O   ALA B   1       2.204  -0.655   1.349  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM     12  N   ALA B   2       2.563  -2.642   0.294  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 392--392
+[]\OT1/cmtt/m/n/10.95 ATOM     13  HN  ALA B   2       2.354  -3.219  -0.488  1
+.00  0.00      BH[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 1 BH   1    ALA  N    NH3   -0.620000       14.007
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 2 BH   1    ALA  HT2  HC     0.310000        1.008
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 3 BH   1    ALA  HT3  HC     0.310000        1.008
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 4 BH   1    ALA  CA   CT1   -0.100000       12.011
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 5 BH   1    ALA  HA   HB     0.100000        1.008
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 6 BH   1    ALA  CB   CT3   -0.270000       12.011
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 7 BH   1    ALA  HB1  HA     0.090000        1.008
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 8 BH   1    ALA  HB2  HA     0.090000        1.008
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]       \OT1/cmtt/m/n/10.95 9 BH   1    ALA  HB3  HA     0.090000        1.008
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]      \OT1/cmtt/m/n/10.95 10 BH   1    ALA  C    C      0.510000       12.011
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]      \OT1/cmtt/m/n/10.95 11 BH   1    ALA  O    O     -0.510000       15.999
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]      \OT1/cmtt/m/n/10.95 12 BH   2    ALA  N    NH1   -0.470000       14.007
+0           0[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 392--392
+[]      \OT1/cmtt/m/n/10.95 13 BH   2    ALA  HN   H      0.310000        1.008
+0           0[] 
+ []
+
+[11]
+Overfull \hbox (2.16733pt too wide) in paragraph at lines 478--478
+[]\OT1/cmtt/m/n/10.95 parameters          ../../../../toppar/par_all27_prot_lip
+id.prm[] 
+ []
+
+[12]
+Overfull \hbox (117.14108pt too wide) in paragraph at lines 478--478
+[]\OT1/cmtt/m/n/10.95 set id1 [atomid U 1 N]     #U is the segment, 1 is the re
+sidue, N is the atom fixed[] 
+ []
+
+
+Overfull \hbox (82.64896pt too wide) in paragraph at lines 478--478
+[]\OT1/cmtt/m/n/10.95 set id2 [atomid U 20 NT] #U is the segment, 20 is the res
+idue, NT is the atom[] 
+ []
+
+[13]
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 505--505
+[]\OT1/cmtt/m/n/10.95 os.system('qstat -u USER > tmpjobs.txt') #Change to speci
+fic user name[] 
+ []
+
+
+Overfull \hbox (94.14633pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 #____________________________________________________
+______________________[] 
+ []
+
+[14]
+Overfull \hbox (94.14633pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 dirs = [str(d) for d in sorted([get_folder(f) for f i
+n os.listdir(my_dir) \[] 
+ []
+
+
+Overfull \hbox (122.88977pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 velocities = ['02', '03']     #Edit velocity to run d
+ifferent velocities at once[] 
+ []
+
+
+Overfull \hbox (111.3924pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 solvents   = ['vac']          #Edit solvents to run d
+ifferent solvents at once[] 
+ []
+
+
+Overfull \hbox (36.65945pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 # stages    = ['01','02','03','04','05','06','07','08
+','09','10'][] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 [find_job(dirs[0],v,s,stages) for s in solvents for v
+ in velocities][] 
+ []
+
+
+Overfull \hbox (105.6437pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 #[find_job(f,v,s,stages) for f in dirs for v in veloc
+ities for s in solvents][] 
+ []
+
+
+Overfull \hbox (94.14633pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 #____________________________________________________
+______________________[] 
+ []
+
+
+Overfull \hbox (94.14633pt too wide) in paragraph at lines 544--544
+[]    \OT1/cmtt/m/n/10.95 export NAMDHOME2=/Users/usr/Documents/NAMD/NAMD_2.9_M
+acOSX-x86_64-multicore[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 545--555
+
+ []
+
+[15]
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 585--585
+[]        \OT1/cmtt/m/n/10.95 deltaf= np.log(np.exp(data[::,::,3]*beta).mean(ax
+is=0))*(1/beta)[] 
+ []
+
+
+Overfull \hbox (105.6437pt too wide) in paragraph at lines 585--585
+[]        \OT1/cmtt/m/n/10.95 d = np.linspace(spos,spos+domain[phase],deltaf.sh
+ape[0]) # stg 1 specific[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 585--585
+[]        \OT1/cmtt/m/n/10.95 deltaf= np.log(np.exp(data[::,::,3]*beta).mean(ax
+is=0))*(1/beta)[] 
+ []
+
+
+Overfull \hbox (99.89502pt too wide) in paragraph at lines 585--585
+[]        \OT1/cmtt/m/n/10.95 d = np.linspace(spos+domain[phase-1],spos+domain[
+phase],deltaf.shape[0])[] 
+ []
+
+[16]
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 682--682
+[]    \OT1/cmtt/m/n/10.95 for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*pr
+*.pkl.*' % stage)):[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 sample_w = np.exp(wrk_pkl[stage][s][1][::,3]*beta
+).astype(float)[] 
+ []
+
+
+Overfull \hbox (13.6647pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 avg_B=np.array(B_list).cumsum()/np.array(W_list).
+cumsum()[] 
+ []
+
+
+Overfull \hbox (82.64896pt too wide) in paragraph at lines 682--682
+[]\OT1/cmtt/m/n/10.95 #________________________________________________________
+____________________[] 
+ []
+
+
+Overfull \hbox (99.89502pt too wide) in paragraph at lines 682--682
+[]\OT1/cmtt/m/n/10.95 def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_l
+abel='hydrogen bonds'):[] 
+ []
+
+[17]
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 682--682
+[]                \OT1/cmtt/m/n/10.95 distance = residue_index(bond[2])-residue
+_index(bond[3])[] 
+ []
+
+
+Overfull \hbox (88.39764pt too wide) in paragraph at lines 682--682
+[]    \OT1/cmtt/m/n/10.95 #____________________________________________________
+_____________________[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 dct_sd_hb=pickle.load(open('%s-sd_%s.pkl' % (stag
+e,sel),'rb'))[] 
+ []
+
+
+Overfull \hbox (25.16208pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 print '%s-sd_%s.pkl' %(stage,sel)     # pkl: sd_h
+b or sd_wp[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 682--682
+[]            \OT1/cmtt/m/n/10.95 sample_i = dct_sd_hb[s]  # trajectory,dcd-len
+gth list with[] 
+ []
+
+
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 682--682
+[]            \OT1/cmtt/m/n/10.95 for c in range(len(sample_i[0])):     # width
+ of bonds per frame[] 
+ []
+
+
+Overfull \hbox (65.4029pt too wide) in paragraph at lines 682--682
+[]                \OT1/cmtt/m/n/10.95 hbc=len(sample_i[0][c]) # hbc-hydrogen-bo
+nd-count, 1 frame[] 
+ []
+
+
+Overfull \hbox (48.15683pt too wide) in paragraph at lines 682--682
+[]                \OT1/cmtt/m/n/10.95 acc.append(hbc)      # acc: counts over f
+ull trajectory[] 
+ []
+
+
+Overfull \hbox (7.91602pt too wide) in paragraph at lines 682--682
+[]            \OT1/cmtt/m/n/10.95 acclens.append(acc)      # acclens: all traje
+ctories[] 
+ []
+
+
+Overfull \hbox (19.41339pt too wide) in paragraph at lines 682--682
+[]            \OT1/cmtt/m/n/10.95 d = np.linspace(spos,spos+domain[phase],data.
+shape[0])[] 
+ []
+
+
+Overfull \hbox (111.3924pt too wide) in paragraph at lines 682--682
+[]            \OT1/cmtt/m/n/10.95 d = np.linspace(spos+domain[phase-1],spos+dom
+ain[phase],data.shape[0])[] 
+ []
+
+
+Overfull \hbox (88.39764pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 # establish domain, by linspacing - vector same l
+ength as data(frames)[] 
+ []
+
+
+Overfull \hbox (2.16733pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 acc_b.append(data)           # acc_b.append(data[
+2:-2])[] 
+ []
+
+
+Overfull \hbox (71.15158pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 dct_sd_hb=pickle.load(open('%s-sd_%s.pkl' % (stag
+e,sel[1:3]),'rb'))[] 
+ []
+
+
+Overfull \hbox (82.64896pt too wide) in paragraph at lines 682--682
+[]        \OT1/cmtt/m/n/10.95 b_data = np.array([[charac_bond2(dct_sd_hb[s][0],
+n) for s in seeds] \[] 
+ []
+
+
+Overfull \hbox (30.91077pt too wide) in paragraph at lines 682--682
+[]            \OT1/cmtt/m/n/10.95 d = np.linspace(spos,spos+domain[phase],b_dat
+a.shape[2])[] 
+ []
+
+[18]
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 682--682
+[]            \OT1/cmtt/m/n/10.95 d = np.linspace(spos+domain[phase-1],spos+dom
+ain[phase], \[] 
+ []
+
+
+Overfull \hbox (99.89502pt too wide) in paragraph at lines 711--711
+[]                \OT1/cmtt/m/n/10.95 deltaf= np.log(np.exp(data[::,::,3]*beta)
+.mean(axis=0))*(1/beta)[] 
+ []
+
+
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 711--711
+[]                    \OT1/cmtt/m/n/10.95 d = np.linspace(spos,spos+domain[phas
+e],deltaf.shape[0])[] 
+ []
+
+
+Overfull \hbox (168.87927pt too wide) in paragraph at lines 711--711
+[]                    \OT1/cmtt/m/n/10.95 d = np.linspace(spos+domain[phase-1],
+spos+domain[phase],deltaf.shape[0])[] 
+ []
+
+
+Overfull \hbox (42.40814pt too wide) in paragraph at lines 711--711
+[]                \OT1/cmtt/m/n/10.95 plt.plot(d,deltaf,'%s' % c_lin,linewidth=
+4.0,label=lb)[] 
+ []
+
+
+Overfull \hbox (99.89502pt too wide) in paragraph at lines 711--711
+[]                \OT1/cmtt/m/n/10.95 deltaf= np.log(np.exp(data[::,::,3]*beta)
+.mean(axis=0))*(1/beta)[] 
+ []
+
+
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 711--711
+[]                    \OT1/cmtt/m/n/10.95 d = np.linspace(spos,spos+domain[phas
+e],deltaf.shape[0])[] 
+ []
+
+
+Overfull \hbox (168.87927pt too wide) in paragraph at lines 711--711
+[]                    \OT1/cmtt/m/n/10.95 d = np.linspace(spos+domain[phase-1],
+spos+domain[phase],deltaf.shape[0])[] 
+ []
+
+
+Overfull \hbox (19.41339pt too wide) in paragraph at lines 770--770
+[]        \OT1/cmtt/m/n/10.95 plt.plot(d,avgB,color,label="hydrogen bonds",line
+width=lw)[] 
+ []
+
+[19]
+Overfull \hbox (88.39764pt too wide) in paragraph at lines 770--770
+[]        \OT1/cmtt/m/n/10.95 d = np.linspace(spos+domain[phase-1],spos+domain[
+phase],avgB.shape[0])[] 
+ []
+
+
+Overfull \hbox (88.39764pt too wide) in paragraph at lines 770--770
+[]        \OT1/cmtt/m/n/10.95 d = np.linspace(spos+domain[phase-1],spos+domain[
+phase],avgB.shape[0])[] 
+ []
+
+
+Overfull \hbox (76.90027pt too wide) in paragraph at lines 770--770
+[]    \OT1/cmtt/m/n/10.95 for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*pr
+*.pkl.*' % stage)):[] 
+ []
+
+
+Overfull \hbox (53.90552pt too wide) in paragraph at lines 770--770
+[]        \OT1/cmtt/m/n/10.95 sample_w = np.exp(wrk_pkl[stage][s][1][::,3]*beta
+).astype(float)[] 
+ []
+
+[20]
+Overfull \hbox (13.6647pt too wide) in paragraph at lines 770--770
+[]        \OT1/cmtt/m/n/10.95 avg_B=np.array(B_list).cumsum()/np.array(W_list).
+cumsum()[] 
+ []
+
+[21] (./asmd2_userguide.aux) ) 
+Here is how much of TeX's memory you used:
+ 234 strings out of 493489
+ 2620 string characters out of 3141349
+ 60432 words of memory out of 3000000
+ 3616 multiletter control sequences out of 15000+200000
+ 8670 words of font info for 31 fonts, out of 3000000 for 9000
+ 957 hyphenation exceptions out of 8191
+ 21i,6n,19p,567b,241s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on asmd2_userguide.dvi (21 pages, 35876 bytes).

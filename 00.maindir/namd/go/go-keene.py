@@ -52,7 +52,7 @@ def run_namd(i,st_num,c_num):
     reg_ex(script,'xxxxx',str(seed),i)
     st = time.time()
     os.system('charmrun ++local +pxxnodecountxx \
-              /apps/rhel5/namd/NAMD_2.9b2_Linux-x86_64-TCP/namd2 \
+              /sw/kfs/namd/2.9/centos6.2_intel12/NAMD_2.9_Linux-x86_64-ibverbs-smp-CUDA/namd2 +idlepoll +pemap 0-11 +commap 12-14\
               smd.namd.%s > run.log' % (seed))
     tt = time.time()-st
     os.remove(script)
@@ -76,7 +76,7 @@ def check_vel(pnum):
 check_vel(prev_num)
 
 for i in range(1,howmany+1):
-    t1 = run_namd(i)
+    t1 = run_namd(i,num,cwd_num)
     t_data = np.append(t_data,t1)
     if i%howmany==0:
         np.savetxt('time.dat',t_data,fmt='%.4f')

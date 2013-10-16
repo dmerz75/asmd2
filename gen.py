@@ -88,6 +88,9 @@ else:
     path_seg = np.linspace(pseg,pseg,parts)
     path_svel= np.linspace(psvel,psvel,parts)
 
+# print path_seg
+# print path_svel
+
 vels    = config.get(molec,'vels')          # 1,2,3,4,5
 vels_l  = [int(v) for v in vels.split(',')] 
 hows    = config.get(molec,'howmany')       # 5,10,10,2,1

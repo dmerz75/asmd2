@@ -5,180 +5,115 @@
 \author{Rigoberto Hernandez\\
 		Gungor Ozer\\
 		Dale R. Merz Jr. \\
-		Hailey Bureau}
+		Hailey Bureau \\
+                Ryan Bucher}
 
 \date{\today}
 
 %----------------------------
 \begin{document}
-
 \maketitle
-
 \section{Quickstart}
+This assumes that a correctly equilibrated structure and correct namd files are located in: 
+
+\begin{verbatim}
+asmd/00.maindir/namd/struc/da/01.vac/00.pdb
+asmd/00.maindir/namd/struc/da/0.vac/00.pdb
+
+asmd/00.maindir/namd/struc/da/02.imp/00.pdb
+asmd/00.maindir/namd/struc/da/02.imp/00.pdb
+
+asmd/00.maindir/namd/struc/da/03.exp/00.pdb
+asmd/00.maindir/namd/struc/da/03.exp/00.pdb
+
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_force.tcl
+
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_force.tcl
+
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_force.tcl
+\end{verbatim}
 
 \subsection{Command Line}
 Command line: 
-
-gen.py(executable script) + engine(namd,amb) + molecule(da,ee)
-
+This creates all working directories used in asmd2
 \begin{verbatim}
+gen.py(executable script)  engine(namd,amb)  molecule(da,ee)
+\end{verbatim}
+\begin{verbatim}
+Example:
+
 ./gen.py namd da
 \end{verbatim}
 
 \subsection{engine.gconf}
 
-Edit the gconf file for the engine selected as necessary. This is one possible configuration for performing ASMD on Decaalanine from 13.0 \AA to 33.0 \AA in 3 solvents and 10 stages, equally discretized at 10\% of the total extension per stage.
+Edit the .gconf file for the engine selected as necessary. This is one possible configuration for performing ASMD on Decaalanine from 13.0 \AA\  to 33.0 \AA\  in 3 solvents and 10 stages, equally discretized at 10\% of the total extension per stage. 
+
 \begin{verbatim}
-[danvt]
-mol = danvt
-zcrd = 13.0
-envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd
-dist = 20.0
-ts   = 2.0
-n    = 2.,3.
-environ = 01.vac,02.imp,03.exp
-gate = steele2
-comp = cpu
-cn   = 2
-ppn_env = 01.vac:cn,02.imp:cn,03.exp:cn
-wallt= mwt
-wt_env  = 01.vac:wallt,02.imp:wallt,03.exp:wallt
-queue= standby
-q_env   = 01.vac:queue,02.imp:queue,03.exp:queue
-lnspc   = True
-path_seg= 0.1
-path_svel= 1.0
-freq = 50,50,50,50,50
-howmany=100,7,7,2,1
-langevD = 5
+[da]                   :Name of molecule which is used in the command line
+jobid = decaalanine    :Job description, Names the working directory
+dircounts= 5           :Number of directories per a velocity
+mol = da               :Name of molecule
+zcrd = 13.0            :Distance from the first CA to the last CA
+envdist = 01.vac:zcrd,02.imp:zcrd,03.exp:zcrd   :Distance in each enviornment
+dist = 20.0            :Distance protein is pulled
+ts   = 2.0             :Time Step, in fs
+n    = 2., 3.          :Pulling velocity, i.e, 2 = 100A/ns, 3 = 10A/ns
+gate = ggatecpu2       :Specify computer cluster
+environ = 01.vac       :Specify the enviornment to make working directories
+howmany = 100,50,25,10,1   :How many trajectories per a directory, Based on 
+                            velocity,i.e., 100 corresponds to the 1000 A/ns, 
+                            50 to the 100 A/ns, 25 to the 10 A/ns, 10 to 
+                            the 1 A/ns, and 1 to the 0.1 A/ns  
+cn   = 2               :Specify number of processors
+wallt= lwt             :Specify the wall time, how long the job will run
+queue= standby         :queue
+ppn_env = 01.vac:1,02.imp:cn,03.exp:cn           :Specify nodes for each 
+                                                  enviornment
+wt_env  = 01.vac:wallt,02.imp:mwt,03.exp:mwt     :Specify wall time for 
+                                                  each enviornment
+q_env   = 01.vac:queue,02.imp:queue,03.exp:queue :Specify queue for each 
+                                                  enviornment
+path_seg = 0.1         :How many stages, to determine number of stages it
+                        must add up to 1   
+path_svel= 1.0         :Stage velocity, can reduce the stage velocity by 
+                        adjusting the value between 0 and 1
+langevD = 5            :Langevin damping, damping coeffeicient (gamma)
+temp = 300             :Temperature used for simulation
 \end{verbatim}
 
 
 
 \section{Description}
 \subsection{Steered Molecular Dynamics}
-Steered Molecular Dynamics, pulling a peptide with an harmonic potential.
+Steered Molecular Dynamics is a Molecular Dynamics (MD) method of pulling a peptide with a harmonic potential to obtain a potential of mean force (PMF). A 'pseudoatom' is connected by a harmonic potential to a specific site of the peptide and is directed along an axis or through a configuration space at a constant velocity. During this pulling, the force applied on the peptide by the 'pseudoatom' is recorded, thereby allowing one to calculate the work for a single trajectory. The PMF for multiple trajectories can be obtained by boltzmann weighting the work and taking the average of that result. 
 \subsection{Adaptive Steered Molecular Dynamics}
-By performing steered molecular dynamics adaptively, i.e. stage by stage, one obtains the potential of mean force more quickly, with fewer trajectories.
+By performing steered molecular dynamics adaptively, i.e. stage by stage, one obtains the potential of mean force with fewer trajectories. After each stage the structure is relaxed and then pulled again with the starting coordinates from the last stage. This causes the work trajectories to not be as spread out as they are in steered molecular dynamics causing the calculation of the PMF to be quicker and thus using fewer trajectories. 
 
 
 
 \section{Setup for NAMD}
-Downloaded a new molecule from the PDB(Protein Data Bank), generated a protein structure file  with psfgen, run an equilibration in the desired force field?
+Download a new molecule from the PDB(Protein Data Bank). If the peptide is missing residues, Modeller, a python program can be used to predict the missing residues. For more information on Modeller, visit their website at http://salilab.org/modeller/. If the peptide you want to work with, i.e. poly peptides, is not found on PDB, a VMD program, Molefacture, can be used to generate a protein structue. For more information on Molefacture, visit their website at http://www.ks.uiuc.edu/Research/vmd/plugins/mole
+facture/. Generate a .pdb file with added hydrogens using VMD and a protein structure file (.psf) with psfgen. For more information on creating a .pdb and .psf files, download the NAMD tutorial. Run an equilibration in the desired force field.  
 Now you're ready to configure that molecule for use in asmd2.
 \subsection{General Control Templates}
 Generally, only two of the following sections, mol.conf and struc, require added templates for the continued use of asmd2 to perform full-scale adaptive or simple steered molecular dynamics on new molecules. The rest of the templates, python scripts, and bash scripts are general enough to require no further adjustments. A short description is provided for each in case further development in the algorithm is required.
 \subsubsection{continue}
 The continue.py script packs the smdforces.out/tef.dat(time,extension,force) files into 1 pickle per stage. It also carries out the selection and copying of the daOut.coor and daOut.vel files for use in the following stage using the Jarzynski averaging criterion.
-\begin{verbatim}
-Example:
-asmd2/00.maindir/namd/continue/continue.py
-Code:
-def calc_pmf(data,st,w_c):
-    phase = int(st)-1
-    if phase == 0:
-        data[::,::,3] = np.cumsum(data[::,::,3]*path_v_aps[phase]*dt,axis=1)
-        data[::,::,3] = data[::,::,3] + w_c[phase]
-        deltaf = np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
-        d = np.linspace(spos,spos+domain[phase],deltaf.shape[0])
-        JA = deltaf[-1]
-        return JA
-    else:
-        data[::,::,3] = np.cumsum(data[::,::,3]*path_v_aps[phase]*dt,axis=1)
-        data[::,::,3] = data[::,::,3] + w_c[phase]
-        deltaf = np.log(np.exp(data[::,::,3]*beta).mean(axis=0))*(1/beta)
-        d = np.linspace(spos+domain[phase-1],spos+domain[phase],deltaf.shape[0])
-        JA = deltaf[-1]
-        return JA
-
-class asmd_calcs:
-    def __init__(self,wrk_pkl,w_c,d_cp):
-        self.wrk = wrk_pkl
-        self.w_c = w_c
-        self.d_cp = d_cp
-    def create_pkl(self,st):
-        acc = []
-        self.wrk[st]={}
-        self.d_cp[st]={}
-        stdir = os.path.join(my_dir,st)
-        folds=[f for f in os.listdir(stdir) if os.path.isdir(os.path.join( \
-                                                        stdir,f))]
-        foldp=[os.path.join(stdir,f) for f in folds]
-        seeds=[(p.split('/')[-2],p.split('/')[-1].split('.')[2]) for f in foldp \
-               for p in glob(os.path.join(f,'*tef.dat*'))]
-        seeds=[p.split('/')[-1].split('.')[2] for f in foldp \
-                 for p in glob(os.path.join(f,'*tef.dat*'))]
-        for path in glob(os.path.join(my_dir,'%s/*/*tef.dat*' % st)):
-            folder = path.split('/')[-2]
-            seed = path.split('/')[-1].split('.')[2]
-            self.wrk[st][seed]={}
-        for path in glob(os.path.join(my_dir,'%s/*/*tef.dat*' % st)):
-            folder = path.split('/')[-2]
-            seed = path.split('/')[-1].split('.')[2]
-            sample_i = np.loadtxt(path)
-            # errcheck
-            if len(sample_i)!= xxlenarrayxx:
-                os.remove(path)
-                del self.wrk[st][seed]
-                seeds.remove(seed)
-            else:
-                acc.append(sample_i)
-                data_1=np.array(sample_i)
-                tew,wf=calc_work(data_1,st,self.w_c) #sample_i/data => tew
-                self.wrk[st][seed]=folder,tew,wf
-                os.remove(path)
-        data=np.array(acc)
-        JA=calc_pmf(data,st,self.w_c)               # get JA
-        wf_sd=dict([(self.wrk[st][s][2],s) for s in seeds])
-        sel_seed=wf_sd.get(JA, wf_sd[min(wf_sd.keys(), key=lambda k: abs(k-JA))])
-        work_ss=self.wrk[st][sel_seed][2]
-        self.d_cp[st][sel_seed]=self.wrk[st][sel_seed][0]
-        print wf_sd
-        print 'JA:',JA
-        print 'selected seed',sel_seed
-        print 'work for selected seed:',work_ss
-        self.w_c[int(st)]=work_ss
-        return seeds
-\end{verbatim}
-
 \subsubsection{go}
-The go.py script runs steered molecular dynamics any number of times.
+The go.py script runs steered molecular dynamics any number of times. This script is called by the job.sh script.
 \begin{verbatim}
-Examples:
-asmd2/00.maindir/namd/go/go-ggatecpu2.py
-asmd2/00.maindir/namd/go/go-ggategpu2.py
-asmd2/00.maindir/namd/go/go-fgatecpu2.py
-Code:
-def reg_ex(script,subout,subin,n):
-    o=open(script,'r+')
-    text=o.read()
-    text=re.sub(subout,subin,text)
-    o.close()
-    o=open(script,'w+')
-    o.write(text)
-    o.close()
-
-def run_namd(i):
-    seed = randint(10000,99999)
-    while seed in slist:
-        seed = randint(10000,99999)
-    slist.append(seed)
-    cp_file(my_dir,'smd.namd',my_dir,'smd.namd.%s' % (seed))
-    script = os.path.join(my_dir,'smd.namd.%s' % (seed))
-    reg_ex(script,'xxxxx',str(seed),i)
-    st = time.time()
-    os.system('namd2 +pxxnodecountxx smd.namd.%s > run.log' % seed)
-    tt = time.time()-st
-    os.remove(script)
-    os.rename('smdforces.out','%d-tef.dat.%s' % (i,seed))
-    os.rename('daOut.coor','daOut.coor.%s' % (seed))
-    os.rename('daOut.vel','daOut.vel.%s' % (seed))
-    os.system('python ../hb.py %d %s' % (i,seed))
-    return tt
+asmd2/00.maindir/namd/go/go.py
+asmd2/00.maindir/namd/job/job.sh
 \end{verbatim}
-
 \subsubsection{hb}
-The hb.py script generates the pickle describing the bonding in a trajectory.
+The hb.py script generates the pickle describing the bonding in a trajectory. The user can edit the hb.py script to change the parameters of hydrogen bonding.
 \begin{verbatim}
 Example:
 asmd2/00.maindir/namd/hb/hb.py
@@ -199,8 +134,10 @@ def analyze_bond(univ,seg1,seg2):
     try:
         name1=seg1.replace(' ','')
         name2=seg2.replace(' ','')
+ 
+#Parameters for H-Bonds
         h = MDAnalysis.analysis.hbonds.HydrogenBondAnalysis(univ,seg1,seg2, \
-                                                 distance=4.0, angle=140.0)
+                                                 distance=4.0, angle=140.0)     
         results = h.run()
         pickle.dump(h.timeseries,open('%s-hb_%s_%s.pkl.%s' % (sys.argv[1], \
                                               name1,name2,sys.argv[2]),'w'))
@@ -215,30 +152,8 @@ analyze_bond(u,'protein','segid WT1')
 \subsubsection{hb\_pkl}
 The hb\_pkl directory contains the hb\_pkl.py script. This script pickles all the hydrogen bonding trajectory pickles into 1 pickle for that stage.
 \begin{verbatim}
-Example:
 asmd2/00.maindir/namd/hb_pkl/hb_pkl.py
-Code:
-    for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*pr*.pkl.*' % stage)):
-        print path
-        seed = path.split('.')[-1]
-        sample_i = pickle.load(open(path,'rb'))
-        if len(sample_i)==xxlenbpklxx:
-            dct_s_hb[seed]=[sample_i]
-            os.remove(path)
-    if len(dct_s_hb)>0:
-        pickle.dump(dct_s_hb,open('%s-sd_hb.pkl' % stage,'w'))
-    if my_dir.split('/')[-2].split('.')[1]=='exp':
-        for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*segid*.pkl.*' % stage)):
-            print path
-            seed = path.split('.')[-1]
-            sample_i = pickle.load(open(path,'rb'))
-            if len(sample_i)==100:
-                dct_s_whb[seed]=[sample_i]
-                os.remove(path)
-        if len(dct_s_hb)>0:
-            pickle.dump(dct_s_whb,open('%s-sd_wp.pkl' % stage,'w'))
 \end{verbatim}
-
 \subsubsection{job}
 The job directory contains the bash scripts submitted to the pbs resource manager for controlling the go.py scripts, which run steered molecular dynamics in any given stage.
 \begin{verbatim}
@@ -319,7 +234,7 @@ NUM=xxnumxx
 \subsubsection{mol.conf.tcl - Steering Control}
 The mol.conf directory is where solvent configuration files by molecule first and solvent second are stored.
 
-The control file, where the velocity of the pseudoatom and force constant of the harmonic potential are set, is placed in the following location.
+The control file, where the velocity of the pseudoatom and force constant of the harmonic potential are set and can select which atom is connected to the psuedoatom and which atom is fixed, is placed in the following location. 
 
 \begin{verbatim}
 Examples:
@@ -327,6 +242,20 @@ asmd2/00.maindir/namd/mol.conf/da/01.vac/smd_force.tcl
 asmd2/00.maindir/namd/mol.conf/da/02.imp/smd_force.tcl
 asmd2/00.maindir/namd/mol.conf/da/03.exp/smd_force.tcl
 Code:
+
+# Atoms selected for force application 
+
+set id1 [atomid U 1 N]     #U is the segment, 1 is the residue, N is the atom fixed
+set grp1 {}
+lappend grp1 $id1
+set a1 [addgroup $grp1]
+
+set id2 [atomid U 20 NT] #U is the segment, 20 is the residue, NT is the atom 
+                         #connected to psuedoatom
+set grp2 {}
+lappend grp2 $id2
+set a2 [addgroup $grp2]
+
 set Tclfreq xxfreqxx
 set t 0
 #set currentStep yyyyy
@@ -376,14 +305,12 @@ writepsf ee_nw.psf
 \end{verbatim}
 
 \subsubsection{struc}
-The struc directory houses the structure files by molecule first and solvent second.
+The struc directory houses the structure files by molecule first and solvent second. Each molecule can have all three solvents with .pdb and .psf files housed within.
 \begin{verbatim}
 Examples:
 asmd2/00.maindir/namd/mol.conf/da/01.vac
 asmd2/00.maindir/namd/mol.conf/ee/03.exp
 asmd2/00.maindir/namd/mol.conf/danvt/02.imp
-Code:
-
 \end{verbatim}
 
 \subsubsection{toppar}
@@ -392,41 +319,35 @@ The toppar directory is for the most commonly used topology and parameter files.
 Examples:
 asmd2/00.maindir/namd/toppar/par_all27_prot_lipid.prm
 asmd2/00.maindir/namd/toppar/top_all27_prot_lipid.inp
-
-*>CHARMM22 All-Hydrogen Parameter File for Proteins and Lipids <<
-*>>>>> Includes phi, psi cross term map (CMAP) correction <<<<<<<
-*>>>>>>>>>>>>>>>>>>>>>>   July, 2003   <<<<<<<<<<<<<<<<<<<<<<<<<<
-* All comments to ADM jr. via the CHARMM web site: www.charmm.org
-*               parameter set discussion forum
-BONDS
-!
-!V(bond) = Kb(b - b0)**2
-!
-!Kb: kcal/mole/A**2
-!b0: A
-!
-!atom type Kb          b0
-!
-!Carbon Dioxide
-CST  OST   937.96      1.1600 ! JES
-!Heme to Sulfate (PSUL) link
-SS   FE    250.0       2.3200 !force constant a guess
-           !equilbrium bond length optimized to reproduce 
-           !CSD survey values of
-           !2.341pm0.01 (mean, standard error)
-           !adm jr., 7/01
-C    C     600.000     1.3350 ! ALLOW ARO HEM
-                ! Heme vinyl substituent (KK, from propene (JCS))
-
 \end{verbatim}
 
-\subsubsection{toppar.all}
-The toppar.all directory is for the least commonly used but all known topology and parameter files.
-
 \subsection{Adding a new molecule}
-A few key template files must be put into place!
+A few key template files must be put into place! Equilibrated structures need to be in place, i.e.. .psf and .pdb files in the struc directory. The smd continue, initial, and force files need to be in place in the mol.conf directory. The smd force file contains the force constant of the harmonic potential and which atom is fixed. 
+\begin{verbatim}
+asmd2/00.maindir/namd/struc/da/01.vac/00.pdb
+asmd2/00.maindir/namd/struc/da/01.vac/00.psf
+
+asmd2/00.maindir/namd/struc/da/02.imp/00.pdb
+asmd2/00.maindir/namd/struc/da/02.imp/00.psf
+
+asmd2/00.maindir/namd/struc/da/03.exp/00.pdb
+asmd2/00.maindir/namd/struc/da/03.exp/00.psf
+
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_force.tcl
+
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_force.tcl
+
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_force.tcl
+\end{verbatim}
+
 \subsubsection{Starting Structure}
-The same starting coordinates are used for every steered molecular dynamics' trajectory.
+Equilibrated structures are are used for 00.pdb and 00.psf. The same starting coordinates are used for every steered molecular dynamics' trajectory.
 
 Example: To study decaalanine, assigned a label "da", in three solvents, the following "equilibrated structure" files are required:
 
@@ -440,6 +361,9 @@ asmd2/00.maindir/namd/struc/da/02.imp/00.psf
 asmd2/00.maindir/namd/struc/da/03.exp/00.pdb
 asmd2/00.maindir/namd/struc/da/03.exp/00.psf
 
+The following are snapshots of the .pdb and .psf files:
+
+.pdb file
 CRYST1    0.000    0.000    0.000   0.00   -NaN-154243993072403881666760839735915053056.00 P 1           1
 ATOM      1  N   ALA B   1       0.166   0.267  -0.304  1.00  0.00      BH  
 ATOM      2  HT2 ALA B   1      -0.544   0.183   0.437  1.00  0.00      BH  
@@ -456,8 +380,7 @@ ATOM     12  N   ALA B   2       2.563  -2.642   0.294  1.00  0.00      BH
 ATOM     13  HN  ALA B   2       2.354  -3.219  -0.488  1.00  0.00      BH  
 
 
-PSF
-
+.psf file
        1 !NTITLE
  REMARKS original generated structure x-plor psf file
 
@@ -479,22 +402,24 @@ PSF
 \end{verbatim}
 
 \subsubsection{Configuration files}
-An initial and restart configuration file are needed per solvent per molecule.
-As an example, in the case of running ASMD (any case with more than 1 stage of SMD), the following template files would be required in the following locations:
+An initial and restart configuration file are needed per solvent per molecule. Also a forces file is needed. As an example, in the case of running ASMD (any case with more than 1 stage of SMD), the following template files would be required in the following locations:
 
 Example: To study decaalanine, assigned a label "da", in three solvents, the following configuration files are required:
 
 \begin{verbatim}
-asmd2/00.maindir/namd/mol.conf/da/01.vac/smd_initial.namd
-asmd2/00.maindir/namd/mol.conf/da/01.vac/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/01.vac/smd_force.tcl
 
-asmd2/00.maindir/namd/mol.conf/da/02.imp/smd_initial.namd
-asmd2/00.maindir/namd/mol.conf/da/02.imp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/02.imp/smd_force.tcl
 
-asmd2/00.maindir/namd/mol.conf/da/03.exp/smd_initial.namd
-asmd2/00.maindir/namd/mol.conf/da/03.exp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_initial.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_continue.namd
+asmd2/00.maindir/namd/mol.conf.tcl/da/03.exp/smd_force.tcl
 
-Code:
+Code: smd__initial.namd
 #############################################################
 ## JOB DESCRIPTION                                         ##
 #############################################################
@@ -523,40 +448,54 @@ switching           on
 switchdist          10.0
 pairlistdist        13.5
 
+Code: smd_force.tcl
 
-#############################################################
-## JOB DESCRIPTION                                         ##
-#############################################################
-# SMD simulation (stretching) of deca-alanine in vacuum
-# Constant temperature
-#############################################################
-## ADJUSTABLE PARAMETERS                                   ##
-#############################################################
-structure          ../../../../00.struc/01.vac/00.psf
-coordinates        ../00.coor
-outputName         daOut
-#############################################################
-## SIMULATION PARAMETERS                                   ##
-#############################################################
-# Input
-seed                xxxxx
-paraTypeCharmm	    on
-parameters          ../../../../toppar/par_all27_prot_lipid.prm
-velocities          ../00.vel
- 
-# Force-Field Parameters
-exclude             scaled1-4
-1-4scaling          1.0
-cutoff              12.0
-switching           on
-switchdist          10.0
-pairlistdist        13.5
+# Atoms selected for force application 
+
+set id1 [atomid U 1 N]     #U is the segment, 1 is the residue, N is the atom fixed
+set grp1 {}
+lappend grp1 $id1
+set a1 [addgroup $grp1]
+
+set id2 [atomid U 20 NT] #U is the segment, 20 is the residue, NT is the atom 
+                         #connected to psuedoatom
+set grp2 {}
+lappend grp2 $id2
+set a2 [addgroup $grp2]
+
+set Tclfreq xxfreqxx
+set t 0
+#set currentStep yyyyy
+
+# contraint points
+
+set c1x 0.0
+set c1y 0.0
+set c1z 0.0
+
+set c2x 0.0
+set c2y 0.0
+set c2z [expr xxzcoordxx+xxcur_zxx]
+
+# force constant (kcal/mol/A^2)
+set k 7.2
+
+# pulling velocity (A/timestep)
+set v xxvelocityxx
+
+set outfilename smdforces.out
+open $outfilename w
 \end{verbatim}
 
 \section{py\_gen}
 
 
 \subsection{del.py}
+This is used to delete jobs that are running. The user would need to edit the user name. In the command line run del.py and give an argument with the numbers of the job id you want to cancel. The script is very useful for deleting a range of jobs by the following command: 
+\begin{verbatim}
+./del.py arg1 arg2
+\end{verbatim}
+Code:
 \begin{verbatim}
 #!/usr/bin/env python
 import sys,os,glob
@@ -564,7 +503,7 @@ import sys,os,glob
 low = int(sys.argv[1])
 high= int(sys.argv[2])
 
-os.system('qstat -u dmerz3 > tmpjobs.txt')
+os.system('qstat -u USER > tmpjobs.txt') #Change to specific user name
 f = open('tmpjobs.txt','r')
 for line in f.readlines()[5:]:
     print line.split('.')[0]
@@ -578,114 +517,64 @@ f.close()
 
 
 \subsection{pipe.py}
+Pipe.py submits the jobs using a pbs resource manager. It also runs the jobs in parallel. The only part of the script that needs editing are the velocities and solvents at the bottom of the script. 
 \begin{verbatim}
-def qsub_job(stage,job_path):
-    if stage==stages[0]:
-        dep_args = []
-        pipe=subprocess.Popen([qsub_path] + dep_args +
-                          [job_path],stdin=subprocess.PIPE, \
-            stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-        stout, stderr = pipe.communicate()
-        print stout
-        print stout.split('.')[0]
-        print 'stderr >> ',stderr
-        jdict[stage]=stout.split('.')[0]
-    elif stage!=stages[0]:
-        entry=str(int(stage)-1).zfill(2)
-        print cdict[entry]
-        job_deps = ':'.join(cdict[entry])
-        dep_args = ['-W depend=afterany:%s' % job_deps]
-        print 'dep_args',dep_args
-        pipe=subprocess.Popen([qsub_path] + dep_args +
-                          [job_path],stdin=subprocess.PIPE, \
-            stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-        stout, stderr = pipe.communicate()
-        print stout
-        print stout.split('.')[0]
-        print 'stderr >> ',stderr
-        jdict[stage]=stout.split('.')[0]
-def qsub_jobc(stage,job_path):
-    print jdict[stage]
-    job_deps = ':'.join(jdict[stage])
-    dep_args = ['-W depend=afterany:%s' % job_deps]
-    print 'dep_args',dep_args
-    pipe=subprocess.Popen([qsub_path] + dep_args +
-                      [job_path],stdin=subprocess.PIPE, \
-        stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-    stout, stderr = pipe.communicate()
-    print stout
-    print stout.split('.')[0]
-    print 'stderr >> ',stderr
-    cdict[stage]=stout.split('.')[0]
-def qsub_jobh(stage,job_path):
-    print jdict[stage]
-    job_deps = ':'.join(jdict[stage])
-    dep_args = ['-W depend=afterany:%s' % job_deps]
-    print 'dep_args',dep_args
-    pipe=subprocess.Popen([qsub_path] + dep_args +
-                      [job_path],stdin=subprocess.PIPE, \
-        stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-    stout, stderr = pipe.communicate()
-    print stout
-    print stout.split('.')[0]
-    print 'stderr >> ',stderr
-    #cdict[stage]=stout.split('.')[0]
+    #__________________________________________________________________________
+    def get_folder(f):
+        try:
+            return int(f)
+        except:
+            return ''
 
-def find_job(vel,solv,st):
-    for path in glob(os.path.join(my_dir,'*.%s/%s/%s/*/job.sh'%(solv,vel,st))):
-        num=(path.split('/')[-4])
-        sol=(path.split('/')[-5]).split('.')[1]
-        stg=(path.split('/')[-3])
-        jtype=num+sol+stg
-        acc.append(jtype)
-        root='/'.join(path.split('/')[:-1])
-        #root='/'+'/'.join(path.split('/')[2:-1])
-        #path='/'+'/'.join(path.split('/')[2:])
-        print root
-        print path
-        os.chdir(root)
-        qsub_job(stg,path)
-    for path in glob(os.path.join(my_dir,'*.%s/%s/%s-job.sh'%(solv,vel,st))):
-        num=(path.split('/')[-2])
-        sol=(path.split('/')[-3]).split('.')[1]
-        stg=(path.split('/')[-1]).split('-')[0]
-        root='/'.join(path.split('/')[:-1])
-        #root='/'+'/'.join(path.split('/')[2:-1])
-        #path='/'+'/'.join(path.split('/')[2:])
-        print root
-        print path
-        os.chdir(root)
-        qsub_jobc(stg,path)
-    for path in glob(os.path.join(my_dir,'*.%s/%s/%s-jobh.sh'%(solv,vel,st))):
-        num=(path.split('/')[-2])
-        sol=(path.split('/')[-3]).split('.')[1]
-        stg=(path.split('/')[-1]).split('-')[0]
-        root='/'.join(path.split('/')[:-1])
-        #root='/'+'/'.join(path.split('/')[2:-1])
-        #path='/'+'/'.join(path.split('/')[2:])
-        print root
-        print path
-        os.chdir(root)
-        qsub_jobh(stg,path)
+    dirs = [str(d) for d in sorted([get_folder(f) for f in os.listdir(my_dir) \
+                         if os.path.isdir(f)])]
+    print dirs
 
-# submitted 02:
-# submitted 03:
-velocities = ['02']
-solvents   = ['vac']   #solvents = ['imp'] #solvents = ['exp'] #one at a time
-stages     = ['01','02','03','04','05','06','07','08','09','10']
-# MAIN SUBMISSION CALL
-# alternatively, qsub_job('01','vac')
-[find_job(v,s,st) for v in velocities for s in solvents for st in stages]
+    velocities = ['02', '03']     #Edit velocity to run different velocities at once
+    #velocities = ['02','03','04','05']
+    solvents   = ['vac']          #Edit solvents to run different solvents at once
+    #solvents   = ['vac','imp','exp']
+    stages     = [str(x).zfill(2) for x in range(1,51)]
+    # stages    = ['01','02','03','04','05','06','07','08','09','10']
+    # alternatively, limit stages to ['01','02','03']
+    # MAIN SUBMISSION CALL
+    # alternatively, qsub_job('01','vac')
+    [find_job(dirs[0],v,s,stages) for s in solvents for v in velocities]
+    #[find_job(f,v,s,stages) for f in dirs for v in velocities for s in solvents]
+    #__________________________________________________________________________
 \end{verbatim}
 
+\subsection{run\_on\_laptop.py}
 
-
-\subsection{lockfile.py}
-
-
+In order to run asmd2 on laptop: \\
+ 1) Make sure correct namd2 path is in .bashrc file.
+    For example: \\
+    \begin{verbatim}
+    export NAMDHOME2=/Users/usr/Documents/NAMD/NAMD_2.9_MacOSX-x86_64-multicore
+    export PATH=$PATH:$NAMDHOME2
+    \end{verbatim}
+ 2) Generate templates and folders by using './gen.py engine molecule'.
+    In order to add new molecule, edit namd.gconf and use the template at
+    top of the file.\\
+    For example:\\
+    ./gen.py namd da\\
+ 3) Once working directories are created, the top level of the directory is
+    where the script 'run\_on\_laptop.py' is located. Make neccessary modifications
+    to the velocity and stages in run\_on\_laptop.py.\\
+ 4) Run ./run\_on\_laptop.py on the same directory level as it is located when
+    generated.\\
 
 
 \subsection{plotpkl.py}
+This plots the work and potential of mean force for the stages. In the command line run plotpkl.py and it will graph all the stages. If the stages are currently running you can graph the data that you have up to that stage; the user needs to give it an argument of the stage in the command line.
+
+In the command line, All stages finished:
+./plotpkl.py
+
+In the command line, Up to stage 6 finished
+./plotpkl.py 06
+
+
 \begin{verbatim}
 def plot_pmf(data,st):
     if st=='01':
@@ -708,6 +597,13 @@ def plot_pmf(data,st):
 
 
 \subsection{plothb.py}
+This plots the hydrogen bonds for the stages. In the command line run plothb.py and will graph all the stages. If the stages are currently running you can graph the data that you have up to that stage; the user needs to give it an argument of the stage in the command line.
+
+In the command line, All stages finished:
+./plothb.py
+
+In the command line, Up to stage 6 finished
+./plothb.py 06
 \begin{verbatim}
 def pack(stage):
     seed_bond={}
@@ -798,6 +694,7 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
 
 
 \subsection{mpmf.py}
+This script allows you to graph multiple PMF's on the same plot. You need to copy .dat files from the fig folder to the same directory as the mpmf.py directory.
 \begin{verbatim}
         def plot_pmf(data,st,c_lin):
             if st=='01':
@@ -823,65 +720,6 @@ def plot_pkl(stage,sel,acc_d,acc_b,index=0,color='k-',b_label='hydrogen bonds'):
                 plt.plot(d,deltaf,'%s' % c_lin,linewidth=4.0)
                 #plt.plot(d,deltaf,'k--',linewidth=1.4)
 \end{verbatim}
-
-
-\subsection{weighthb.py}
-\begin{verbatim}
-def plot_hb(avgB,st,color,lw):
-    phase = int(st)-1
-    if (st=='01'):
-        d = np.linspace(spos,spos+domain[phase],avgB.shape[0])
-        plt.plot(d,avgB,color,label="hydrogen bonds",linewidth=lw)
-    elif st !='01':
-        d = np.linspace(spos+domain[phase-1],spos+domain[phase],avgB.shape[0])
-        plt.plot(d,avgB,color,linewidth=lw)
-def plot_hb_bluedot(avgB,st,color,lw):
-    phase = int(st)-1
-    if (st=='01'):
-        d = np.linspace(spos,spos+domain[phase],avgB.shape[0])
-        plt.plot(d,avgB,color,linewidth=lw)
-    elif st !='01':
-        d = np.linspace(spos+domain[phase-1],spos+domain[phase],avgB.shape[0])
-        plt.plot(d,avgB,color,linewidth=lw)
-
-def pack(stage):
-    seed_bond={}
-    wght_bond={}
-    wrk_pkl={}
-    wrk_pkl=pickle.load(open('%s-sfwf.pkl' % stage,'rb'))
-    for path in glob(os.path.join(my_dir,'%s/*/*-hb_pr*pr*.pkl.*' % stage)):
-        seed = path.split('.')[-1]
-        sample_i = pickle.load(open(path,'rb'))
-        bond_clist=[]
-        for i in range(len(sample_i)):
-            cnt = len(sample_i[i])
-            bond_clist.append(cnt)
-        seed_bond[seed]=np.array(bond_clist)
-    seeds = wrk_pkl[stage].keys()
-    for s in seeds:
-        sample_w = np.exp(wrk_pkl[stage][s][1][::,3]*beta).astype(float)
-        sample_b = (seed_bond[s]).astype(float)
-        lenf_w = len(sample_w)/100
-        lenf_b = len(sample_b)/100
-        print lenf_w,lenf_b
-        B_list=[]
-        W_list=[]
-        for b in range(len(sample_b)):
-            wv = int(((b+1)/lenf_b)*lenf_w)
-            sum_B=(sample_b[b]*np.exp(beta*sample_w[wv]))
-            sum_W=(np.exp(beta*sample_w[wv]))
-            print sum_B,sum_W
-            B_list.append(sum_B)
-            W_list.append(sum_W)
-        avg_B=np.array(B_list).cumsum()/np.array(W_list).cumsum()
-        wght_bond[s]=avg_B
-        plot_hb_bluedot(avg_B[::2],stage,'b.',0.1)
-    wb_vecs = np.array(wght_bond.values()).mean(axis=0)
-    plot_hb(wb_vecs,stage,'k-',2)
-    print type(wb_vecs)
-    print len(wb_vecs)
-\end{verbatim}
-
 
 % END %
 \end{document}

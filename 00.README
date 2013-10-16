@@ -35,3 +35,20 @@ Preparations:
     PBS resource manager and all subsequent stages,'02','03', etc. with a 
     job dependency hold in order that the prior stage completes before the
     following stage begins.
+
+
+In order to run asmd2 on laptop:
+ 1) Make sure correct namd2 path is in .bashrc file. 
+    For example:
+    export NAMDHOME2=/Users/usr/Documents/NAMD/NAMD_2.9_MacOSX-x86_64-multicore
+    export PATH=$PATH:$NAMDHOME2
+ 2) Generate templates and folders by using './gen.py engine molecule'. 
+    In order to add new molecule, edit namd.gconf and use the template at 
+    top of the file. 
+    For example:  
+    ./gen.py namd da
+ 3) Once working directories are created, the top level of the directory is 
+    where the script 'run_on_laptop.py' is located. Make neccessary modifications
+    to the velocity and stages in run_on_laptop.py.
+ 4) Run ./run_on_laptop.py on the same directory level as it is located when
+    generated.

@@ -7,13 +7,20 @@ import numpy as np
 from random import *
 
 my_dir = os.path.abspath(os.path.dirname(__file__))
+
+#HB: fix for total_stages var; counts # of job scripts in above 
+#dir to count the total # of stages
+count = 0
+for path in glob(os.path.join(my_dir,'*-job.sh*')):
+    count +=1
+
 num=sys.argv[1]
 
 # load AsmdMethod_solv_vel_stage.pkl
 # ex.: AsmdMethod_vac_02_10.pkl
 solvent = my_dir.split('/')[-2].split('.')[1]
 vel_dir = my_dir.split('/')[-1]
-total_stages = str(int(num))
+total_stages = str(int(count))
 asmd_pkl_name = 'AsmdMethod_%s_%s_%s.pkl' % (solvent,vel_dir,total_stages)
 dir_loc_AsmdMethod_pkl = '/'.join(my_dir.split('/')[0:-2])
 asmd_pkl = os.path.join(dir_loc_AsmdMethod_pkl,asmd_pkl_name)
