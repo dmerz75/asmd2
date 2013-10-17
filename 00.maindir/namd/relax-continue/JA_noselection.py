@@ -101,6 +101,9 @@ class asmd_calcs:
         data=np.array(acc)
         JA=calc_pmf(data,st,self.w_c,self.pmf_c)               # get JA
         wf_sd=dict([(self.wrk[st][s][2],s) for s in seeds])
+        #sel_seed needs to be removed? We don't want to select any seeds 
+        #work_ss also needs to be removed 
+        #self.d --what is this doing??
         sel_seed=wf_sd.get(JA, wf_sd[min(wf_sd.keys(), key=lambda k: abs(k-JA))])
         work_ss=self.wrk[st][sel_seed][2]
         self.d_cp[st][sel_seed]=self.wrk[st][sel_seed][0]
