@@ -66,7 +66,7 @@ quota=xxquotaxx*xxhowmanyxx
 quota = []
 
 #_____________________________________________________________________________
-def plot_work(data,st,w_c):
+ndef plot_work(data,st,w_c):
     rnd = np.random.RandomState(0x2913)
     indices = np.arange(data.shape[0])
     rnd.shuffle(indices)

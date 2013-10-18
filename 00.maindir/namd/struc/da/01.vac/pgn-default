@@ -1,0 +1,34 @@
+package require psfgen
+psfcontext new delete
+topology meth_top_all22_prot.inp
+
+pdbalias residue HIS HSE
+pdbalias residue HOH TIP3
+pdbalias atom ILE CD1 CD
+pdbalias atom HOH O OH2 
+
+segment PIM {
+  pdb output/nameJPV_PIM.pdb
+ }
+segment PEP {
+  pdb output/nameJPV_PEP.pdb
+ }
+segment SOLV {
+  auto none
+  pdb output/nameJPV_SOLV.pdb
+ }
+segment PARA {
+  pdb output/nameJPV_PARA.pdb
+  first NONE
+  last  NONE
+  auto none
+}
+
+coordpdb output/nameJPV_PEP.pdb PEP
+coordpdb output/nameJPV_SOLV.pdb SOLV
+coordpdb output/nameJPV_PIM.pdb PIM 
+coordpdb output/nameJPV_PARA.pdb PARA
+guesscoord
+
+writepdb out-pgn/meth_sys.pdb
+writepsf out-pgn/meth_sys.psf
