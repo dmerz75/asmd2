@@ -222,21 +222,3 @@ def expand_pickle(script):
     print 'stderr >> ',stderr
 
 expand_pickle(os.path.join(proj_dirs[0],'build_%s.py' % sys.argv[1]))
-
-              
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
