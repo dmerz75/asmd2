@@ -7,7 +7,9 @@ import numpy as np
 import os,sys,pickle
 
 #______________universe________________________________________________________
-u = MDAnalysis.Universe('../../../../00.struc/xxenvironxx/00.psf','daOut.dcd',\
+#u = MDAnalysis.Universe('../../../../00.struc/xxenvironxx/00.psf','daOut.dcd',\
+#                        permissive=True)
+u = MDAnalysis.Universe('../../../00.struc/xxenvironxx/00.psf','daOut.dcd',\
                         permissive=True)
 
 def analyze_bond(univ,seg1,seg2):

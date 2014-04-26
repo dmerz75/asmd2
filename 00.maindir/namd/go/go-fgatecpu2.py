@@ -5,6 +5,9 @@ import numpy as np
 from random import randint
 
 my_dir=os.path.abspath(os.path.dirname(__file__))
+hb_dir=('/').join(my_dir.split('/')[:-1])
+print hb_dir
+sys.exit()
 
 num   =my_dir.split('/')[-2]
 prev_num=str(int(num)-1).zfill(2)
@@ -57,6 +60,7 @@ def run_namd(i,st_num,c_num):
     os.rename('smdforces.out','%d-tef.dat.%s' % (i,seed))
     os.rename('daOut.coor','daOut.coor.%s' % (seed))
     os.rename('daOut.vel','daOut.vel.%s' % (seed))
+    
     os.system('python ../hb.py %d %s' % (i,seed))
     os.rename('daOut.dcd','daOut.dcd.%s' % (seed))
     return tt
